@@ -124,7 +124,7 @@ def pricing():
 </div></section>
 '''
     data = json.dumps(CAT).replace('</', '<\\/')
-    js = '<script>window.BS_CAT=' + data + ';</script>\n<script src="pricing.js?v=2"></script>'
+    js = '<script>window.BS_CAT=' + data + ';</script>\n<script src="calc.js?v=1"></script><script src="pricing.js?v=3"></script>'
     page = blog.page('Pricing | BlackSheep Digital Works', 'Real estate and dealership photo, video and drone pricing. Build your package and get an instant numbered quote with a PDF.',
                      blog.SITE + '/pricing/', body, 1, 'img/og-image.jpg', '<style>' + CSS + '</style>')
     page = page.replace('</body>', js + '\n</body>', 1)
@@ -150,5 +150,7 @@ def account():
 
 
 open(os.path.join(ROOT, 'pricing', 'index.html'), 'w', encoding='utf-8').write(pricing())
+# Price list for the homepage booking form (same source as everything else)
+open(os.path.join(ROOT, 'pricing', 'catalog.js'), 'w', encoding='utf-8').write('window.BS_CAT=' + json.dumps(CAT, ensure_ascii=False) + ';\n')
 open(os.path.join(ROOT, 'account', 'index.html'), 'w', encoding='utf-8').write(account())
 print('Built pricing/ and account/')

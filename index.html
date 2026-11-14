@@ -264,6 +264,16 @@ fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;align-it
 .check input:checked + span{border-color:var(--red);color:var(--fg);box-shadow:inset 0 0 0 1px var(--red)}
 .check input:focus-visible + span{outline:2px solid var(--red);outline-offset:2px}
 .error{color:var(--err);font-size:.98rem}
+.bk-opts .check span{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:132px}
+.bk-opts .check b{font-weight:500;color:var(--fg)}
+.bk-opts .check small{font-size:.86rem;color:var(--muted)}
+.bk-opts .check input:disabled + span{opacity:.75;cursor:default}
+.bk-opts .check.inc small{color:var(--red)}
+.bk-est{width:100%;border:1px solid var(--line);background:var(--field);padding:14px 16px;text-align:center;font-size:1rem;color:var(--muted)}
+.bk-est b{color:var(--fg);font-family:var(--display);letter-spacing:.04em;font-size:1.15rem}
+.bk-est ul{list-style:none;margin:6px 0 8px;padding:0;font-size:.95rem}
+.bk-est .fl{color:var(--red);font-size:.92rem}
+
 .pick{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:22px;align-items:start}
 @media (max-width:640px){.pick{grid-template-columns:1fr}}
 .cal{background:var(--field);border:1px solid var(--line);padding:14px;display:flex;flex-direction:column;gap:10px}
@@ -475,6 +485,8 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
 }
 </script>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>
+<script src="pricing/catalog.js?v=1"></script>
+<script src="pricing/calc.js?v=1"></script>
 </head>
 <body>
 
@@ -681,20 +693,32 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
       <div class="formcard panel">
         <form id="bookForm" novalidate>
           <fieldset>
-            <legend>Services needed</legend>
-            <div class="checks">
-              <label class="check"><input type="checkbox" id="b-s-photo" name="svc" value="Photography"><span>Photography</span></label>
-              <label class="check"><input type="checkbox" id="b-s-video" name="svc" value="Videography"><span>Videography</span></label>
-              <label class="check"><input type="checkbox" id="b-s-drone" name="svc" value="Drone"><span>Drone</span></label>
-              <label class="check"><input type="checkbox" id="b-s-plan" name="svc" value="Floor plan"><span>Floor plan</span></label>
-              <label class="check"><input type="checkbox" id="b-s-tour" name="svc" value="Virtual tour"><span>Virtual tour</span></label>
-              <label class="check"><input type="checkbox" id="b-s-event" name="svc" value="Event coverage"><span>Event coverage</span></label>
-              <label class="check"><input type="checkbox" id="b-s-dealer" name="svc" value="Dealership inventory"><span>Dealership inventory</span></label>
+            <legend>What are we shooting?</legend>
+            <div class="checks" id="bSeg">
+              <label class="check"><input type="radio" name="bseg" value="re" checked><span>Real estate</span></label>
+              <label class="check"><input type="radio" name="bseg" value="auto"><span>Dealership</span></label>
+              <label class="check"><input type="radio" name="bseg" value="event"><span>Event or other</span></label>
             </div>
           </fieldset>
+          <fieldset id="bPkgSet">
+            <legend>Package</legend>
+            <div class="checks bk-opts" id="bPkgs"></div>
+          </fieldset>
+          <fieldset id="bAddSet">
+            <legend id="bAddLbl">Add-ons</legend>
+            <div class="checks bk-opts" id="bAdds"></div>
+          </fieldset>
+          <div class="row" id="bSizeRow">
+            <div class="field"><label for="b-size">Home size</label><select id="b-size"></select></div>
+          </div>
+          <div class="row" id="bUnitRow" hidden>
+            <div class="field"><label for="b-cars">Cars &amp; trucks</label><input type="tel" inputmode="numeric" id="b-cars" value="0"></div>
+            <div class="field"><label for="b-rvs">RVs &amp; trailers</label><input type="tel" inputmode="numeric" id="b-rvs" value="0"></div>
+          </div>
+          <div class="bk-est" id="bEst" aria-live="polite"></div>
           <div class="row">
             <div class="field"><label for="b-type">Shoot type</label>
-              <select id="b-type"><option>Residential listing</option><option>Commercial property</option><option>Dealership / inventory</option><option>Lifestyle or event</option><option>Other</option></select></div>
+              <select id="b-type"></select></div>
             <div class="field"><label for="b-addr">Address or city</label><input type="text" id="b-addr" autocomplete="street-address" placeholder="123 Example St, Oshawa"></div>
           </div>
           <div class="pick">
@@ -1320,26 +1344,81 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
     }, function(){});
   })();
 
+  /* Booking chooser: same packages, add-ons and prices as /pricing/ (pricing/catalog.js, built from bs-lib.php) */
+  var BC = window.BS_CAT, bk = {seg: 're', re: {pkg: '', add: [], size: 's1'}, auto: {pkg: '', add: [], cars: 0, rvs: 0}, event: {add: []}};
+  var BTYPES = {re: ['Residential listing', 'Condo or townhouse', 'Luxury estate', 'Commercial property', 'Builder or new construction'],
+    auto: ['Car & truck dealership', 'RV & trailer dealership', 'Powersports or marine', 'Auction or fleet'],
+    event: ['Community festival or fair', 'Brand activation or launch', 'Private gathering', 'Corporate event', 'Other']};
+  var EVENT_OPTS = ['Event photography', 'Event video', 'Vertical social reels', 'Drone coverage'];
+  function bMoney(n){ return '$' + Number(n).toLocaleString('en-CA', {minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2}); }
+  function bFind(list, id){ for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i]; return null; }
+  function bEsc(t){ return String(t).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function chip(type, name, val, title, sub, on, dis, inc){
+    return '<label class="check' + (inc ? ' inc' : '') + '"><input type="' + type + '" name="' + name + '" value="' + bEsc(val) + '"' + (on ? ' checked' : '') + (dis ? ' disabled' : '') + '><span><b>' + bEsc(title) + '</b>' + (sub ? '<small>' + bEsc(sub) + '</small>' : '') + '</span></label>';
+  }
+  function bDraw(){
+    if (!BC) return;
+    var sg = bk.seg, st = bk[sg], P = $('bPkgs'), A = $('bAdds');
+    $('bPkgSet').hidden = sg === 'event'; $('bSizeRow').hidden = sg !== 're'; $('bUnitRow').hidden = sg !== 'auto';
+    $('bAddLbl').textContent = sg === 'event' ? 'What do you need?' : 'Add-ons';
+    var ty = $('b-type'), keep = ty.value; ty.innerHTML = BTYPES[sg].map(function(t){ return '<option>' + bEsc(t) + '</option>'; }).join(''); if (BTYPES[sg].indexOf(keep) >= 0) ty.value = keep;
+    if (sg === 'event') { P.innerHTML = ''; A.innerHTML = EVENT_OPTS.map(function(o){ return chip('checkbox', 'badd', o, o, 'Quoted per event', st.add.indexOf(o) >= 0); }).join(''); return bEst(); }
+    var c = BC[sg], pk = bFind(c.packages, st.pkg), h = '';
+    if (sg === 're') h += chip('radio', 'bpkg', '', 'No package', 'Add-ons only', !st.pkg);
+    c.packages.forEach(function(p){ h += chip('radio', 'bpkg', p.id, p.name, p.perunit ? 'From $35 / unit' : bMoney(p.price), st.pkg === p.id); });
+    P.innerHTML = h; h = '';
+    if (sg === 're') c.addons.forEach(function(a){ h += chip('checkbox', 'badd', a.id, a.name, a.quote ? 'On request' : '+ ' + bMoney(a.price), st.add.indexOf(a.id) >= 0); });
+    else {
+      c.unitAddons.forEach(function(a){ var inc = pk && !pk.perunit && pk.unitType === a.unitType; h += chip('checkbox', 'badd', a.id, a.name, inc ? 'Included' : bMoney(a.price) + ' / unit', inc || st.add.indexOf(a.id) >= 0, inc, inc); });
+      c.addons.forEach(function(a){ var inc = pk && !pk.perunit && a.id === 'au-aerial'; h += chip('checkbox', 'badd', a.id, a.name, inc ? 'Included' : a.quote ? 'On request' : '+ ' + bMoney(a.price), inc || st.add.indexOf(a.id) >= 0, inc, inc); });
+    }
+    A.innerHTML = h; bEst();
+  }
+  function bCalc(){ return bk.seg === 'event' ? null : window.bsCalc(BC, bk.seg, bk[bk.seg]); }
+  function bEst(){
+    var r = bCalc(), box = $('bEst');
+    if (!r) { box.innerHTML = 'Events are quoted to fit the day. Tell us the date, place and what you need, and we will reply with a price.'; return; }
+    if (!r.lines.length) { box.innerHTML = 'Pick a package or add-ons to see your estimate. <a class="lk" href="pricing/">Full pricing</a>'; return; }
+    box.innerHTML = '<ul>' + r.lines.map(function(l){ return '<li>' + bEsc(l[0]) + (l[1] > 1 ? ' × ' + l[1] : '') + ' · ' + bMoney(l[2]) + '</li>'; }).join('') + '</ul>'
+      + 'Estimated total <b>' + bMoney(r.total) + '</b> incl. 13% HST' + (r.flags.length ? '<div class="fl">' + bEsc(r.flags.join(' · ')) + '</div>' : '')
+      + '<div style="font-size:.9rem;margin-top:6px">Want it as a numbered PDF quote you can approve? <a class="lk" href="pricing/#book">Build it on the pricing page</a>.</div>';
+  }
+  if (BC) {
+    $('b-size').innerHTML = BC.re.sizes.map(function(z){ return '<option value="' + z.id + '">' + bEsc(z.name) + (z.quote ? ' (quoted)' : z.price ? ' (+' + bMoney(z.price) + ')' : '') + '</option>'; }).join('');
+    $('b-size').addEventListener('change', function(){ bk.re.size = this.value; bEst(); });
+    ['cars', 'rvs'].forEach(function(u){ $('b-' + u).addEventListener('input', function(){ bk.auto[u] = Math.max(0, Math.min(500, parseInt(this.value, 10) || 0)); bEst(); }); });
+    $('bSeg').addEventListener('change', function(e){ bk.seg = e.target.value; if (bk.seg === 'auto' && !bk.auto.pkg) bk.auto.pkg = 'au-fleet'; bDraw(); });
+    $('bPkgs').addEventListener('change', function(e){ bk[bk.seg].pkg = e.target.value; bDraw(); });
+    $('bAdds').addEventListener('change', function(e){ var a = bk[bk.seg].add, v = e.target.value, i = a.indexOf(v); if (e.target.checked && i < 0) a.push(v); if (!e.target.checked && i >= 0) a.splice(i, 1); bEst(); });
+    bDraw();
+  } else { $('bPkgSet').hidden = true; $('bAddSet').hidden = true; $('bSizeRow').hidden = true; }
+
   $('bookForm').addEventListener('submit', function(e){
     e.preventDefault();
     var err = $('bookErr'); err.hidden = true;
-    var svcs = Array.prototype.map.call(document.querySelectorAll('input[name=svc]:checked'), function(i){ return i.value; });
-    if (!svcs.length) return fail(err, 'Choose at least one service.');
+    var sg = bk.seg, st = bk[sg], r = bCalc(), c = BC && BC[sg];
+    if (sg === 'event' ? !st.add.length : (!r || (!r.lines.length && !r.flags.length))) return fail(err, sg === 'event' ? 'Choose what you need for the event.' : 'Choose a package or at least one add-on.');
     if (!val('b-addr')) return fail(err, 'Add the address or city for the shoot.');
     if (!val('b-date')) return fail(err, 'Pick a date on the calendar.');
     if (!val('b-time')) return fail(err, 'Pick a time slot.');
     if (!val('b-name')) return fail(err, 'Add your name.');
     if (!val('b-phone') && !val('b-email')) return fail(err, 'Add a phone number or email so we can confirm.');
     if (val('b-email') && !/^\S+@\S+\.\S+$/.test(val('b-email'))) return fail(err, 'That email address looks incomplete.');
-    var lines = [
-      'BOOKING REQUEST · BlackSheep Digital Works', '',
-      'Services: ' + svcs.join(', '),
-      'Shoot type: ' + $('b-type').value,
-      'Location: ' + val('b-addr'),
-      'Requested date: ' + $('b-date').getAttribute('data-nice'),
-      'Requested time: ' + val('b-time'), '',
-      'Name: ' + val('b-name')
-    ];
+    var lines = ['BOOKING REQUEST · BlackSheep Digital Works', '', 'Shoot: ' + ({re: 'Real estate', auto: 'Dealership', event: 'Event or other'})[sg] + ' · ' + $('b-type').value];
+    if (sg === 'event') lines.push('Needs: ' + st.add.join(', '));
+    else {
+      var pk = bFind(c.packages, st.pkg);
+      lines.push('Package: ' + (pk ? pk.name + (pk.perunit ? ' (per unit)' : ' (' + bMoney(pk.price) + ')') : 'None, add-ons only'));
+      var adds = st.add.map(function(id){ var a = bFind(c.addons, id) || bFind(c.unitAddons || [], id); return a ? a.name : id; });
+      if (adds.length) lines.push('Add-ons: ' + adds.join(', '));
+      if (sg === 're') lines.push('Home size: ' + (bFind(c.sizes, st.size) || c.sizes[0]).name);
+      if (sg === 'auto') lines.push('Units: ' + st.cars + ' cars/trucks, ' + st.rvs + ' RVs/trailers');
+      lines.push('', 'Estimate:');
+      r.lines.forEach(function(l){ lines.push('- ' + l[0] + (l[1] > 1 ? ' x ' + l[1] : '') + ': ' + bMoney(l[2])); });
+      lines.push('Subtotal ' + bMoney(r.sub) + ' · HST ' + bMoney(r.hst) + ' · Estimated total ' + bMoney(r.total));
+      if (r.flags.length) lines.push('Notes: ' + r.flags.join(' · '));
+    }
+    lines.push('', 'Location: ' + val('b-addr'), 'Requested date: ' + $('b-date').getAttribute('data-nice'), 'Requested time: ' + val('b-time'), '', 'Name: ' + val('b-name'));
     if (val('b-phone')) lines.push('Phone: ' + val('b-phone'));
     if (val('b-email')) lines.push('Email: ' + val('b-email'));
     if (val('b-notes')) lines.push('', 'Notes: ' + val('b-notes'));

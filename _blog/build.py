@@ -123,6 +123,7 @@ def page(title, desc, canonical, body, depth, og_image, extra_head=''):
       <a class="lk" href="{up}#portfolio">Portfolio</a>
       <a class="lk" href="{up}journal/" aria-current="page">Journal</a>
       <a class="lk" href="{up}pricing/">Pricing</a>
+      <a class="lk" href="{up}#booking">Booking</a>
       <a class="lk" href="{up}#contact">Contact</a>
     </nav>
     <button class="theme-switch" id="themeSwitch" type="button" role="switch" aria-checked="true" aria-label="Dark mode">
