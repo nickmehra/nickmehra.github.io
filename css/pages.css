@@ -51,7 +51,7 @@
 .tilt{display:block;padding:0;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--card);cursor:zoom-in;transform:rotateX(calc(var(--ty,0)*-9deg)) rotateY(calc(var(--tx,0)*11deg)) translateZ(0);transition:transform .18s ease-out,box-shadow .2s;position:relative}
 .tilt:hover{box-shadow:var(--shadow)}
 .tilt img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:50% 0}
-.tilt.wide img{aspect-ratio:3/2;object-position:50% 50%}
+.tilt.wide img{aspect-ratio:3/2;height:auto;object-position:50% 50%}
 .tilt::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at calc(50% + var(--tx,0)*60%) calc(50% + var(--ty,0)*60%),rgba(255,255,255,.22),transparent 55%);opacity:0;transition:opacity .2s;pointer-events:none}
 .tilt:hover::after{opacity:1}
 #box{position:fixed;inset:0;z-index:80;background:rgba(5,5,7,.94);display:none;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
