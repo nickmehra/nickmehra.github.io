@@ -10,7 +10,7 @@
 /* Layout: one centred column of content over a fixed WebGL gallery of the studio's own photographs. Scroll flies the camera down a corridor of floating prints into a ring of the portfolio. Dark mode dims the prints to sit softly on black; light mode shows them at full strength with lifted shadows on white. */
 :root{
   --bg:#F5F5F2; --panel:rgba(255,255,255,.93); --fg:#08090A; --muted:#25292E; --line:rgba(8,9,10,.24);
-  --hdr:rgba(248,248,246,.95); --field:#FFFFFF; --ghost:rgba(255,255,255,.88); --ts:rgba(255,255,255,1); --veil:rgba(245,245,242,.5); --shadow:rgba(18,20,22,.28); --on-fg:#F5F5F2;
+  --hdr:rgba(248,248,246,.95); --field:#FFFFFF; --ghost:rgba(255,255,255,.88); --ts:transparent; --veil:rgba(245,245,242,.5); --shadow:rgba(18,20,22,.28); --on-fg:#F5F5F2;
   --red:#9A1219; --red-hi:#9A1219; --red-1:#86111A; --red-2:#6A0D13; --red-3:#4C090D; --err:#9C2B1E;
   --display:"Cinzel","Trajan Pro","Optima","Palatino Linotype",Georgia,serif;
   --body:"EB Garamond","Garamond","Iowan Old Style",Georgia,serif;
@@ -214,7 +214,7 @@ figcaption{font-family:var(--display);font-size:.66rem;letter-spacing:.22em;text
 .script.story::after{content:"";position:absolute;z-index:2;left:10%;right:10%;top:calc(var(--rise) - 2px);height:2px;pointer-events:none;
   background:linear-gradient(90deg,transparent,var(--red) 30%,var(--red-hi) 50%,var(--red) 70%,transparent);
   box-shadow:0 0 18px rgba(209,31,38,.45)}
-.script.story>*{position:relative;z-index:4;text-shadow:0 1px 3px var(--bg),0 0 10px var(--bg)}
+.script.story>*{position:relative;z-index:4;text-shadow:0 1px 3px var(--ts),0 0 10px var(--ts)}
 .owner-hint{margin-top:16px;font-family:var(--display);font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);opacity:.85}
 @media (prefers-reduced-motion:reduce){.owner-body,.owner-strap{animation:none;transition:none}.owner-shine,.owner-floor{transition:none}}
 /* full-screen view of the portrait */

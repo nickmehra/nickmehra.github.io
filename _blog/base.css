@@ -1,6 +1,6 @@
 :root{
   --bg:#F5F5F2; --panel:rgba(255,255,255,.93); --fg:#08090A; --muted:#25292E; --line:rgba(8,9,10,.24);
-  --hdr:rgba(248,248,246,.95); --field:#FFFFFF; --ghost:rgba(255,255,255,.88); --ts:rgba(255,255,255,1); --veil:rgba(245,245,242,.5); --shadow:rgba(18,20,22,.28); --on-fg:#F5F5F2;
+  --hdr:rgba(248,248,246,.95); --field:#FFFFFF; --ghost:rgba(255,255,255,.88); --ts:transparent; --veil:rgba(245,245,242,.5); --shadow:rgba(18,20,22,.28); --on-fg:#F5F5F2;
   --red:#9A1219; --red-hi:#9A1219; --red-1:#86111A; --red-2:#6A0D13; --red-3:#4C090D; --err:#9C2B1E;
   --display:"Cinzel","Trajan Pro","Optima","Palatino Linotype",Georgia,serif;
   --body:"EB Garamond","Garamond","Iowan Old Style",Georgia,serif;
