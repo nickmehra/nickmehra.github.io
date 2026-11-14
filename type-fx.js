@@ -142,7 +142,74 @@
   });
   addEventListener('scroll', function () { live.forEach(function (st, el) { sync(el, st); }); }, { passive: true });
   addEventListener('resize', function () { live.forEach(function (st, el) { sync(el, st); }); });
-  (function loop() { live.forEach(function (st, el) { if (!document.contains(el)) drop(el); else sync(el, st); }); requestAnimationFrame(loop); })();
+  /* Custom caret: a fine vertical bar in the brand gradient with a soft glow. It breathes slowly instead of
+     blinking hard, holds solid while typing, and each keystroke gives a small visual "tap": the caret flares
+     and a faint ring of light opens from it, matching the haptic tick. */
+  var css4 = document.createElement('style');
+  css4.textContent =
+    'input.tfx-cc,textarea.tfx-cc{caret-color:transparent!important}' +
+    '.tfx-caret{position:fixed;z-index:2147483000;width:2px;pointer-events:none;border-radius:2px;display:none;' +
+    'background:linear-gradient(180deg,#e9a42c,#e2622b 50%,#c2202c);box-shadow:0 0 6px rgba(226,98,43,.75),0 0 14px rgba(233,164,44,.35);' +
+    'animation:tfxBreathe 1.25s ease-in-out infinite;transform-origin:50% 50%}' +
+    '.tfx-caret.typing{animation:none;opacity:1}' +
+    '.tfx-caret.flare{animation:tfxFlare .32s cubic-bezier(.2,.8,.3,1)}' +
+    '@keyframes tfxBreathe{0%,100%{opacity:1}50%{opacity:.12}}' +
+    '@keyframes tfxFlare{0%{transform:scaleY(1.35);box-shadow:0 0 10px rgba(233,164,44,1),0 0 26px rgba(226,98,43,.8)}100%{transform:scaleY(1)}}' +
+    '.tfx-ring{position:fixed;z-index:2147482999;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;pointer-events:none;' +
+    'border:1px solid rgba(233,164,44,.8);box-shadow:0 0 10px rgba(226,98,43,.45),inset 0 0 6px rgba(233,164,44,.3);animation:tfxRing .5s cubic-bezier(.2,.75,.3,1) forwards}' +
+    '@keyframes tfxRing{0%{transform:scale(.25);opacity:.9}100%{transform:scale(1.5);opacity:0}}';
+  if (!reduce) document.head.appendChild(css4);
+  var caret = null, typingT = 0;
+  function caretEl() {
+    if (!caret) { caret = document.createElement('div'); caret.className = 'tfx-caret'; caret.setAttribute('aria-hidden', 'true'); document.body.appendChild(caret); }
+    return caret;
+  }
+  function caretPos(el, st) {
+    var off; try { off = el.selectionStart; if (off == null || el.selectionEnd !== off) return null; } catch (x) { return null; }
+    var cs = getComputedStyle(el), fs = parseFloat(cs.fontSize) || 16, h = fs * 1.25;
+    var walker = document.createTreeWalker(st.inner, NodeFilter.SHOW_TEXT), node, left = off, r = null;
+    while ((node = walker.nextNode())) {
+      if (left <= node.length) {
+        var rg = document.createRange();
+        if (left > 0) { rg.setStart(node, left - 1); rg.setEnd(node, left); var rr = rg.getClientRects(); var b = rr[rr.length - 1];
+          if (b && node.data[left - 1] !== '\n') r = { x: b.right, y: b.top + b.height / 2 }; }
+        if (!r) { rg.setStart(node, left); rg.setEnd(node, Math.min(node.length, left + 1)); var b2 = rg.getClientRects()[0];
+          if (b2) r = { x: b2.left, y: b2.top + b2.height / 2 }; }
+        break;
+      }
+      left -= node.length;
+    }
+    if (!r) {
+      var o = el.getBoundingClientRect();
+      var x = o.left + parseFloat(cs.borderLeftWidth) + parseFloat(cs.paddingLeft) + (parseFloat(cs.textIndent) || 0);
+      var y = el.tagName === 'TEXTAREA' ? o.top + parseFloat(cs.borderTopWidth) + parseFloat(cs.paddingTop) + (parseFloat(cs.lineHeight) || h) / 2 : o.top + o.height / 2;
+      r = { x: x, y: y };
+    }
+    var o2 = el.getBoundingClientRect();
+    if (r.x < o2.left - 1 || r.x > o2.right + 1 || r.y < o2.top || r.y > o2.bottom) return null;
+    r.h = h; return r;
+  }
+  function placeCaret() {
+    var el = document.activeElement, st = el && live.get(el), c = caret;
+    if (!st) { if (c) c.style.display = 'none'; return; }
+    var p = caretPos(el, st);
+    if (!p) { if (c) c.style.display = 'none'; el.classList.remove('tfx-cc'); return; }
+    c = caretEl(); el.classList.add('tfx-cc');
+    c.style.display = 'block'; c.style.left = (p.x - 1) + 'px'; c.style.top = (p.y - p.h / 2) + 'px'; c.style.height = p.h + 'px';
+    return p;
+  }
+  function tap(el) {
+    var st = live.get(el); if (!st) return;
+    sync(el, st); var p = placeCaret(); if (!p) return;
+    caret.classList.add('typing'); caret.classList.remove('flare'); void caret.offsetWidth; caret.classList.add('flare');
+    clearTimeout(typingT); typingT = setTimeout(function () { caret.classList.remove('typing', 'flare'); }, 650);
+    var ring = document.createElement('div'); ring.className = 'tfx-ring'; ring.setAttribute('aria-hidden', 'true');
+    ring.style.left = p.x + 'px'; ring.style.top = p.y + 'px'; document.body.appendChild(ring);
+    setTimeout(function () { ring.remove(); }, 560);
+  }
+  if (!reduce) document.addEventListener('input', function (e) { if (eligible(e.target)) tap(e.target); }, true);
+  document.addEventListener('focusout', function (e) { e.target.classList && e.target.classList.remove('tfx-cc'); if (caret) caret.style.display = 'none'; }, true);
+  (function loop() { live.forEach(function (st, el) { if (!document.contains(el)) drop(el); else sync(el, st); }); if (!reduce) placeCaret(); requestAnimationFrame(loop); })();
   document.addEventListener('reset', function () { setTimeout(function () { live.forEach(function (st, el) { st.prev = el.value; render(el, st, 0, 0); }); }, 0); }, true);
 
   /* Cinematic opening glow for the box around any form (same as the journal comment box): the frame warms
