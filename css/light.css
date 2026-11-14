@@ -62,3 +62,5 @@
 :root[data-theme="light"] .rx{background:rgba(255,255,255,.92)!important;color:#111113!important;box-shadow:0 10px 30px rgba(0,0,0,.16)!important;border:1px solid var(--line)}
 :root[data-theme="light"] .rx button:hover{background:rgba(0,0,0,.07)}
 :root[data-theme="light"] .rx .down.mine svg{fill:#46474e;stroke:#46474e}
+/* small labels inside story cards */
+:root[data-theme="light"] .ch .eyebrow,:root[data-theme="light"] .ch.turn .eyebrow{color:#55565d}

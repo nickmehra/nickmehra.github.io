@@ -1,0 +1,12 @@
+# Pages always revalidate, so design changes show up straight away instead of an old cached copy
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=3600, must-revalidate"
+  </FilesMatch>
+</IfModule>
+<IfModule LiteSpeed>
+  CacheLookup off
+</IfModule>
