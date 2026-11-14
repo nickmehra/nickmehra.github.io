@@ -5,185 +5,49 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nick Mehra</title>
 <meta name="description" content="Nick Mehra. Almost two decades in law enforcement, now owner and creative director of BlackSheep Digital Works.">
+<link rel="canonical" href="https://nickmehra.ca/">
+<meta property="og:title" content="Nick Mehra"><meta property="og:description" content="Nick Mehra. Almost two decades in law enforcement, now owner and creative director of BlackSheep Digital Works."><meta property="og:image" content="https://nickmehra.ca/img/shot-01.jpg">
+<link rel="icon" href="/img/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/site.css">
-<style>
-/* hero stage */
-.stage{position:relative;height:clamp(640px,96vh,900px);overflow:hidden;perspective:1400px;background:radial-gradient(120% 80% at 50% 100%,#17171b,#060607 70%);color:#f4f2ee}
-.scene{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(calc(var(--my,0)*-5deg)) rotateY(calc(var(--mx,0)*7deg));transition:transform .25s ease-out}
-.scene>*{position:absolute;left:50%}
-#dust{left:0;top:0;width:100%;height:100%;transform:translateZ(-160px) scale(1.2)}
-.glow{bottom:6%;width:min(760px,96vw);aspect-ratio:1;border-radius:50%;background:var(--lens);filter:blur(90px);opacity:.34;transform:translate3d(-50%,0,-140px)}
-.ring{bottom:10%;width:min(620px,88vw);aspect-ratio:1;border-radius:50%;border:1px solid #c9ccd3;opacity:.45;transform:translate3d(-50%,0,-90px)}
-.ring.r2{width:min(820px,116vw);opacity:.18;bottom:2%}
-.name{top:15%;margin:0;font-family:var(--display);font-weight:600;font-size:clamp(76px,16.5vw,250px);line-height:.86;letter-spacing:-.02em;white-space:nowrap;transform:translate3d(-50%,0,-60px);text-transform:uppercase}
-.name i{font-style:italic;font-weight:400;background:var(--lens);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.06em}
-.figure{bottom:-2%;height:min(86%,760px);width:auto;max-width:none;transform:translate3d(-50%,0,70px);filter:drop-shadow(0 30px 50px rgba(0,0,0,.55));-webkit-mask-image:linear-gradient(#000 78%,transparent 99%),linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100%);-webkit-mask-composite:source-in;mask-image:linear-gradient(#000 78%,transparent 99%),linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100%);mask-composite:intersect}
-.front{bottom:6%;width:min(92vw,720px);transform:translate3d(-50%,0,130px)}
-.front p{margin:0 0 4px;font-size:12px;letter-spacing:.34em;text-transform:uppercase;font-weight:700;color:#f4f2ee;text-shadow:0 2px 18px rgba(0,0,0,.9)}
-.front h1{font-size:clamp(24px,3.2vw,38px);line-height:1.15;font-style:italic;color:#fff;text-shadow:0 2px 24px rgba(0,0,0,.95)}
-.tagL,.tagR{top:47%;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:#9d9fa7;font-weight:600;transform:translate3d(-50%,0,20px)}
-.tagL{left:14%}.tagR{left:86%}
-@media (max-width:820px){.name{white-space:normal;top:12%;font-size:27vw}.tagL,.tagR{display:none}}
-.hint{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--mute)}
-
-/* story */
-.chapters{display:grid;gap:26px;margin-top:64px;perspective:1300px}
-.ch{width:100%;max-width:780px;margin:0 auto;padding:46px 38px 42px;background:var(--card);border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);transform:rotateX(calc(var(--r,0)*1deg)) scale(calc(1 - var(--a,0)*.05));transform-origin:50% 50%;will-change:transform}
-.ch .no{font-family:var(--display);font-style:italic;font-size:74px;line-height:1;background:var(--lens);-webkit-background-clip:text;background-clip:text;color:transparent}
-.ch h3{font-size:clamp(28px,3.6vw,42px);margin:10px 0 14px;line-height:1.08}
-.ch p{margin:0 auto;max-width:56ch;color:var(--mute)}
-.ch p+p{margin-top:12px}
-.ch.turn{background:#0b0b0d;border-color:#2a2b30;color:#f4f2ee}
-.ch.turn p{color:#b9bbc2}
-@media (max-width:600px){.ch{padding:36px 22px}}
-
-/* ring of portraits */
-.orbit{padding-bottom:70px}
-.ringwrap{height:520px;margin-top:54px;perspective:1500px;position:relative;touch-action:pan-y;cursor:grab;user-select:none}
-.ringwrap:active{cursor:grabbing}
-.carousel{position:absolute;left:50%;top:50%;width:280px;height:350px;margin:-175px 0 0 -140px;transform-style:preserve-3d;transform:translateZ(calc(var(--R,300px)*-1)) rotateY(var(--ang,0deg))}
-.carousel figure{position:absolute;inset:0;margin:0;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.14);background:#0d0d10;box-shadow:0 30px 60px -20px rgba(0,0,0,.8);backface-visibility:hidden}
-.carousel img{width:100%;height:100%;object-fit:cover;pointer-events:none}
-.carousel figure.cut img{object-fit:contain;object-position:50% 100%;background:radial-gradient(90% 70% at 50% 85%,#3a1612,#0d0d10 70%)}
-.carousel figcaption{position:absolute;left:0;right:0;bottom:0;padding:26px 12px 12px;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:#fff;font-weight:700;background:linear-gradient(transparent,rgba(0,0,0,.85))}
-.spin{display:flex;gap:10px;justify-content:center;margin-top:8px}
-.spin button{width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:none;color:var(--ink);font-size:20px;cursor:pointer}
-.spin button:hover{border-color:var(--ink)}
-@media (max-width:640px){.ringwrap{height:420px}.carousel{width:200px;height:250px;margin:-125px 0 0 -100px}}
-
-/* work */
-.group{margin-top:60px}
-.group h3{font-size:30px;font-style:italic}
-.group .eyebrow{display:block;margin-bottom:8px}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:28px;perspective:1200px}
-@media (max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
-.tilt{display:block;padding:0;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--card);cursor:zoom-in;transform:rotateX(calc(var(--ty,0)*-9deg)) rotateY(calc(var(--tx,0)*11deg)) translateZ(0);transition:transform .18s ease-out,box-shadow .2s;position:relative}
-.tilt:hover{box-shadow:var(--shadow)}
-.tilt img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:50% 0}
-.tilt.wide img{aspect-ratio:3/2;object-position:50% 50%}
-.tilt::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at calc(50% + var(--tx,0)*60%) calc(50% + var(--ty,0)*60%),rgba(255,255,255,.22),transparent 55%);opacity:0;transition:opacity .2s;pointer-events:none}
-.tilt:hover::after{opacity:1}
-#box{position:fixed;inset:0;z-index:80;background:rgba(5,5,7,.94);display:none;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
-#box.on{display:flex}
-#box img{max-height:92vh;max-width:94vw;border-radius:10px}
-#box button{position:absolute;top:18px;right:18px;background:none;border:1px solid #555;color:#fff;border-radius:999px;padding:10px 16px;font:600 12px var(--body);letter-spacing:.16em;cursor:pointer}
-
-/* blacksheep */
-.bs{background:#060607;color:#f4f2ee;position:relative;overflow:hidden}
-.bs::before{content:"";position:absolute;left:50%;top:38%;width:780px;height:780px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(120,124,134,.30),transparent 62%)}
-.bs .wrap{position:relative}
-.bs .logo{width:min(380px,74vw);margin:0 auto 26px;filter:drop-shadow(0 20px 40px rgba(0,0,0,.8))}
-.bs .eyebrow{color:#9d9fa7}
-.bs h2{color:#f4f2ee}
-.bs .lead{color:#b9bbc2}
-.bs .btn{border-color:#f4f2ee;color:#f4f2ee}
-.bs .btn.solid{color:#150a05;border-color:transparent}
-.bs .btn.ghost:hover{background:#f4f2ee;color:#060607}
-.svc{list-style:none;padding:0;margin:30px auto 0;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:760px}
-.svc li{font-size:11px;letter-spacing:.2em;text-transform:uppercase;border:1px solid #303137;border-radius:999px;padding:9px 16px;color:#d5d6da;font-weight:600}
-
-/* journal + contact */
-.post{display:block;max-width:760px;margin:44px auto 0;padding:40px 34px;border:1px solid var(--line);border-radius:26px;background:var(--card);text-decoration:none;box-shadow:var(--shadow);transition:transform .25s}
-.post:hover{transform:translateY(-4px)}
-.post h3{font-size:clamp(26px,3.4vw,38px);margin:10px 0 10px;line-height:1.1}
-.post p{margin:0 auto;color:var(--mute);max-width:54ch}
-.post span.more{display:inline-block;margin-top:18px;font-size:12px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;color:var(--red)}
-.reach{display:grid;gap:6px;margin-top:38px;font-family:var(--display);font-size:clamp(26px,4.4vw,52px);line-height:1.2}
-.reach a{text-decoration:none}
-.reach a:hover{font-style:italic}
-</style>
+<script>try{var t=localStorage.getItem('nm-theme');document.documentElement.setAttribute('data-theme',t||'dark');}catch(e){document.documentElement.setAttribute('data-theme','dark');}</script>
+<link rel="stylesheet" href="/css/site.css">
+<link rel="stylesheet" href="/css/pages.css">
 </head>
 <body>
-<div class="nav"><div class="pill">
-  <a class="mark" href="#top">Nick Mehra</a>
-  <a class="l opt" href="#story">Story</a><a class="l opt" href="#shots">Portraits</a><a class="l opt" href="#work">Work</a><a class="l" href="blog.html">Journal</a><a class="l opt" href="#contact">Contact</a>
+<header class="nav"><div class="bar">
+  <a class="mark" href="/">Nick <span>Mehra</span></a>
+  <nav class="links" aria-label="Main"><a class="l" href="/" aria-current="page">Home</a><a class="l" href="/story/">Story</a><a class="l" href="/portraits/">Portraits</a><a class="l" href="/work/">Work</a><a class="l" href="/journal/">Journal</a><a class="l" href="/contact/">Contact</a></nav>
   <button id="theme" type="button" aria-label="Switch between dark and light">Light</button>
-</div></div>
-
-<main id="top">
+</div></header>
+<main>
 <div class="stage" id="stage">
   <div class="scene" id="scene">
     <canvas id="dust" aria-hidden="true"></canvas>
     <div class="glow"></div><div class="ring r2"></div><div class="ring"></div>
     <p class="name" aria-hidden="true">Nick <i>Mehra</i></p>
     <span class="tagL">Enforcement</span><span class="tagR">Creative</span>
-    <img class="figure" src="img/nick-portrait.webp" alt="Nick Mehra standing with a camera in hand" width="663" height="1442">
+    <img class="figure" src="/img/nick-portrait.webp" alt="Nick Mehra standing with a camera in hand" width="663" height="1442">
     <div class="front">
       <p>Owner &amp; Creative Director, BlackSheep Digital Works</p>
       <h1>Almost two decades behind a badge. Now behind a lens.</h1>
     </div>
   </div>
 </div>
-
-<section id="story">
-  <div class="wrap">
-    <div class="rule"></div>
-    <span class="eyebrow"><b>01</b> &nbsp; The story</span>
-    <h2>A life in <em>five chapters</em></h2>
-    <p class="lead">Almost two decades enforcing the law. Then a camera, a company, and a name that finally fit.</p>
-    <div class="chapters" id="chapters">
-      <article class="ch"><div class="no">I</div><span class="eyebrow">Origins</span><h3>Born in India, raised in Toronto</h3><p>I came to Canada as a child and grew up in Toronto. It has been home ever since.</p></article>
-      <article class="ch"><div class="no">II</div><span class="eyebrow">The pattern</span><h3>The odd one out</h3><p>At work, among friends, in my own family, I have always been the odd one out.</p><p>I stopped fighting it a long time ago. I find my peace in depth, in the bigger questions about life and why any of us are here.</p></article>
-      <article class="ch"><div class="no">III</div><span class="eyebrow">Almost two decades</span><h3>The badge</h3><p>My career ran through private security, transit enforcement operations, municipal law enforcement and provincial Highway Traffic Act enforcement.</p><p>It taught me to stay steady, to notice what others walk past, and to answer for my decisions.</p></article>
-      <article class="ch turn"><div class="no">IV</div><span class="eyebrow" style="color:#9d9fa7">2026 &nbsp;·&nbsp; The turn</span><h3>The decision not to go back</h3><p>In 2026 I reached a point where I could have returned to enforcement. Choosing not to was the hardest professional decision I have made.</p><p>I do not have a tidy story about it. I only know it was the honest choice.</p></article>
-      <article class="ch"><div class="no">V</div><span class="eyebrow">Now &nbsp;·&nbsp; Ontario</span><h3>The lens</h3><p>I started BlackSheep Digital Works instead. The name is the point. It is who I have always been, and now it is on the door.</p><p>Creativity is the catalyst. Everything I learned in uniform now goes into the work.</p></article>
-    </div>
+<section class="doors"><div class="wrap">
+  <span class="eyebrow">Start anywhere</span>
+  <h2>Behind the <em>badge</em>, behind the <em>lens</em></h2>
+  <div class="dgrid">
+    <a class="door" href="/story/"><img src="/img/shot-04.jpg" alt="" loading="lazy"><span><b>I</b><strong>The story</strong><i>Five chapters, one decision</i></span></a>
+    <a class="door" href="/portraits/"><img src="/img/shot-02.jpg" alt="" loading="lazy"><span><b>II</b><strong>Portraits</strong><i>A ring of frames to spin</i></span></a>
+    <a class="door" href="/work/"><img src="/img/ff-313.jpg" alt="" loading="lazy"><span><b>III</b><strong>The work</strong><i>Campaigns and coverage</i></span></a>
+    <a class="door" href="/journal/"><img src="/img/shot-01.jpg" alt="" loading="lazy"><span><b>IV</b><strong>Journal</strong><i>Notes from the restart</i></span></a>
   </div>
-</section>
-
-<section class="orbit" id="shots">
-  <div class="wrap">
-    <span class="eyebrow"><b>02</b> &nbsp; Portraits</span>
-    <h2>In <em>frame</em></h2>
-    <p class="lead">Drag to spin, or use the arrows.</p>
-  </div>
-  <div class="ringwrap" id="ringwrap" aria-label="Rotating gallery of portraits">
-    <div class="carousel" id="carousel">
-      <figure><img src="img/shot-01.jpg" alt="Nick in a black shirt outside a modern home at dusk"><figcaption>After hours</figcaption></figure>
-      <figure><img src="img/shot-02.jpg" alt="Nick in a charcoal suit in a glass-walled foyer"><figcaption>On site</figcaption></figure>
-      <figure class="cut"><img src="img/nick-storm.webp" alt="Nick looking off to the side"><figcaption>Off duty</figcaption></figure>
-      <figure><img src="img/shot-03.jpg" alt="Nick in a navy suit beside a lakefront pool"><figcaption>Waterfront</figcaption></figure>
-      <figure><img src="img/shot-04.jpg" alt="Nick in a camel overcoat outside a stone estate in autumn"><figcaption>Estate season</figcaption></figure>
-      <figure class="cut"><img src="img/nick-car.webp" alt="Nick leaning on a black car"><figcaption>The drive</figcaption></figure>
-    </div>
-  </div>
-  <div class="spin"><button type="button" id="prev" aria-label="Previous portrait">&#8592;</button><button type="button" id="next" aria-label="Next portrait">&#8594;</button></div>
-</section>
-
-<section id="work" style="padding-top:60px">
-  <div class="wrap">
-    <span class="eyebrow"><b>03</b> &nbsp; Portfolio</span>
-    <h2>Selected <em>work</em></h2>
-    <p class="lead">Click any piece to see it full size.</p>
-    <div class="group">
-      <span class="eyebrow">Brand campaign &nbsp;·&nbsp; 2026</span>
-      <h3>Market Notes</h3>
-      <div class="grid">
-        <button class="tilt" type="button" data-full="img/mn-01.jpg"><img src="img/mn-01.jpg" alt="Market Notes post about Durham Region listings" loading="lazy"></button>
-        <button class="tilt" type="button" data-full="img/mn-02.jpg"><img src="img/mn-02.jpg" alt="Market Notes post about Clarington, with a camera viewfinder overlay" loading="lazy"></button>
-        <button class="tilt" type="button" data-full="img/mn-07.jpg"><img src="img/mn-07.jpg" alt="Market Notes post about Uxbridge" loading="lazy"></button>
-        <button class="tilt" type="button" data-full="img/mn-08.jpg"><img src="img/mn-08.jpg" alt="Market Notes post about Scugog" loading="lazy"></button>
-      </div>
-    </div>
-    <div class="group">
-      <span class="eyebrow">Event coverage &nbsp;·&nbsp; 2026</span>
-      <h3>Fall Fun Fest</h3>
-      <div class="grid">
-        <button class="tilt wide" type="button" data-full="img/ff-252.jpg"><img src="img/ff-252.jpg" alt="Welcome Fall sign at the festival entrance" loading="lazy"></button>
-        <button class="tilt wide" type="button" data-full="img/ff-254.jpg"><img src="img/ff-254.jpg" alt="Giant game set up on the festival lawn" loading="lazy"></button>
-        <button class="tilt wide" type="button" data-full="img/ff-313.jpg"><img src="img/ff-313.jpg" alt="Guests at the food stalls" loading="lazy"></button>
-        <button class="tilt wide" type="button" data-full="img/ff-337.jpg"><img src="img/ff-337.jpg" alt="A handler presenting a parrot to the crowd" loading="lazy"></button>
-      </div>
-    </div>
-  </div>
-</section>
-
+</div></section>
 <section class="bs" id="blacksheep">
   <div class="wrap">
-    <img class="logo" src="img/logo.png" alt="BlackSheep Digital Works" width="820" height="766" loading="lazy">
+    <img class="logo" src="/img/logo.png" alt="BlackSheep Digital Works" width="820" height="766" loading="lazy">
     <span class="eyebrow">The company</span>
     <h2>From conviction <em>to legacy</em></h2>
     <p class="lead">BlackSheep Digital Works is where all of this went. Photography, film and drone for properties, inventory and events, edited in-house and delivered in 24 to 48 hours.</p>
@@ -191,93 +55,10 @@
     <div class="row"><a class="btn solid" href="https://www.blacksheepdigitalworks.ca">Visit BlackSheep</a><a class="btn ghost" href="https://www.instagram.com/blacksheepdigitalworks">Instagram</a></div>
   </div>
 </section>
-
-<section id="journal">
-  <div class="wrap">
-    <span class="eyebrow"><b>04</b> &nbsp; Journal</span>
-    <h2>Notes from <em>the restart</em></h2>
-    <a class="post" href="blog.html#odd-one-out">
-      <span class="eyebrow">November 2026</span>
-      <h3>The odd one out</h3>
-      <p>Why I did not go back to enforcement, and why the company is called BlackSheep.</p>
-      <span class="more">Read the journal</span>
-    </a>
-  </div>
-</section>
-
-<section id="contact" style="padding-top:40px">
-  <div class="wrap">
-    <span class="eyebrow"><b>05</b> &nbsp; Contact</span>
-    <h2>Let&rsquo;s <em>talk</em></h2>
-    <div class="reach">
-      <a href="tel:+16478883098">647.888.3098</a>
-      <a href="mailto:nic.mehra@gmail.com">nic.mehra@gmail.com</a>
-      <a href="https://www.instagram.com/blacksheepdigitalworks">@BlackSheepDigitalWorks</a>
-    </div>
-  </div>
-</section>
 </main>
+<footer><div class="wrap"><div class="fl"><a href="/story/">Story</a><a href="/portraits/">Portraits</a><a href="/work/">Work</a><a href="/journal/">Journal</a><a href="/contact/">Contact</a><a href="https://www.blacksheepdigitalworks.ca">BlackSheep</a></div>Nick Mehra &nbsp;·&nbsp; Ontario, Canada</div></footer>
 
-<footer><div class="wrap">Nick Mehra &nbsp;·&nbsp; Ontario, Canada &nbsp;·&nbsp; <a href="https://www.blacksheepdigitalworks.ca">blacksheepdigitalworks.ca</a></div></footer>
-
-<div id="box" role="dialog" aria-modal="true" aria-label="Full size image"><button type="button" id="boxclose">Close</button><img alt=""></div>
-
-<script src="js/site.js"></script>
-<script>
-(function(){
-  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // hero: 3D parallax
-  var stage=document.getElementById('stage'), scene=document.getElementById('scene');
-  stage.addEventListener('pointermove',function(e){var r=stage.getBoundingClientRect();
-    scene.style.setProperty('--mx',((e.clientX-r.left)/r.width-.5)*2); scene.style.setProperty('--my',((e.clientY-r.top)/r.height-.5)*2);});
-  stage.addEventListener('pointerleave',function(){scene.style.setProperty('--mx',0);scene.style.setProperty('--my',0);});
-
-  // hero: drifting bokeh
-  var cv=document.getElementById('dust'), cx=cv.getContext('2d'), P=[];
-  function size(){cv.width=cv.offsetWidth;cv.height=cv.offsetHeight;}
-  size(); addEventListener('resize',size);
-  for(var i=0;i<46;i++)P.push({x:Math.random(),y:Math.random(),r:1+Math.random()*3.2,s:.00015+Math.random()*.0005,h:Math.random()});
-  function draw(){cx.clearRect(0,0,cv.width,cv.height);
-    P.forEach(function(p){p.y-=p.s; if(p.y<-.05)p.y=1.05;
-      cx.beginPath();cx.arc(p.x*cv.width,p.y*cv.height,p.r,0,6.3);
-      cx.fillStyle=p.h<.5?'rgba(226,98,43,.55)':'rgba(233,164,44,.4)';cx.fill();});
-    if(!reduce)requestAnimationFrame(draw);}
-  draw();
-
-  // story: cards rotate in 3D as they pass the centre of the screen
-  var chs=[].slice.call(document.querySelectorAll('.ch'));
-  function tiltCh(){var mid=innerHeight/2;
-    chs.forEach(function(c){var r=c.getBoundingClientRect(), d=((r.top+r.height/2)-mid)/innerHeight; d=Math.max(-1,Math.min(1,d));
-      c.style.setProperty('--r',(-d*16).toFixed(2)); c.style.setProperty('--a',Math.abs(d).toFixed(3));});}
-  if(!reduce){addEventListener('scroll',tiltCh,{passive:true});tiltCh();}
-
-  // ring of portraits
-  var car=document.getElementById('carousel'), figs=car.children, n=figs.length, step=360/n, ang=0, vel=reduce?0:-.12, drag=false, lx=0, hover=false;
-  function radius(){return Math.round((car.offsetWidth/2)/Math.tan(Math.PI/n))+34;}
-  function lay(){var R=radius(); car.style.setProperty('--R',R+'px'); for(var i=0;i<n;i++)figs[i].style.transform='rotateY('+(i*step)+'deg) translateZ('+R+'px)';}
-  lay(); addEventListener('resize',lay);
-  function tick(){ if(!drag&&!hover) ang+=vel; car.style.setProperty('--ang',ang+'deg'); requestAnimationFrame(tick);}
-  tick();
-  var rw=document.getElementById('ringwrap');
-  rw.addEventListener('pointerdown',function(e){drag=true;lx=e.clientX;rw.setPointerCapture(e.pointerId);});
-  rw.addEventListener('pointermove',function(e){if(!drag)return;ang+=(e.clientX-lx)*.35;lx=e.clientX;});
-  rw.addEventListener('pointerup',function(){drag=false;});
-  rw.addEventListener('pointerenter',function(){hover=true;}); rw.addEventListener('pointerleave',function(){hover=false;drag=false;});
-  function snap(dir){var t=Math.round(ang/step)*step+dir*step, s=ang, t0=performance.now();
-    (function go(now){var k=Math.min(1,(now-t0)/450);k=1-Math.pow(1-k,3);ang=s+(t-s)*k;if(k<1)requestAnimationFrame(go);})(t0);}
-  document.getElementById('prev').addEventListener('click',function(){snap(1);});
-  document.getElementById('next').addEventListener('click',function(){snap(-1);});
-
-  // work: tilt + lightbox
-  var box=document.getElementById('box'), bimg=box.querySelector('img');
-  [].forEach.call(document.querySelectorAll('.tilt'),function(t){
-    t.addEventListener('pointermove',function(e){var r=t.getBoundingClientRect();t.style.setProperty('--tx',((e.clientX-r.left)/r.width-.5)*2);t.style.setProperty('--ty',((e.clientY-r.top)/r.height-.5)*2);});
-    t.addEventListener('pointerleave',function(){t.style.setProperty('--tx',0);t.style.setProperty('--ty',0);});
-    t.addEventListener('click',function(){bimg.src=t.dataset.full;bimg.alt=t.querySelector('img').alt;box.classList.add('on');document.getElementById('boxclose').focus();});});
-  function shut(){box.classList.remove('on');}
-  box.addEventListener('click',shut); addEventListener('keydown',function(e){if(e.key==='Escape')shut();});
-})();
-</script>
+<script src="/js/site.js"></script>
+<script src="/js/pages.js"></script>
 </body>
 </html>
