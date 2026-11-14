@@ -36,8 +36,8 @@
   function paint() {
     if (!cur) return;
     var c = counts[keyOf(cur)] || { up: 0, down: 0, mine: 'none' };
-    bUp.querySelector('.n').textContent = c.up || '';
-    bDown.querySelector('.n').textContent = c.down || '';
+    bUp.querySelector('.n').textContent = c.up >= 10 ? c.up : '';
+    bDown.querySelector('.n').textContent = c.down >= 10 ? c.down : '';
     bUp.classList.toggle('mine', c.mine === 'up'); bDown.classList.toggle('mine', c.mine === 'down');
     bUp.setAttribute('aria-pressed', c.mine === 'up'); bDown.setAttribute('aria-pressed', c.mine === 'down');
   }
