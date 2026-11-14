@@ -32,14 +32,14 @@
     el.style.setProperty('--tfx-fill', (el.value.length ? Math.max(8, f) : 0) + '%');
   }
   var n = 0, t1 = new WeakMap(), t2 = new WeakMap();
-  document.addEventListener('focusin', function (e) { if (eligible(e.target)) { e.target.classList.add('tfx'); fill(e.target); } });
+  document.addEventListener('focusin', function (e) { if (eligible(e.target)) { e.target.classList.add('tfx'); fill(e.target); } }, true);
   document.addEventListener('input', function (e) {
     var el = e.target; if (!eligible(el)) return;
     el.classList.add('tfx'); fill(el);
     if (reduce) return;
     el.classList.add('tfx-hit'); clearTimeout(t1.get(el));
     t1.set(el, setTimeout(function () { el.classList.remove('tfx-hit'); }, 700));
-  });
+  }, true);
 
   /* Per-character "trace" layer: a mirror of the field's text sits exactly over it; the field's own text is
      made transparent (caret and selection stay). Newly typed characters grow from their centre, soft and warm,
@@ -122,11 +122,11 @@
   }
   function drop(el) { var st = live.get(el); if (!st) return; st.ov.remove(); live.delete(el); el.classList.remove('tfx-live'); }
 
-  document.addEventListener('focusin', function (e) { if (eligible(e.target)) { textColor(e.target); ensure(e.target); } });
+  document.addEventListener('focusin', function (e) { if (eligible(e.target)) { textColor(e.target); ensure(e.target); } }, true);
   document.addEventListener('focusout', function (e) {
     var el = e.target; if (!live.has(el)) return;
     setTimeout(function () { if (document.activeElement !== el) drop(el); }, 700);
-  });
+  }, true);
   document.addEventListener('input', function (e) {
     var el = e.target; if (!eligible(el)) return;
     var st = ensure(el); if (!st) return;
@@ -169,5 +169,5 @@
     if (getComputedStyle(f).position === 'static') f.style.position = 'relative';
     f.classList.add('tfx-frame');
     var sw = document.createElement('span'); sw.className = 'tfx-sweep'; sw.setAttribute('aria-hidden', 'true'); f.insertBefore(sw, f.firstChild);
-  });
+  }, true);
 })();
