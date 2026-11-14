@@ -108,7 +108,7 @@ FOOTER_CSS = ('footer .fcols{display:grid;grid-template-columns:repeat(3,minmax(
               'footer .fcol{display:flex;flex-direction:column;align-items:center;gap:9px}'
               'footer .fcol h4{margin:0 0 4px;font-family:var(--display);font-size:.68rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#C9CCD2}'
               'footer .fcol a{font-size:.98rem;letter-spacing:.01em}'
-              '@media (max-width:700px){footer .fcols{grid-template-columns:1fr 1fr}footer .fcol:last-child{grid-column:1/-1}}')
+              '@media (max-width:700px){footer .fcols{grid-template-columns:1fr;gap:22px;max-width:420px}footer .fcol{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:8px 18px;padding-top:18px;border-top:1px solid rgba(239,235,227,.12)}footer .fcol:first-child{border-top:0;padding-top:0}footer .fcol h4{flex-basis:100%;margin:0 0 2px}footer .fcol a{font-size:1rem}}')
 
 def page(title, desc, canonical, body, depth, og_image, extra_head=''):
     up = '../' * depth
@@ -171,7 +171,7 @@ def page(title, desc, canonical, body, depth, og_image, extra_head=''):
   sync();
 }})();
 </script>
-<script src="/react.js?v=7" defer></script>\n<script src="/comments.js?v=4" defer></script>\n<script src="/type-fx.js?v=12" defer></script>
+<script src="/react.js?v=7" defer></script>\n<script src="/comments.js?v=5" defer></script>\n<script src="/type-fx.js?v=12" defer></script>
 <div class="view-note" role="note" hidden>Best viewed in light mode on Chrome, Safari, Firefox or Edge. Using Opera? Turn off its <b>Dark web pages</b> setting, or switch this site to Dark.<button type="button" class="vn-x" aria-label="Close this note">&times;</button></div>
 <script>(function(){{var n=document.querySelector('.view-note');if(!n)return;try{{if(localStorage.getItem('vn-off')||sessionStorage.getItem('vn-seen')){{n.remove();return}}}}catch(e){{}}if(!window.matchMedia||!matchMedia('(max-width:760px)').matches){{n.remove();return}}document.body.appendChild(n);n.hidden=false;try{{sessionStorage.setItem('vn-seen','1')}}catch(e){{}}var gone=false;function hide(keep){{if(gone)return;gone=true;n.classList.remove('on');if(keep){{try{{localStorage.setItem('vn-off','1')}}catch(e){{}}}}setTimeout(function(){{n.remove()}},600)}}setTimeout(function(){{n.classList.add('on')}},900);setTimeout(function(){{hide(false)}},8000);addEventListener('scroll',function(){{if(scrollY>240)hide(false)}},{{passive:true}});n.querySelector('.vn-x').addEventListener('click',function(){{hide(true)}});}})();</script>
 </body>
