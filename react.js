@@ -13,14 +13,14 @@
 
   var css = document.createElement('style');
   css.textContent =
-    '.rx{position:fixed;z-index:90;display:flex;gap:6px;padding:5px;border-radius:999px;background:rgba(8,8,10,.62);' +
-    '-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);opacity:0;transform:translateY(6px);' +
-    'transition:opacity .25s ease,transform .25s ease;pointer-events:none;font:600 12px/1 Manrope,system-ui,sans-serif;color:#f4f2ee}' +
+    '.rx{position:fixed;z-index:90;display:flex;gap:8px;padding:7px;box-shadow:0 10px 30px rgba(0,0,0,.45);border-radius:999px;background:rgba(8,8,10,.62);' +
+    '-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);opacity:0;transform:translateY(8px) scale(.85);' +
+    'transition:opacity .25s ease,transform .3s cubic-bezier(.2,.9,.3,1.4);pointer-events:none;font:700 15px/1 Manrope,system-ui,sans-serif;color:#f4f2ee;transform-origin:100% 100%}' +
     '.rx.on{opacity:1;transform:none;pointer-events:auto}' +
-    '.rx button{display:flex;align-items:center;gap:5px;border:0;background:none;color:inherit;font:inherit;padding:6px 9px;border-radius:999px;cursor:pointer;transition:background .2s,transform .2s}' +
-    '.rx button:hover{background:rgba(255,255,255,.12);transform:scale(1.06)}' +
-    '.rx svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}' +
-    '.rx .up.mine svg{fill:#e2622b;stroke:#e2622b}.rx .down.mine svg{fill:#9d9fa7;stroke:#9d9fa7}' +
+    '.rx button{display:flex;align-items:center;gap:7px;border:0;background:none;color:inherit;font:inherit;padding:9px 13px;border-radius:999px;cursor:pointer;transition:background .2s,transform .2s}' +
+    '.rx button:hover{background:rgba(255,255,255,.14);transform:scale(1.1)}.rx .up:hover svg{stroke:#ff5a5f}' +
+    '.rx svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}' +
+    '.rx .up.mine svg{fill:#ff3b4a;stroke:#ff3b4a;animation:rxpop .35s ease}@keyframes rxpop{50%{transform:scale(1.35)}}.rx .down.mine svg{fill:#9d9fa7;stroke:#9d9fa7}' +
     '.rx .n{min-width:.6em;opacity:.85}' +
     '@media (prefers-reduced-motion:reduce){.rx{transition:none}}';
   document.head.appendChild(css);
