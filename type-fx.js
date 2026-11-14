@@ -15,6 +15,7 @@
     'background-size:var(--tfx-fill,0%) 1px!important;transition:background-size .9s cubic-bezier(.22,.61,.36,1),box-shadow 1.2s ease,border-color 1.2s ease}' +
     'input.tfx::placeholder,textarea.tfx::placeholder{font-style:normal}' +
     'input.tfx:focus,textarea.tfx:focus{box-shadow:0 0 0 3px rgba(226,98,43,.14)}' +
+    'input.tfx:hover:not(:focus),textarea.tfx:hover:not(:focus){box-shadow:0 0 0 1px rgba(226,98,43,.35),0 10px 28px -16px rgba(226,98,43,.5)}' +
     '.tfx.tfx-hit{border-color:rgba(226,160,90,.55)!important;box-shadow:0 0 0 1px rgba(226,160,90,.18),0 14px 34px -18px rgba(226,140,70,.55)!important;' +
     'transition:background-size .9s cubic-bezier(.22,.61,.36,1),box-shadow .25s ease,border-color .25s ease}' +
     '@media (prefers-reduced-motion:reduce){.tfx,.tfx.tfx-hit,.tfx{transition:none!important}}';
@@ -149,25 +150,50 @@
   var css3 = document.createElement('style');
   css3.textContent =
     '.tfx-frame{transition:border-color 1.2s ease,box-shadow 1.2s ease}' +
-    '.tfx-frame:focus-within{animation:tfxOpen 2.2s cubic-bezier(.22,.61,.36,1) both}' +
+    '.tfx-frame:hover,.tfx-frame:focus-within{animation:tfxOpen 2.2s cubic-bezier(.22,.61,.36,1) both}' +
     '.tfx-sweep{position:absolute;left:0;right:0;top:0;height:1px;pointer-events:none;opacity:0;z-index:3;border-radius:inherit;' +
     'background:linear-gradient(90deg,transparent,rgba(255,214,150,.95),transparent) no-repeat;background-size:40% 1px;background-position:-60% 0}' +
-    '.tfx-frame:focus-within>.tfx-sweep{animation:tfxSweep 1.6s .35s cubic-bezier(.45,.05,.25,1) both}' +
+    '.tfx-frame:hover>.tfx-sweep,.tfx-frame:focus-within>.tfx-sweep{animation:tfxSweep 1.6s .35s cubic-bezier(.45,.05,.25,1) both}' +
     '@keyframes tfxOpen{0%{box-shadow:0 0 0 0 rgba(226,98,43,0),0 0 0 0 rgba(226,98,43,0)}' +
     '30%{box-shadow:0 0 0 1px rgba(233,164,44,.22),0 0 0 0 rgba(226,98,43,0)}' +
     '100%{box-shadow:0 0 0 1px rgba(226,98,43,.55),0 0 0 5px rgba(226,98,43,.07),0 24px 50px -24px rgba(226,98,43,.6)}}' +
     '@keyframes tfxSweep{0%{opacity:0;background-position:-60% 0}25%{opacity:1}100%{opacity:0;background-position:160% 0}}' +
-    '@media (prefers-reduced-motion:reduce){.tfx-frame:focus-within,.tfx-frame:focus-within>.tfx-sweep{animation:none}.tfx-frame:focus-within{box-shadow:0 0 0 1px rgba(226,98,43,.55)}}';
+    '@media (prefers-reduced-motion:reduce){.tfx-frame:hover,.tfx-frame:focus-within,.tfx-frame:hover>.tfx-sweep,.tfx-frame:focus-within>.tfx-sweep{animation:none}.tfx-frame:focus-within{box-shadow:0 0 0 1px rgba(226,98,43,.55)}}';
   document.head.appendChild(css3);
   function frameFor(el) {
     if (el.closest('.cm')) return null; /* the journal comment box has its own version */
     return el.closest('.formcard') || el.closest('form') || el.parentElement;
   }
-  document.addEventListener('focusin', function (e) {
-    var el = e.target; if (!eligible(el)) return;
+  function arm(el) {
+    if (!eligible(el)) return;
+    el.classList.add('tfx');
     var f = frameFor(el); if (!f || f.classList.contains('tfx-frame')) return;
     if (getComputedStyle(f).position === 'static') f.style.position = 'relative';
     f.classList.add('tfx-frame');
     var sw = document.createElement('span'); sw.className = 'tfx-sweep'; sw.setAttribute('aria-hidden', 'true'); f.insertBefore(sw, f.firstChild);
+  }
+  function armAll() { [].forEach.call(document.querySelectorAll('input, textarea'), arm); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', armAll); else armAll();
+  document.addEventListener('focusin', function (e) { arm(e.target); }, true);
+  document.addEventListener('pointerover', function (e) { if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') arm(e.target); }, true);
+
+  /* A light tap of haptic feedback on each keystroke. Android browsers use the vibration API; iPhones
+     (Safari 18+) don't offer it, so a hidden system switch is toggled instead, which gives the native tick. */
+  var lastBuzz = 0, sw2 = null;
+  function iosTick() {
+    if (!sw2) {
+      var lab = document.createElement('label'); lab.setAttribute('aria-hidden', 'true');
+      lab.style.cssText = 'position:fixed;left:-9999px;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none';
+      var cb = document.createElement('input'); cb.type = 'checkbox'; cb.setAttribute('switch', ''); cb.tabIndex = -1;
+      lab.appendChild(cb); document.body.appendChild(lab); sw2 = lab;
+    }
+    var a = document.activeElement; sw2.click();
+    if (a && document.activeElement !== a && a.focus) a.focus({ preventScroll: true });
+  }
+  var IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  document.addEventListener('input', function (e) {
+    if (!eligible(e.target)) return;
+    var now = Date.now(); if (now - lastBuzz < 35) return; lastBuzz = now;
+    try { if (navigator.vibrate) navigator.vibrate(7); else if (IOS) iosTick(); } catch (x) {}
   }, true);
 })();
