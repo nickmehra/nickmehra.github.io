@@ -157,7 +157,7 @@ def page(title, desc, canonical, body, depth, og_image, extra_head=''):
   sync();
 }})();
 </script>
-<script src="/react.js?v=3" defer></script>\n<script src="/comments.js?v=2" defer></script>\n<script src="/type-fx.js?v=3" defer></script>
+<script src="/react.js?v=3" defer></script>\n<script src="/comments.js?v=3" defer></script>\n<script src="/type-fx.js?v=3" defer></script>
 </body>
 </html>
 '''
