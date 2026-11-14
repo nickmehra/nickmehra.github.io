@@ -12,8 +12,15 @@
     '.cm .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}' +
     '.cm button{justify-self:start;font:600 .78rem/1 inherit;letter-spacing:.18em;text-transform:uppercase;padding:13px 22px;border-radius:999px;border:0;background:#c2202c;color:#fff;cursor:pointer}' +
     '.cm button:disabled{opacity:.6;cursor:default}.cm .st{font-size:.9rem;opacity:.85;margin:0;min-height:1.4em}.cm .empty{opacity:.6;margin:0 0 6px}' +
-    '.cm form{position:relative;padding:18px;border-radius:16px;border:1px solid rgba(127,127,127,.22);background:rgba(127,127,127,.04);transition:border-color .35s,box-shadow .35s,transform .35s}' +
-    '.cm form:focus-within{border-color:rgba(226,98,43,.6);box-shadow:0 18px 40px -22px rgba(226,98,43,.55),0 0 0 4px rgba(226,98,43,.08);transform:translateY(-2px)}' +
+    '.cm form{position:relative;padding:18px;border-radius:16px;border:1px solid rgba(127,127,127,.22);background:rgba(127,127,127,.04);transition:border-color 1.2s ease,box-shadow 1.2s ease,transform 1.2s ease}' +
+    '.cm form{overflow:hidden}' +
+    '.cm form::after{content:"";position:absolute;left:0;top:0;height:1px;width:40%;pointer-events:none;opacity:0;background:linear-gradient(90deg,transparent,rgba(255,214,150,.95),transparent);transform:translateX(-120%)}' +
+    '.cm form:focus-within{animation:cmOpen 2.2s cubic-bezier(.22,.61,.36,1) both}' +
+    '.cm form:focus-within::after{animation:cmSweep 1.6s .35s cubic-bezier(.45,.05,.25,1) both}' +
+    '@keyframes cmOpen{0%{border-color:rgba(127,127,127,.22);box-shadow:0 0 0 0 rgba(226,98,43,0),0 0 0 0 rgba(226,98,43,0);transform:none}' +
+    '30%{border-color:rgba(233,164,44,.35);box-shadow:0 0 0 1px rgba(233,164,44,.10),0 0 0 0 rgba(226,98,43,0)}' +
+    '100%{border-color:rgba(226,98,43,.6);box-shadow:0 0 0 4px rgba(226,98,43,.08),0 22px 46px -22px rgba(226,98,43,.6);transform:translateY(-2px)}}' +
+    '@keyframes cmSweep{0%{opacity:0;transform:translateX(-120%)}25%{opacity:1}100%{opacity:0;transform:translateX(260%)}}' +
     '.cm input,.cm textarea{transition:border-color .25s,background .25s}.cm input:hover,.cm textarea:hover{border-color:rgba(127,127,127,.55)}' +
     '.cm textarea{overflow:hidden;transition:height .15s ease,border-color .25s,background .25s}' +
     '.cm .row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}' +
