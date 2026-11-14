@@ -106,6 +106,8 @@ def page(title, desc, canonical, body, depth, og_image, extra_head=''):
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..800&family=EB+Garamond:ital,wght@0,400..600;1,400..600&display=swap">
 <script>try{{var t=localStorage.getItem('bs-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}}catch(e){{}}</script>
 <style>{CSS}</style>
+<link rel="alternate" type="application/rss+xml" title="The BlackSheep Journal" href="{SITE}/journal/feed.xml">
+<meta name="twitter:card" content="summary_large_image">
 {extra_head}
 </head>
 <body>
@@ -241,6 +243,14 @@ def build():
     sm = re.sub(r'\s*<!-- journal -->.*?<!-- /journal -->', '', sm, flags=re.S)
     sm = sm.replace('</urlset>', '  <!-- journal -->\n' + '\n'.join(urls) + '\n  <!-- /journal -->\n</urlset>')
     open(sm_path, 'w', encoding='utf-8').write(sm)
+    # RSS feed so readers and aggregators can follow the journal
+    from email.utils import format_datetime
+    items=[]
+    for p in posts[:30]:
+        dt=datetime.datetime.combine(p['dt'],datetime.time(6,0),tzinfo=datetime.timezone(datetime.timedelta(hours=-5)))
+        u='%s/journal/%s/'%(SITE,p['slug'])
+        items.append('<item><title>%s</title><link>%s</link><guid isPermaLink="true">%s</guid><pubDate>%s</pubDate><description>%s</description></item>'%(html.escape(p['title']),u,u,format_datetime(dt),html.escape(p['description'])))
+    open(os.path.join(OUT,'feed.xml'),'w',encoding='utf-8').write('<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>The BlackSheep Journal</title><link>%s/journal/</link><atom:link href="%s/journal/feed.xml" rel="self" type="application/rss+xml"/><description>Notes on real estate, dealership and event media in Ontario from BlackSheep Digital Works.</description><language>en-ca</language>%s</channel></rss>\n'%(SITE,SITE,''.join(items)))
     print('Built %d post(s): %s' % (len(posts), ', '.join(slugs)))
 
 
