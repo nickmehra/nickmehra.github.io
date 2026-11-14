@@ -56,7 +56,7 @@
     '70%{clip-path:circle(62% at 50% 52%);filter:blur(.6px);color:#e2622b;text-shadow:0 0 8px rgba(226,98,43,.55)}' +
     '100%{clip-path:circle(80% at 50% 50%);filter:blur(.3px);transform:scale(.97)}}' +
     '@keyframes tfxSnap{0%{transform:scale(.97);filter:blur(.3px)}55%{transform:scale(1.05)}100%{transform:scale(1);filter:none;text-shadow:none;clip-path:none}}' +
-    'input.tfx-live,textarea.tfx-live{color:transparent!important;-webkit-text-fill-color:transparent!important}' +
+    'input.tfx-live,textarea.tfx-live{-webkit-text-fill-color:transparent!important}' +
     'input.tfx-live::placeholder,textarea.tfx-live::placeholder{color:rgba(160,162,170,.75)!important;-webkit-text-fill-color:rgba(160,162,170,.75)!important}' +
     'input.tfx-live::selection,textarea.tfx-live::selection{background:rgba(226,98,43,.35)}';
   if (!reduce) document.head.appendChild(css2);
@@ -70,13 +70,26 @@
     var ov = document.createElement('div'); ov.className = 'tfx-ov'; ov.setAttribute('aria-hidden', 'true');
     var inner = document.createElement('div'); inner.className = 'in'; ov.appendChild(inner);
     document.body.appendChild(ov);
-    st = { ov: ov, inner: inner, prev: el.value };
+    st = { ov: ov, inner: inner, prev: el.value, color: textColor(el) };
     live.set(el, st); el.classList.add('tfx-live');
     render(el, st, 0, 0); sync(el, st);
     return st;
   }
+  /* Text colour steps through the brand gradient across a form's fields in order (dark red -> orange -> amber).
+     On light backgrounds a deeper version of the same gradient keeps it readable. */
+  var DARK_BG = [[224, 64, 72], [240, 122, 58], [247, 189, 74]], LIGHT_BG = [[154, 18, 25], [176, 64, 20], [150, 92, 0]];
+  function lum(c) { var m = (c || '').match(/\d+(\.\d+)?/g); if (!m || (m.length > 3 && +m[3] === 0)) return null; return (0.299 * m[0] + 0.587 * m[1] + 0.114 * m[2]) / 255; }
+  function bgLum(el) { for (var n = el; n && n.nodeType === 1; n = n.parentElement) { var l = lum(getComputedStyle(n).backgroundColor); if (l !== null) return l; } return 0; }
+  function mix(a, b, t) { return a.map(function (v, i) { return Math.round(v + (b[i] - v) * t); }); }
   function textColor(el) {
-    el.classList.remove('tfx-live'); var c = getComputedStyle(el).color; el.classList.add('tfx-live'); return c;
+    var scope = el.form || el.closest('form, section, main') || document;
+    var list = [].filter.call(scope.querySelectorAll('input, textarea'), eligible);
+    var i = Math.max(0, list.indexOf(el)), n = list.length, t = n > 1 ? i / (n - 1) : 0;
+    var P = bgLum(el) > 0.55 ? LIGHT_BG : DARK_BG;
+    var c = t <= .5 ? mix(P[0], P[1], t * 2) : mix(P[1], P[2], (t - .5) * 2);
+    var col = 'rgb(' + c.join(',') + ')';
+    el.style.setProperty('color', col, 'important'); el.style.setProperty('-webkit-text-fill-color', col);
+    return col;
   }
   function sync(el, st) {
     var r = el.getBoundingClientRect(), cs = getComputedStyle(el), ov = st.ov;
@@ -109,7 +122,7 @@
   }
   function drop(el) { var st = live.get(el); if (!st) return; st.ov.remove(); live.delete(el); el.classList.remove('tfx-live'); }
 
-  document.addEventListener('focusin', function (e) { if (eligible(e.target)) ensure(e.target); });
+  document.addEventListener('focusin', function (e) { if (eligible(e.target)) { textColor(e.target); ensure(e.target); } });
   document.addEventListener('focusout', function (e) {
     var el = e.target; if (!live.has(el)) return;
     setTimeout(function () { if (document.activeElement !== el) drop(el); }, 700);
