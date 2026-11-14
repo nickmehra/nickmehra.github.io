@@ -143,4 +143,31 @@
   addEventListener('resize', function () { live.forEach(function (st, el) { sync(el, st); }); });
   (function loop() { live.forEach(function (st, el) { if (!document.contains(el)) drop(el); else sync(el, st); }); requestAnimationFrame(loop); })();
   document.addEventListener('reset', function () { setTimeout(function () { live.forEach(function (st, el) { st.prev = el.value; render(el, st, 0, 0); }); }, 0); }, true);
+
+  /* Cinematic opening glow for the box around any form (same as the journal comment box): the frame warms
+     from dark to a faint edge, a soft line of light sweeps once across the top, then the full glow blooms in. */
+  var css3 = document.createElement('style');
+  css3.textContent =
+    '.tfx-frame{transition:border-color 1.2s ease,box-shadow 1.2s ease}' +
+    '.tfx-frame:focus-within{animation:tfxOpen 2.2s cubic-bezier(.22,.61,.36,1) both}' +
+    '.tfx-sweep{position:absolute;left:0;right:0;top:0;height:1px;pointer-events:none;opacity:0;z-index:3;border-radius:inherit;' +
+    'background:linear-gradient(90deg,transparent,rgba(255,214,150,.95),transparent) no-repeat;background-size:40% 1px;background-position:-60% 0}' +
+    '.tfx-frame:focus-within>.tfx-sweep{animation:tfxSweep 1.6s .35s cubic-bezier(.45,.05,.25,1) both}' +
+    '@keyframes tfxOpen{0%{box-shadow:0 0 0 0 rgba(226,98,43,0),0 0 0 0 rgba(226,98,43,0)}' +
+    '30%{box-shadow:0 0 0 1px rgba(233,164,44,.22),0 0 0 0 rgba(226,98,43,0)}' +
+    '100%{box-shadow:0 0 0 1px rgba(226,98,43,.55),0 0 0 5px rgba(226,98,43,.07),0 24px 50px -24px rgba(226,98,43,.6)}}' +
+    '@keyframes tfxSweep{0%{opacity:0;background-position:-60% 0}25%{opacity:1}100%{opacity:0;background-position:160% 0}}' +
+    '@media (prefers-reduced-motion:reduce){.tfx-frame:focus-within,.tfx-frame:focus-within>.tfx-sweep{animation:none}.tfx-frame:focus-within{box-shadow:0 0 0 1px rgba(226,98,43,.55)}}';
+  document.head.appendChild(css3);
+  function frameFor(el) {
+    if (el.closest('.cm')) return null; /* the journal comment box has its own version */
+    return el.closest('.formcard') || el.closest('form') || el.parentElement;
+  }
+  document.addEventListener('focusin', function (e) {
+    var el = e.target; if (!eligible(el)) return;
+    var f = frameFor(el); if (!f || f.classList.contains('tfx-frame')) return;
+    if (getComputedStyle(f).position === 'static') f.style.position = 'relative';
+    f.classList.add('tfx-frame');
+    var sw = document.createElement('span'); sw.className = 'tfx-sweep'; sw.setAttribute('aria-hidden', 'true'); f.insertBefore(sw, f.firstChild);
+  });
 })();
