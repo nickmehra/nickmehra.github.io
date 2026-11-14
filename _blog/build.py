@@ -139,7 +139,7 @@ def page(title, desc, canonical, body, depth, og_image, extra_head=''):
   <div class="wrap">
     <a class="lk" href="{up}#home" aria-label="BlackSheep Digital Works home"><img class="logo-foot" src="{up}img/logo.png" alt="BlackSheep Digital Works"></a>
     <div class="links">
-      <a class="lk" href="{up}#about">About</a><a class="lk" href="{up}#portfolio">Portfolio</a><a class="lk" href="{up}journal/">Journal</a><a class="lk" href="{up}pricing/">Pricing</a><a class="lk" href="{up}account/">Account</a><a class="lk" href="{up}#contact">Contact</a>
+      <a class="lk" href="{up}#about">About</a><a class="lk" href="{up}#portfolio">Portfolio</a><a class="lk" href="{up}journal/">Journal</a><a class="lk" href="{up}pricing/">Pricing</a><a class="lk" href="{up}account/">My quotes</a><a class="lk" href="{up}#contact">Contact</a>
       <a class="lk" href="https://www.instagram.com/BlackSheepDigitalWorks/" target="_blank" rel="noopener">Instagram</a>
     </div>
     <span>© {datetime.date.today().year} BlackSheep Digital Works · From Conviction to Legacy</span>
