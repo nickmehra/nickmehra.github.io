@@ -76,26 +76,4 @@ footer a{text-decoration:none}
 :root[data-theme="light"] .nav a.l[aria-current="page"]{color:#111113}
 :root[data-theme="light"] .eyebrow{color:#55565d}
 :root[data-theme="light"] .lead{color:#3c3d44}
-/* ---------- Light mode rebuild: no dark boxes. Every section sits on the light page and light-on-dark text flips to dark-on-light.
-   Only the BlackSheep logo keeps a small dark plate (brand rule). Photo-based areas (hero reel, photo cards) keep their overlays. ---------- */
-:root[data-theme="light"] .stage{--lens:linear-gradient(100deg,#c2202c 0%,#e2622b 48%,#e9a42c 100%);--mute:#c9cbd1;--red:#e03a45}
-:root[data-theme="light"] .tagL,:root[data-theme="light"] .tagR{color:#e7e5e0;text-shadow:0 1px 10px rgba(0,0,0,.85)}
-:root[data-theme="light"] .bs{background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--ink);border-top:1px solid var(--line)}
-:root[data-theme="light"] .bs::before{background:radial-gradient(circle,rgba(163,20,31,.10),transparent 62%)}
-:root[data-theme="light"] .bs .logo{background:#0A0B0D;padding:clamp(16px,3vw,26px);border-radius:24px;box-sizing:border-box;filter:none;box-shadow:0 24px 50px -24px rgba(0,0,0,.45)}
-:root[data-theme="light"] .bs .eyebrow{color:#55565d}
-:root[data-theme="light"] .bs h2{color:var(--ink)}
-:root[data-theme="light"] .bs .lead{color:#33343a}
-:root[data-theme="light"] .bs .btn{border-color:var(--ink);color:var(--ink)}
-:root[data-theme="light"] .bs .btn.solid{color:#fff;border-color:transparent}
-:root[data-theme="light"] .bs .btn.ghost:hover{background:var(--ink);color:var(--bg)}
-:root[data-theme="light"] .svc li{border-color:#b9b2a4;color:#2a2b30;background:rgba(255,255,255,.55)}
-:root[data-theme="light"] .btn.solid{color:#fff}
-:root[data-theme="light"] .ch.turn{background:var(--card);border-color:var(--red);color:var(--ink);box-shadow:0 0 0 1px var(--red),var(--shadow)}
-:root[data-theme="light"] .ch.turn p{color:#33343a}
-:root[data-theme="light"] footer{background:var(--bg2);border-top-color:var(--line);color:#46474e}
-:root[data-theme="light"] footer .fl{color:var(--ink)}
-:root[data-theme="light"] footer a:hover{color:var(--red)}
-:root[data-theme="light"] .rx{background:rgba(255,255,255,.9)!important;color:#111113!important;box-shadow:0 10px 30px rgba(0,0,0,.18)!important;border:1px solid var(--line)}
-:root[data-theme="light"] .rx button:hover{background:rgba(0,0,0,.07)}
-:root[data-theme="light"] .rx .down.mine svg{fill:#46474e;stroke:#46474e}
+/* light mode lives in css/light.css */

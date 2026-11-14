@@ -1,0 +1,64 @@
+/* Light mode, built for the light page: every section that is dark in dark mode becomes light here,
+   and every light-on-dark colour flips to dark-on-light. Only the BlackSheep logo keeps a small dark plate (brand rule). */
+:root[data-theme="light"]{--bg:#f4f1eb;--bg2:#e9e4da;--ink:#111113;--mute:#3f4046;--line:#cbc4b6;--card:#fdfcf9;
+  --red:#a3141f;--chrome:#5b5f68;--lens:linear-gradient(100deg,#a3141f 0%,#c2410f 50%,#9a5b00 100%);
+  --shadow:0 30px 60px -32px rgba(40,30,20,.35);color-scheme:light}
+:root[data-theme="light"] body{font-weight:500}
+:root[data-theme="light"] .eyebrow{color:#55565d}
+:root[data-theme="light"] .lead{color:#3c3d44}
+:root[data-theme="light"] .nav a.l{color:#3c3d44}
+:root[data-theme="light"] .nav a.l[aria-current="page"],:root[data-theme="light"] .nav a.l:hover{color:#111113}
+
+/* hero stage: a bright, sunlit version of the same scene */
+:root[data-theme="light"] .stage{background:radial-gradient(120% 80% at 50% 100%,#fbf8f2,#e9e4da 70%);color:#111113}
+:root[data-theme="light"] .reel{background:#efeae1}
+:root[data-theme="light"] .reel img.on{filter:blur(1.2px) saturate(.75) brightness(1.08) contrast(.9)!important;opacity:.55}
+:root[data-theme="light"] .reel::after{background:radial-gradient(75% 70% at 50% 55%,rgba(244,241,235,.1),rgba(244,241,235,.85) 85%),linear-gradient(rgba(244,241,235,.7),transparent 30%,transparent 62%,rgba(244,241,235,.95))}
+:root[data-theme="light"] .reel .beam{mix-blend-mode:multiply;background:linear-gradient(100deg,transparent 40%,rgba(226,98,43,.08) 52%,transparent 64%)}
+:root[data-theme="light"] .glow{background:linear-gradient(90deg,#d9dde4 0%,#efe6da 45%,#f3c9a8 70%,#f1d7a6 100%);opacity:.6!important}
+:root[data-theme="light"] .ring{border-color:#9a9da5}
+:root[data-theme="light"] .name{color:#111113;filter:drop-shadow(0 4px 22px rgba(244,241,235,.95)) drop-shadow(0 0 2px rgba(244,241,235,.8))}
+:root[data-theme="light"] .name i{background:linear-gradient(100deg,#a3141f 0%,#c2410f 48%,#9a5b00 100%);-webkit-background-clip:text;background-clip:text}
+:root[data-theme="light"] .figure{filter:drop-shadow(0 26px 40px rgba(40,30,20,.32))}
+:root[data-theme="light"] .front p{color:#2a2b30;text-shadow:0 0 14px #f4f1eb,0 0 4px #f4f1eb}
+:root[data-theme="light"] .front h1{color:#111113;text-shadow:0 0 22px #f4f1eb,0 0 6px #f4f1eb}
+:root[data-theme="light"] .tagL,:root[data-theme="light"] .tagR{color:#46474e;text-shadow:none}
+:root[data-theme="light"] .hint{color:#55565d}
+
+/* story */
+:root[data-theme="light"] .ch.turn{background:var(--card);border-color:var(--red);color:var(--ink);box-shadow:0 0 0 1px var(--red),var(--shadow)}
+:root[data-theme="light"] .ch.turn p{color:#33343a}
+
+/* portrait ring */
+:root[data-theme="light"] .carousel figure{background:#ece7de;border-color:rgba(17,17,19,.12);box-shadow:0 26px 50px -22px rgba(40,30,20,.45)}
+:root[data-theme="light"] .carousel figure.cut img{background:radial-gradient(90% 70% at 50% 85%,#f3d6c4,#ece7de 70%)}
+
+/* work lightbox */
+:root[data-theme="light"] #box{background:rgba(244,241,235,.96)}
+:root[data-theme="light"] #box img{box-shadow:0 30px 70px -20px rgba(40,30,20,.45)}
+:root[data-theme="light"] #box button{border-color:#111113;color:#111113}
+
+/* home doors: photo cards keep a soft dark fade so their white titles stay readable on the photo */
+:root[data-theme="light"] .door{box-shadow:0 20px 40px -24px rgba(40,30,20,.45)}
+
+/* BlackSheep block: light section, dark type; the logo sits on its own small dark plate */
+:root[data-theme="light"] .bs{background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--ink);border-top:1px solid var(--line)}
+:root[data-theme="light"] .bs::before{background:radial-gradient(circle,rgba(163,20,31,.10),transparent 62%)}
+:root[data-theme="light"] .bs .logo{background:#0A0B0D;padding:clamp(16px,3vw,26px);border-radius:24px;box-sizing:border-box;filter:none;box-shadow:0 24px 50px -24px rgba(0,0,0,.45)}
+:root[data-theme="light"] .bs .eyebrow{color:#55565d}
+:root[data-theme="light"] .bs h2{color:var(--ink)}
+:root[data-theme="light"] .bs .lead{color:#33343a}
+:root[data-theme="light"] .bs .btn{border-color:var(--ink);color:var(--ink)}
+:root[data-theme="light"] .bs .btn.solid,:root[data-theme="light"] .btn.solid{color:#fff;border-color:transparent}
+:root[data-theme="light"] .bs .btn.ghost:hover{background:var(--ink);color:var(--bg)}
+:root[data-theme="light"] .svc li{border-color:#b9b2a4;color:#2a2b30;background:rgba(255,255,255,.6)}
+
+/* footer */
+:root[data-theme="light"] footer{background:var(--bg2);border-top-color:var(--line);color:#46474e}
+:root[data-theme="light"] footer .fl{color:var(--ink)}
+:root[data-theme="light"] footer a:hover{color:var(--red)}
+
+/* floating reactions bar */
+:root[data-theme="light"] .rx{background:rgba(255,255,255,.92)!important;color:#111113!important;box-shadow:0 10px 30px rgba(0,0,0,.16)!important;border:1px solid var(--line)}
+:root[data-theme="light"] .rx button:hover{background:rgba(0,0,0,.07)}
+:root[data-theme="light"] .rx .down.mine svg{fill:#46474e;stroke:#46474e}
