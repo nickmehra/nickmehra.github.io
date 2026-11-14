@@ -131,3 +131,10 @@ article.entry blockquote{margin:38px 0;padding:0;font-family:var(--display);font
 .reel::after{content:"";position:absolute;inset:0;z-index:2;background:radial-gradient(75% 70% at 50% 55%,rgba(6,6,7,.15),rgba(6,6,7,.8) 85%),linear-gradient(rgba(6,6,7,.55),transparent 30%,transparent 65%,rgba(6,6,7,.9))}
 .glow{opacity:.28!important}
 @media (prefers-reduced-motion:reduce){.reel img.on{animation:none}}
+
+/* hero backdrop: one still scene, night platform melting into sunrise, drifting slowly */
+.reel img.on{animation:drift 26s ease-in-out infinite alternate!important;filter:blur(1.2px) saturate(.9) brightness(.6)!important}
+@keyframes drift{0%{transform:scale(1.14) translate3d(1.8%,.6%,0)}100%{transform:scale(1.04) translate3d(-1.8%,-.6%,0)}}
+.reel .beam{position:absolute;inset:-20% 0;z-index:1;pointer-events:none;background:linear-gradient(100deg,transparent 40%,rgba(255,190,110,.10) 52%,transparent 64%);mix-blend-mode:screen;animation:beam 14s ease-in-out infinite alternate}
+@keyframes beam{0%{transform:translate3d(-12%,0,0);opacity:.5}100%{transform:translate3d(12%,0,0);opacity:1}}
+@media (prefers-reduced-motion:reduce){.reel img.on,.reel .beam{animation:none!important}}
