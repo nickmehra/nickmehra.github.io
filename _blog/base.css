@@ -138,8 +138,8 @@ header{--bg:#0A0B0D;--panel:rgba(12,14,18,.74);--fg:#EFEBE3;--muted:#A9ADB3;--li
 @media not all and (prefers-color-scheme: dark){:root:not([data-theme]){--veil:rgba(245,245,242,.9)}}
 :root[data-theme="light"] .veil{background:radial-gradient(ellipse 62% 78% at 50% 48%,var(--veil) 0%,rgba(245,245,242,.78) 55%,rgba(245,245,242,.32) 100%)}
 @media not all and (prefers-color-scheme: dark){:root:not([data-theme]) .veil{background:radial-gradient(ellipse 62% 78% at 50% 48%,var(--veil) 0%,rgba(245,245,242,.78) 55%,rgba(245,245,242,.32) 100%)}}
-:root[data-theme="light"] main :is(h1,h2,h3,.lede,.eyebrow,.hint,.muted,p,li,figcaption,label,.spec){text-shadow:0 0 2px #F5F5F2,0 0 8px #F5F5F2,0 0 16px #F5F5F2,0 0 30px #F5F5F2,0 0 54px rgba(245,245,242,.9)}
-@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) main :is(h1,h2,h3,.lede,.eyebrow,.hint,.muted,p,li,figcaption,label,.spec){text-shadow:0 0 2px #F5F5F2,0 0 8px #F5F5F2,0 0 16px #F5F5F2,0 0 30px #F5F5F2,0 0 54px rgba(245,245,242,.9)}}
+:root[data-theme="light"] main :is(h1,h2,h3,.lede,.eyebrow,.hint,.muted,p,li,figcaption,label,.spec){text-shadow:none}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) main :is(h1,h2,h3,.lede,.eyebrow,.hint,.muted,p,li,figcaption,label,.spec){text-shadow:none}}
 :root[data-theme="light"] main .panel :is(h1,h2,h3,p,li,label,.spec,.eyebrow,.muted){text-shadow:none}
 @media not all and (prefers-color-scheme: dark){:root:not([data-theme]) main .panel :is(h1,h2,h3,p,li,label,.spec,.eyebrow,.muted){text-shadow:none}}
 :root[data-theme="light"] .hint{color:#25292E}
