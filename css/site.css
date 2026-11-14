@@ -77,3 +77,7 @@ footer a{text-decoration:none}
 :root[data-theme="light"] .eyebrow{color:#55565d}
 :root[data-theme="light"] .lead{color:#3c3d44}
 /* light mode lives in css/light.css */
+
+/* mobile note under the theme toggle */
+.view-note{display:none}
+@media (max-width:760px){.view-note{display:block;margin:4px auto 2px;max-width:36ch;font:400 12px/1.45 var(--body);color:var(--mute);text-align:center}.view-note b{color:var(--ink);font-weight:600}}
