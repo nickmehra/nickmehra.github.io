@@ -374,12 +374,12 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
 /* ---------- Light mode rebuild: no dark boxes around text. Light-on-dark text flips to dark-on-light, a stronger light veil
    keeps the floating photos from fighting the copy, and a soft page-coloured halo replaces dark plates.
    Brand rule kept: the ram logo (header, footer, big logo) still sits on dark. ---------- */
-:root[data-theme="light"]{--veil:rgba(245,245,242,.9)}
-@media not all and (prefers-color-scheme: dark){:root:not([data-theme]){--veil:rgba(245,245,242,.9)}}
-:root[data-theme="light"] .veil{background:radial-gradient(ellipse 62% 78% at 50% 48%,var(--veil) 0%,rgba(245,245,242,.78) 55%,rgba(245,245,242,.32) 100%)}
-@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) .veil{background:radial-gradient(ellipse 62% 78% at 50% 48%,var(--veil) 0%,rgba(245,245,242,.78) 55%,rgba(245,245,242,.32) 100%)}}
-:root[data-theme="light"] main :is(h1,h2,h3,.lede,.eyebrow,.hint,.muted,p,li,figcaption,label,.spec){text-shadow:0 0 1px #F5F5F2,0 0 6px #F5F5F2,0 0 18px #F5F5F2,0 0 34px #F5F5F2}
-@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) main :is(h1,h2,h3,.lede,.eyebrow,.hint,.muted,p,li,figcaption,label,.spec){text-shadow:0 0 1px #F5F5F2,0 0 6px #F5F5F2,0 0 18px #F5F5F2,0 0 34px #F5F5F2}}
+:root[data-theme="light"]{--veil:rgba(245,245,242,.5)}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]){--veil:rgba(245,245,242,.5)}}
+:root[data-theme="light"] .veil{background:radial-gradient(ellipse 46% 64% at 50% 46%,var(--veil) 0%,rgba(245,245,242,.28) 55%,transparent 82%)}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) .veil{background:radial-gradient(ellipse 46% 64% at 50% 46%,var(--veil) 0%,rgba(245,245,242,.28) 55%,transparent 82%)}}
+:root[data-theme="light"] main :is(h1,h2,h3,.lede,.eyebrow,.hint,.muted,p,li,figcaption,label,.spec){text-shadow:0 0 2px #F5F5F2,0 0 8px #F5F5F2,0 0 16px #F5F5F2,0 0 30px #F5F5F2,0 0 54px rgba(245,245,242,.9)}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) main :is(h1,h2,h3,.lede,.eyebrow,.hint,.muted,p,li,figcaption,label,.spec){text-shadow:0 0 2px #F5F5F2,0 0 8px #F5F5F2,0 0 16px #F5F5F2,0 0 30px #F5F5F2,0 0 54px rgba(245,245,242,.9)}}
 :root[data-theme="light"] main .panel :is(h1,h2,h3,p,li,label,.spec,.eyebrow,.muted){text-shadow:none}
 @media not all and (prefers-color-scheme: dark){:root:not([data-theme]) main .panel :is(h1,h2,h3,p,li,label,.spec,.eyebrow,.muted){text-shadow:none}}
 :root[data-theme="light"] .hint{color:#25292E}
@@ -600,7 +600,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
       </div>
       <p class="soon panel">Real estate, dealership and aerial work join the collection soon. More on Instagram: <a class="lk" href="https://www.instagram.com/BlackSheepDigitalWorks/" target="_blank" rel="noopener">@BlackSheepDigitalWorks</a></p>
       <aside class="lens-card" aria-labelledby="lensName">
-        <img class="lens-face" src="img/nick-drone-pilot.webp" alt="Nick Mehra holding a drone controller" width="882" height="1245" loading="lazy">
+        <img class="lens-face" src="img/nick-portrait-c.webp" alt="Nick Mehra holding a drone" width="588" height="840" loading="lazy">
         <div class="lens-copy">
           <span class="eyebrow">Behind the lens</span>
           <h3 id="lensName">Nick Mehra</h3>
@@ -1667,7 +1667,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   var dark = isDark();
   var THEME = {
     dark:  {print:.3, hero:.4, ring:.85, shadow:.9, glow:.1, border:.85, satP:.6, satH:.55, satR:.9},
-    light: {print:.68, hero:.34, ring:1,  shadow:.26, glow:.22, border:1, satP:.88, satH:.8, satR:1}
+    light: {print:.94, hero:.88, ring:1,  shadow:.5, glow:.28, border:1, satP:.96, satH:.95, satR:1}
   };
   var BORDER_DARK = new THREE.Color(0x4a4e55), BORDER_LIGHT = new THREE.Color(0xffffff), borderNow = new THREE.Color(0x4a4e55);
   var tf = THEME[dark ? 'dark' : 'light'], tfNow = {}; for (var tk in tf) tfNow[tk] = tf[tk];
@@ -1675,6 +1675,8 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
     dark = d; tf = THEME[d ? 'dark' : 'light'];
     var v = getComputedStyle(root).getPropertyValue('--bg').trim() || (d ? '#0A0B0D' : '#F5F5F2');
     bgColor.set(v); scene.fog.color.set(v);
+    // light mode: push the haze back so distant prints stay crisp instead of melting into white
+    scene.fog.near = d ? 30 : 70; scene.fog.far = d ? 100 : 190;
   };
   window.__theme3d(dark);
 
