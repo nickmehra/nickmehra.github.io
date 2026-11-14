@@ -63,7 +63,7 @@
 .bs{background:#060607;color:#f4f2ee;position:relative;overflow:hidden}
 .bs::before{content:"";position:absolute;left:50%;top:38%;width:780px;height:780px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(120,124,134,.30),transparent 62%)}
 .bs .wrap{position:relative}
-.bs .logo{width:min(380px,74vw);margin:0 auto 26px;filter:drop-shadow(0 20px 40px rgba(0,0,0,.8))}
+.bs .logo{width:min(210px,52vw);height:auto;margin:0 auto 22px;filter:drop-shadow(0 20px 40px rgba(0,0,0,.8))}
 .bs .eyebrow{color:#9d9fa7}
 .bs h2{color:#f4f2ee}
 .bs .lead{color:#b9bbc2}
