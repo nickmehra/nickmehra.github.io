@@ -1,12 +1,31 @@
-# Pages always revalidate, so design changes show up straight away instead of an old cached copy
 <IfModule mod_headers.c>
+  # Pages always revalidate, so design changes show up straight away instead of an old cached copy
   <FilesMatch "\.(html|htm)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
   <FilesMatch "\.(css|js)$">
     Header set Cache-Control "public, max-age=3600, must-revalidate"
   </FilesMatch>
+  <FilesMatch "\.(woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # Security headers
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+  # Everything (fonts, scripts, 3D library, images, video) is served from this site only.
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; frame-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self' mailto:; object-src 'none'; upgrade-insecure-requests"
 </IfModule>
+
+# Never serve hidden or backup files
+<FilesMatch "^\.|\.(bak|old|orig|log|sql|ini|sh|py|md|json~)$">
+  Require all denied
+</FilesMatch>
+
 <IfModule LiteSpeed>
   CacheLookup off
 </IfModule>
