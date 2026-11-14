@@ -49,11 +49,11 @@
   css2.textContent =
     '.tfx-ov{position:fixed;pointer-events:none;overflow:hidden;z-index:15;box-sizing:border-box;margin:0;background:none!important;border-color:transparent!important}' +
     '.tfx-ov .in{display:block;will-change:transform}' +
-    '.tfx-ov .tfx-c{display:inline-block;white-space:pre;margin:0;padding:0;border:0;background:none;box-shadow:none;max-width:none;animation:tfxBorn .52s cubic-bezier(.16,.84,.3,1) both,tfxSnap .16s .5s cubic-bezier(.3,1.8,.6,1) both}' +
-    '.tfx-ov .tfx-u{display:inline-block;white-space:pre-wrap;margin:0;padding:0;border:0;background:none;box-shadow:none;max-width:100%;vertical-align:top;animation:tfxBorn .75s cubic-bezier(.16,.84,.3,1) both,tfxSnap .18s .72s cubic-bezier(.3,1.8,.6,1) both}' +
-    '.tfx-ov .tfx-m{display:inline;white-space:pre-wrap;animation:tfxSoft .8s cubic-bezier(.16,.84,.3,1) both}' +
-    '@keyframes tfxSoft{0%{filter:blur(3px);opacity:.2;color:#e9a42c;text-shadow:0 0 14px rgba(233,164,44,.9)}75%{filter:blur(.4px);opacity:1;color:#e2622b}100%{filter:none;text-shadow:none}}' +
-    '@keyframes tfxBorn{0%{clip-path:circle(0% at 50% 58%);filter:blur(2.4px);color:#e9a42c;text-shadow:0 0 14px rgba(233,164,44,.9);transform:scale(.82)}' +
+    '.tfx-ov .tfx-c{display:inline-block;white-space:pre;margin:0;padding:0;border:0;background:none;box-shadow:none;max-width:none;animation:tfxBorn .26s cubic-bezier(.2,.8,.3,1) both,tfxSnap .12s .24s cubic-bezier(.3,1.6,.6,1) both}' +
+    '.tfx-ov .tfx-u{display:inline-block;white-space:pre-wrap;margin:0;padding:0;border:0;background:none;box-shadow:none;max-width:100%;vertical-align:top;animation:tfxBorn .36s cubic-bezier(.2,.8,.3,1) both,tfxSnap .12s .34s cubic-bezier(.3,1.6,.6,1) both}' +
+    '.tfx-ov .tfx-m{display:inline;white-space:pre-wrap;animation:tfxSoft .4s cubic-bezier(.2,.8,.3,1) both}' +
+    '@keyframes tfxSoft{0%{filter:blur(1.5px);opacity:.45;color:#e9a42c;text-shadow:0 0 14px rgba(233,164,44,.9)}75%{filter:blur(.4px);opacity:1;color:#e2622b}100%{filter:none;text-shadow:none}}' +
+    '@keyframes tfxBorn{0%{clip-path:circle(28% at 50% 55%);filter:blur(1.2px);color:#e9a42c;text-shadow:0 0 14px rgba(233,164,44,.9);transform:scale(.82)}' +
     '70%{clip-path:circle(62% at 50% 52%);filter:blur(.6px);color:#e2622b;text-shadow:0 0 8px rgba(226,98,43,.55)}' +
     '100%{clip-path:circle(80% at 50% 50%);filter:blur(.3px);transform:scale(.97)}}' +
     '@keyframes tfxSnap{0%{transform:scale(.97);filter:blur(.3px)}55%{transform:scale(1.05)}100%{transform:scale(1);filter:none;text-shadow:none;clip-path:none}}' +
