@@ -15,7 +15,8 @@ if (!empty($in['website'])) bs_json(['ok' => true]); // honeypot: bots fill hidd
 $name = bs_clean($in['name'] ?? '', 80); $email = strtolower(bs_clean($in['email'] ?? '', 120));
 $phone = bs_clean($in['phone'] ?? '', 40); $company = bs_clean($in['company'] ?? '', 100);
 if ($name === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) bs_json(['error' => 'Please add your name and a valid email so we can send your quote.'], 422);
-if (!bs_rate_ok(bs_ip_hash(), 6, 3600)) bs_json(['error' => 'Too many quotes from this connection in the last hour. Please call or text ' . BS_OWNER_PHONE . '.'], 429);
+// Site-wide limit (no visitor IPs are kept): stops a flood of fake requests without tracking anyone.
+if (!bs_rate_ok('all', 40, 3600)) bs_json(['error' => 'We are getting a lot of requests right now. Please call or text ' . BS_OWNER_PHONE . ' and we will quote you directly.'], 429);
 
 $price = bs_price($in);
 if (!$price['lines'] && !$price['flags']) bs_json(['error' => 'Choose a package or at least one service.'], 422);

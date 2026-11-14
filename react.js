@@ -48,10 +48,14 @@
     var lift = cur.tagName === 'VIDEO' ? 62 : 10;
     bar.style.top = Math.max(8, Math.min(innerHeight - bar.offsetHeight - 8, r.bottom - bar.offsetHeight - lift)) + 'px';
   }
+  /* Your own like/dislike is remembered only in this browser; the server keeps nothing but the totals. */
+  function mineAll() { try { return JSON.parse(localStorage.getItem('rx-mine') || '{}'); } catch (e) { return {}; } }
+  function setMine(k, v) { try { var m = mineAll(); if (v === 'none') delete m[k]; else m[k] = v; localStorage.setItem('rx-mine', JSON.stringify(m)); } catch (e) {} }
+  function merge(d) { var m = mineAll(); for (var x in d) { d[x].mine = m[x] || 'none'; counts[x] = d[x]; } }
   function load(k) {
     if (counts[k]) return paint();
     fetch(API + '?keys=' + encodeURIComponent(k), { cache: 'no-store' }).then(function (r) { return r.json(); })
-      .then(function (d) { for (var x in d) counts[x] = d[x]; paint(); }).catch(function () {});
+      .then(function (d) { merge(d); paint(); }).catch(function () {});
   }
   function findImg(t) {
     if (!t || !t.closest) return null;
@@ -67,13 +71,14 @@
   function vote(kind) {
     if (!cur) return;
     var k = keyOf(cur), c = counts[k] || { up: 0, down: 0, mine: 'none' };
-    var next = c.mine === kind ? 'none' : kind;
+    var next = c.mine === kind ? 'none' : kind, prev = c.mine;
     if (c.mine !== 'none') c[c.mine] = Math.max(0, c[c.mine] - 1);
     if (next !== 'none') c[next] += 1;
     c.mine = next; counts[k] = c; paint();
-    var body = new URLSearchParams(); body.set('k', k); body.set('v', next);
+    setMine(k, next);
+    var body = new URLSearchParams(); body.set('k', k); body.set('v', next); body.set('prev', prev);
     fetch(API, { method: 'POST', body: body }).then(function (r) { return r.json(); })
-      .then(function (d) { if (d && typeof d.up === 'number') { counts[k] = d; paint(); } }).catch(function () {});
+      .then(function (d) { if (d && typeof d.up === 'number') { d.mine = next; counts[k] = d; paint(); } }).catch(function () {});
   }
   bUp.addEventListener('click', function (e) { e.stopPropagation(); e.preventDefault(); vote('up'); });
   bDown.addEventListener('click', function (e) { e.stopPropagation(); e.preventDefault(); vote('down'); });
@@ -109,7 +114,7 @@
     cur = img; var k = keyOf(img);
     /* double-tap toggles: like, or withdraw an existing like */
     var apply = function () { var c = counts[k] || { up: 0, down: 0, mine: 'none' }; var liking = c.mine !== 'up'; burstHeart(x, y, img, liking); vote('up'); show(img); hideSoon(2500); };
-    if (counts[k]) apply(); else fetch(API + '?keys=' + encodeURIComponent(k), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) { for (var q in d) counts[q] = d[q]; apply(); }).catch(apply);
+    if (counts[k]) apply(); else fetch(API + '?keys=' + encodeURIComponent(k), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) { merge(d); apply(); }).catch(apply);
   }
   var lastTap = { t: 0, img: null, x: 0, y: 0 }, lastTouchEnd = 0, pending = null, passClick = false;
   /* For photos that do something on a single tap (open full size, follow a link), hold that single tap

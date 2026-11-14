@@ -12,11 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $msg  = trim(mb_substr(strip_tags($_POST['message'] ?? ''), 0, 2000));
   if (($_POST['website'] ?? '') !== '') { echo '{"ok":true,"pending":true}'; exit; } // bot trap
   if ($post === '' || $name === '' || mb_strlen($msg) < 2) { http_response_code(400); echo '{"error":"Please add your name and a comment."}'; exit; }
-  $ip = cm_voter();
-  $ok = cm_update(function (&$d) use ($post, $name, $msg, $ip) {
-    $recent = array_filter($d['pending'], function ($c) use ($ip) { return $c['ip'] === $ip && $c['time'] > time() - 60; });
-    if (count($recent) > 0 || count($d['pending']) > 500) return false;
-    $d['pending'][] = ['id' => bin2hex(random_bytes(6)), 'post' => $post, 'name' => $name, 'message' => $msg, 'time' => time(), 'ip' => $ip];
+  // Only the name, the comment and when it was posted are kept. No IP address or device details.
+  $ok = cm_update(function (&$d) use ($post, $name, $msg) {
+    foreach ($d['pending'] as &$p) unset($p['ip']); unset($p);
+    $recent = array_filter($d['pending'], function ($c) use ($name, $post) { return $c['time'] > time() - 60 && ($c['post'] === $post && strcasecmp($c['name'], $name) === 0); });
+    $burst = array_filter($d['pending'], function ($c) { return $c['time'] > time() - 60; });
+    if (count($recent) > 0 || count($burst) > 8 || count($d['pending']) > 500) return false;
+    $d['pending'][] = ['id' => bin2hex(random_bytes(6)), 'post' => $post, 'name' => $name, 'message' => $msg, 'time' => time()];
     return true;
   });
   if (!$ok) { http_response_code(429); echo '{"error":"Please wait a minute before posting again."}'; exit; }

@@ -8,7 +8,6 @@ function cm_dir() {
   return $dir;
 }
 function cm_key($k) { return substr(preg_replace('~[^A-Za-z0-9:_\-/]~', '', (string)$k), 0, 120); }
-function cm_voter() { return substr(hash('sha256', 'cm-salt-41b9|' . ($_SERVER['REMOTE_ADDR'] ?? '')), 0, 16); }
 function cm_read() {
   $f = cm_dir() . '/comments.json';
   $d = is_file($f) ? json_decode((string)file_get_contents($f), true) : null;

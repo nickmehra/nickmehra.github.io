@@ -53,14 +53,13 @@ function bs_mark_approved($num) {
   $d = json_decode(stream_get_contents($fh) ?: '', true) ?: []; $first = !isset($d[$num]); if ($first) $d[$num] = time();
   ftruncate($fh, 0); rewind($fh); fwrite($fh, json_encode($d)); flock($fh, LOCK_UN); fclose($fh); return $first;
 }
-function bs_ip_hash() { return substr(hash('sha256', 'bsq|' . ($_SERVER['REMOTE_ADDR'] ?? '') . '|' . date('Ymd')), 0, 16); }
 function bs_rate_ok($key, $max, $window) {
   $f = bs_dir() . '/rate/' . preg_replace('~[^a-z0-9]~', '', $key) . '.json';
   $d = bs_jread($f) ?: []; $now = time();
   $d = array_values(array_filter($d, function ($t) use ($now, $window) { return $t > $now - $window; }));
   if (count($d) >= $max) return false;
   $d[] = $now; bs_jwrite($f, $d);
-  if (mt_rand(1, 50) === 1) foreach (glob(bs_dir() . '/rate/*.json') ?: [] as $g) if (filemtime($g) < $now - 86400) @unlink($g);
+  foreach (glob(bs_dir() . '/rate/*.json') ?: [] as $g) if (basename($g) !== basename($f)) @unlink($g); // older per-connection files from before
   return true;
 }
 
