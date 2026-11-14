@@ -72,8 +72,8 @@ function bs_catalog() {
       'packages' => [
         ['id' => 're-essential', 'name' => 'Essential', 'price' => 299, 'items' => ['25 HDR photos', '2D floor plan', 'Sky replacement']],
         ['id' => 're-signature', 'name' => 'Signature', 'price' => 549, 'items' => ['35 HDR photos', 'Drone aerial photos', '2D floor plan']],
-        ['id' => 're-cinematic', 'name' => 'Cinematic', 'price' => 849, 'items' => ['35 HDR photos', 'Walkthrough video + social reel', 'Drone photo + video', '2D floor plan']],
-        ['id' => 're-legacy', 'name' => 'The Legacy', 'price' => 1249, 'was' => 1604, 'flag' => 'All-inclusive', 'items' => ['35 HDR photos', 'Cinematic walkthrough (60–90 s)', 'Vertical social reel', 'Drone aerial photos + video', '2D + 3D floor plans', 'Priority scheduling · next-day delivery']],
+        ['id' => 're-cinematic', 'name' => 'Cinematic', 'price' => 749, 'items' => ['35 HDR photos', 'Walkthrough video + social reel', 'Drone photo + video', '2D floor plan']],
+        ['id' => 're-legacy', 'name' => 'The Legacy', 'price' => 949, 'was' => 1604, 'flag' => 'All-inclusive', 'items' => ['35 HDR photos', 'Cinematic walkthrough (60–90 s)', 'Vertical social reel', 'Drone aerial photos + video', '2D + 3D floor plans', 'Priority scheduling · next-day delivery']],
       ],
       'addons' => [
         ['id' => 're-p25', 'name' => 'Photography · 25 images', 'price' => 249],

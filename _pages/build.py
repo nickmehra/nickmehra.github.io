@@ -75,7 +75,7 @@ def pricing():
   <h2>Download the <em>rate cards.</em></h2>
   <p class="sub">Print-ready flyers for your office, your brokerage or your sales floor.</p>
   <div class="fly">
-    <a class="fl tilt3" href="flyers/BlackSheep-Real-Estate-Flyer.pdf" download><span class="sheet"><img src="flyers/real-estate-preview.jpg" alt="BlackSheep real estate rate card" loading="lazy"></span><b>Real estate flyer</b><span class="btn lk">Download PDF</span></a>
+    <a class="fl tilt3" href="flyers/BlackSheep-Real-Estate-Flyer.pdf?v=2" download><span class="sheet"><img src="flyers/real-estate-preview.jpg?v=2" alt="BlackSheep real estate rate card" loading="lazy"></span><b>Real estate flyer</b><span class="btn lk">Download PDF</span></a>
     <a class="fl tilt3" href="flyers/BlackSheep-Dealership-Flyer.pdf" download><span class="sheet"><img src="flyers/dealership-preview.jpg" alt="BlackSheep dealership rate card" loading="lazy"></span><b>Dealership flyer</b><span class="btn lk">Download PDF</span></a>
   </div>
 </div></section>
