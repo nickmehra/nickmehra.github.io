@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script>try{var t=localStorage.getItem('nm-theme');document.documentElement.setAttribute('data-theme',t||'dark');}catch(e){document.documentElement.setAttribute('data-theme','dark');}</script>
-<link rel="stylesheet" href="/css/site.css?v=5">
+<link rel="stylesheet" href="/css/site.css?v=6">
 <link rel="stylesheet" href="/css/pages.css?v=15">
 <link rel="stylesheet" href="/css/light.css?v=3">
 </head>
@@ -21,7 +21,7 @@
 <header class="nav"><div class="bar">
   <a class="mark" href="/">Nick <span>Mehra</span></a>
   <nav class="links" aria-label="Main"><a class="l" href="/">Home</a><a class="l" href="/story/">Story</a><a class="l" href="/portraits/">Portraits</a><a class="l" href="/work/">Work</a><a class="l" href="/journal/">Journal</a><a class="l" href="/contact/" aria-current="page">Contact</a></nav>
-  <button id="theme" type="button" aria-label="Switch between dark and light">Light</button><p class="view-note">Best viewed in light mode on Chrome, Safari, Firefox or Edge. Using Opera? Turn off its <b>Dark web pages</b> setting, or switch this site to Dark.</p>
+  <button id="theme" type="button" aria-label="Switch between dark and light">Light</button>
 </div></header>
 <main>
 <section id="contact">
@@ -43,5 +43,11 @@
 <script src="/js/pages.js?v=9"></script>
 <script src="/react.js?v=6" defer></script>
 <script src="/type-fx.js?v=11" defer></script>
+<div class="view-note" role="note" hidden>Best viewed in light mode on Chrome, Safari, Firefox or Edge. Using Opera? Turn off its <b>Dark web pages</b> setting, or switch this site to Dark.<button type="button" class="vn-x" aria-label="Close this note">&times;</button></div>
+<script>(function(){var n=document.querySelector('.view-note');if(!n)return;try{if(localStorage.getItem('vn-off')){n.remove();return}}catch(e){}
+if(!window.matchMedia||!matchMedia('(max-width:760px)').matches){n.remove();return}
+document.body.appendChild(n);function place(){var h=document.querySelector('header');n.style.top=Math.max(10,(h?h.getBoundingClientRect().bottom:0)+10)+'px'}
+place();n.hidden=false;setTimeout(function(){n.classList.add('on')},600);addEventListener('resize',place);addEventListener('scroll',place,{passive:true});
+n.querySelector('.vn-x').addEventListener('click',function(){n.classList.remove('on');try{localStorage.setItem('vn-off','1')}catch(e){}setTimeout(function(){n.remove()},500)});})();</script>
 </body>
 </html>

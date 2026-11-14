@@ -78,6 +78,9 @@ footer a{text-decoration:none}
 :root[data-theme="light"] .lead{color:#3c3d44}
 /* light mode lives in css/light.css */
 
-/* mobile note under the theme toggle */
-.view-note{display:none}
-@media (max-width:760px){.view-note{display:block;margin:4px auto 2px;max-width:36ch;font:400 12px/1.45 var(--body);color:var(--mute);text-align:center}.view-note b{color:var(--ink);font-weight:600}}
+/* mobile note under the theme toggle: a faded, closable pop-up, outside the header */
+.view-note{position:fixed;left:50%;z-index:60;width:min(340px,calc(100% - 28px));box-sizing:border-box;padding:10px 38px 10px 14px;background:rgba(10,11,13,.84);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#D6D7DB;border:1px solid rgba(239,235,227,.18);border-radius:10px;font-size:13px;line-height:1.4;text-align:center;letter-spacing:0;text-transform:none;opacity:0;transform:translate(-50%,-6px);transition:opacity .5s ease,transform .5s ease;pointer-events:none;box-shadow:0 10px 28px rgba(0,0,0,.25)}
+.view-note.on{opacity:.9;transform:translate(-50%,0);pointer-events:auto}
+.view-note b{color:#F2EEE7;font-weight:600}
+.vn-x{position:absolute;top:3px;right:4px;width:32px;height:32px;background:none;border:0;color:#D6D7DB;font-size:20px;line-height:1;cursor:pointer}
+.vn-x:focus-visible{outline:2px solid #D11F26}
