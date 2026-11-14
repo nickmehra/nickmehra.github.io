@@ -70,10 +70,10 @@ function bs_catalog() {
     're' => [
       'label' => 'Real estate',
       'packages' => [
-        ['id' => 're-essential', 'name' => 'Essential', 'price' => 299, 'items' => ['25 HDR photos', '2D floor plan', 'Sky replacement']],
-        ['id' => 're-signature', 'name' => 'Signature', 'price' => 549, 'items' => ['35 HDR photos', 'Drone aerial photos', '2D floor plan']],
-        ['id' => 're-cinematic', 'name' => 'Cinematic', 'price' => 749, 'items' => ['35 HDR photos', 'Walkthrough video + social reel', 'Drone photo + video', '2D floor plan']],
-        ['id' => 're-legacy', 'name' => 'The Legacy', 'price' => 949, 'was' => 1604, 'flag' => 'All-inclusive', 'items' => ['35 HDR photos', 'Cinematic walkthrough (60–90 s)', 'Vertical social reel', 'Drone aerial photos + video', '2D + 3D floor plans', 'Priority scheduling · next-day delivery']],
+        ['id' => 're-essential', 'name' => 'Essential', 'price' => 299, 'items' => ['Unlimited HDR photos, as the property needs', '2D floor plan', 'Sky replacement']],
+        ['id' => 're-signature', 'name' => 'Signature', 'price' => 549, 'items' => ['Unlimited HDR photos, as the property needs', 'Drone aerial photos', '2D floor plan']],
+        ['id' => 're-cinematic', 'name' => 'Cinematic', 'price' => 749, 'items' => ['Unlimited HDR photos, as the property needs', 'Walkthrough video + social reel', 'Drone photo + video', '2D floor plan']],
+        ['id' => 're-legacy', 'name' => 'The Legacy', 'price' => 949, 'was' => 1604, 'flag' => 'All-inclusive', 'items' => ['Unlimited HDR photos, as the property needs', 'Cinematic walkthrough (60–90 s)', 'Vertical social reel', 'Drone aerial photos + video', '2D + 3D floor plans', 'Priority scheduling · next-day delivery']],
       ],
       'addons' => [
         ['id' => 're-p25', 'name' => 'Photography · 25 images', 'price' => 249],
@@ -91,8 +91,8 @@ function bs_catalog() {
     'auto' => [
       'label' => 'Dealerships',
       'packages' => [
-        ['id' => 'au-fleet', 'name' => 'The Fleet', 'price' => 1899, 'was' => 2299, 'flag' => 'All-inclusive', 'included' => 25, 'extra' => 69, 'unitType' => 'car', 'items' => ['Up to 25 cars or trucks', '25–35 photos per unit, inside & out', 'Walkaround video for every unit', 'Drone aerial lot showcase', 'Extra units $69 each']],
-        ['id' => 'au-caravan', 'name' => 'The Caravan', 'price' => 2599, 'was' => 3194, 'flag' => 'RV dealers', 'included' => 15, 'extra' => 149, 'unitType' => 'rv', 'items' => ['Up to 15 RVs or trailers', '35–45 photos per unit', 'Interior walkthrough video per unit', '2D layout plan per unit', 'Drone aerial lot showcase', 'Extra units $149 each']],
+        ['id' => 'au-fleet', 'name' => 'The Fleet', 'price' => 1899, 'was' => 2299, 'flag' => 'All-inclusive', 'included' => 25, 'extra' => 69, 'unitType' => 'car', 'items' => ['Up to 25 cars or trucks', 'Unlimited photos per unit, inside & out', 'Walkaround video for every unit', 'Drone aerial lot showcase', 'Extra units $69 each']],
+        ['id' => 'au-caravan', 'name' => 'The Caravan', 'price' => 2599, 'was' => 3194, 'flag' => 'RV dealers', 'included' => 15, 'extra' => 149, 'unitType' => 'rv', 'items' => ['Up to 15 RVs or trailers', 'Unlimited photos per unit, as each RV needs', 'Interior walkthrough video per unit', '2D layout plan per unit', 'Drone aerial lot showcase', 'Extra units $149 each']],
         ['id' => 'au-alacarte', 'name' => 'Per unit', 'price' => 0, 'perunit' => true, 'items' => ['Build your own from the per-unit list', 'Minimum 10 cars or 5 RVs per visit']],
       ],
       'unitAddons' => [
