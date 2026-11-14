@@ -92,6 +92,7 @@ def pricing():
   <span class="eyebrow">Book &amp; get your quote</span>
   <h2>Build your shoot. <em>See the price live.</em></h2>
   <p class="sub">Your quote is emailed to you with a PDF and a quote number good for 30 days. Approve it from the email to confirm your booking.</p>
+  <div class="bk-gate" data-form="qForm" data-email="q-email"></div>
   <form class="build" id="qForm" novalidate>
     <div>
       <div class="step"><h3><i>1</i>Package</h3>
@@ -120,6 +121,7 @@ def pricing():
           <div class="f"><label for="q-addr">Address or city</label><input id="q-addr" autocomplete="street-address"></div>
         </div>
         <div class="f"><label for="q-notes">Notes (optional)</label><textarea id="q-notes" placeholder="Access, lockbox, deadlines, anything we should know"></textarea></div>
+        <label class="optin"><input type="checkbox" id="q-updates"> Send me the BlackSheep Monday update: listing and marketing tips, open dates and offers. Unsubscribe anytime.</label>
         <div class="hp" aria-hidden="true"><label for="q-web">Website</label><input id="q-web" tabindex="-1" autocomplete="off"></div>
       </div>
     </div>
@@ -133,7 +135,7 @@ def pricing():
 </div></section>
 '''
     data = json.dumps(CAT).replace('</', '<\\/')
-    js = '<script>window.BS_CAT=' + data + ';</script>\n<script src="calc.js?v=2"></script><script src="pricing.js?v=4"></script>'
+    js = '<script>window.BS_CAT=' + data + ';</script>\n<script src="calc.js?v=2"></script><script src="/booking-gate.js?v=1" defer></script><script src="pricing.js?v=5"></script>'
     page = blog.page('Pricing | BlackSheep Digital Works', 'Real estate, dealership and event photo, video and drone pricing. Build your package and get an instant numbered quote with a PDF.',
                      blog.SITE + '/pricing/', body, 1, 'img/og-image.jpg', '<style>' + CSS + '</style>')
     page = page.replace('</body>', js + '\n</body>', 1)

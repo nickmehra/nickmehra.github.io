@@ -1,7 +1,7 @@
 <?php
 // Approve & confirm a quote. GET shows the quote and a confirm button (so email link scanners can't approve by accident);
 // POST approves it, then emails the client and the owner.
-require __DIR__ . '/bs-lib.php';
+require __DIR__ . '/bs-auth.php';
 $v = (string)($_REQUEST['v'] ?? '');
 $q = bs_unseal($v);
 $allowed = $q && !empty($q['number']);
@@ -12,7 +12,7 @@ $msg = ''; $state = $allowed ? bs_status($q) : 'missing';
 if ($allowed && $_SERVER['REQUEST_METHOD'] === 'POST' && $state === 'open') {
   $first = bs_mark_approved($num); $state = 'approved';
   if ($first) {
-    $q['approved_at'] = time(); $L = bs_links($q); $pdf = bs_pdf($q); $c = $q['client']; $s = $q['shoot'];
+    $q['approved_at'] = time(); bs_list_add($q['client']['email'], $q['client']['name'], 'client'); $L = bs_links($q); $pdf = bs_pdf($q); $c = $q['client']; $s = $q['shoot'];
     $when = $s['date'] ? date('l, F j, Y', strtotime($s['date'])) . ($s['slot'] ? ', ' . $s['slot'] : '') : 'date to be confirmed';
     $ctext = "You approved quote {$q['number']} for $when. Nick will confirm the final details shortly.\nPDF: {$L['pdf']}\n";
     bs_mail($c['email'], "Booking confirmed · quote {$q['number']}", bs_email_shell('You are booked in',

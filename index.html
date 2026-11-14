@@ -264,6 +264,7 @@ fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;align-it
 .check input:checked + span{border-color:var(--red);color:var(--fg);box-shadow:inset 0 0 0 1px var(--red)}
 .check input:focus-visible + span{outline:2px solid var(--red);outline-offset:2px}
 .error{color:var(--err);font-size:.98rem}
+.optin span{font-size:.95rem!important;text-align:left;max-width:560px}
 .bk-opts .check span{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:132px}
 .bk-opts .check b{font-weight:500;color:var(--fg)}
 .bk-opts .check small{font-size:.86rem;color:var(--muted)}
@@ -487,6 +488,7 @@ footer .fcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26p
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>
 <script src="pricing/catalog.js?v=2"></script>
 <script src="pricing/calc.js?v=2"></script>
+<script src="/booking-gate.js?v=1" defer></script>
 </head>
 <body>
 
@@ -691,6 +693,7 @@ footer .fcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26p
         <p>Tell us about the property or inventory and when you'd like us there. We confirm every booking personally.</p>
       </div>
       <div class="formcard panel">
+        <div class="bk-gate" data-form="bookForm" data-email="b-email"></div>
         <form id="bookForm" novalidate>
           <fieldset>
             <legend>What are we shooting?</legend>
@@ -753,8 +756,10 @@ footer .fcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26p
           </div>
           <div class="field"><label for="b-email">Email</label><input type="email" id="b-email" autocomplete="email"></div>
           <div class="field"><label for="b-notes">Notes (optional)</label><textarea id="b-notes" placeholder="Square footage, access details, number of vehicles, deadlines"></textarea></div>
+          <label class="check optin"><input type="checkbox" id="b-updates"><span>Send me the BlackSheep Monday update: listing and marketing tips, open dates and offers. Unsubscribe anytime.</span></label>
+          <div class="hp" aria-hidden="true" style="position:absolute;left:-9999px"><label for="b-web">Website</label><input id="b-web" tabindex="-1" autocomplete="off"></div>
           <p class="error" id="bookErr" role="alert" hidden></p>
-          <div><button class="btn primary lk" type="submit" id="bookSubmit">Prepare booking request</button></div>
+          <div><button class="btn primary lk" type="submit" id="bookSubmit">Send booking request</button></div>
         </form>
         <div class="result" id="bookResult" hidden></div>
       </div>
@@ -1390,6 +1395,7 @@ footer .fcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26p
     $('b-size').addEventListener('change', function(){ bk.re.size = this.value; bEst(); });
     $('b-hours').addEventListener('change', function(){ bk.ev.hours = +this.value || 0; bEst(); });
     ['cars', 'rvs'].forEach(function(u){ $('b-' + u).addEventListener('input', function(){ bk.auto[u] = Math.max(0, Math.min(500, parseInt(this.value, 10) || 0)); bEst(); }); });
+    document.addEventListener('bk-verified', function(){ bDraw(); });
     $('bSeg').addEventListener('change', function(e){ bk.seg = e.target.value; if (bk.seg === 'auto' && !bk.auto.pkg) bk.auto.pkg = 'au-fleet'; bDraw(); });
     $('bPkgs').addEventListener('change', function(e){ bk[bk.seg].pkg = e.target.value; bDraw(); });
     $('bAdds').addEventListener('change', function(e){ var a = bk[bk.seg].add, v = e.target.value, i = a.indexOf(v); if (e.target.checked && i < 0) a.push(v); if (!e.target.checked && i >= 0) a.splice(i, 1); bEst(); });
@@ -1406,8 +1412,7 @@ footer .fcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26p
     if (!val('b-date')) return fail(err, 'Pick a date on the calendar.');
     if (!val('b-time')) return fail(err, 'Pick a time slot.');
     if (!val('b-name')) return fail(err, 'Add your name.');
-    if (!val('b-phone') && !val('b-email')) return fail(err, 'Add a phone number or email so we can confirm.');
-    if (val('b-email') && !/^\S+@\S+\.\S+$/.test(val('b-email'))) return fail(err, 'That email address looks incomplete.');
+    if (!window.bsVerifiedEmail) return fail(err, 'Please verify your email at the top of the form first.');
     var lines = ['BOOKING REQUEST · BlackSheep Digital Works', '', 'Shoot: ' + ({re: 'Real estate', auto: 'Dealership', ev: 'Event'})[sg] + ' · ' + $('b-type').value];
     {
       var pk = bFind(c.packages, st.pkg);
@@ -1422,11 +1427,20 @@ footer .fcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26p
       lines.push('Subtotal ' + bMoney(r.sub) + ' · HST ' + bMoney(r.hst) + ' · Estimated total ' + bMoney(r.total));
       if (r.flags.length) lines.push('Notes: ' + r.flags.join(' · '));
     }
-    lines.push('', 'Location: ' + val('b-addr'), 'Requested date: ' + $('b-date').getAttribute('data-nice'), 'Requested time: ' + val('b-time'), '', 'Name: ' + val('b-name'));
-    if (val('b-phone')) lines.push('Phone: ' + val('b-phone'));
-    if (val('b-email')) lines.push('Email: ' + val('b-email'));
-    if (val('b-notes')) lines.push('', 'Notes: ' + val('b-notes'));
-    showResult($('bookResult'), $('bookForm'), 'Your booking request is ready', 'Booking request: ' + val('b-addr') + ' on ' + $('b-date').getAttribute('data-nice'), lines.join('\n'));
+    var btn = $('bookSubmit'); btn.disabled = true; btn.textContent = 'Sending…';
+    var body = {segment: sg, package: st.pkg || '', addons: st.add, size: st.size, cars: st.cars, rvs: st.rvs, hours: st.hours || 0,
+      type: $('b-type').value, address: val('b-addr'), date: val('b-date'), slot: val('b-time'), name: val('b-name'), phone: val('b-phone'),
+      notes: val('b-notes'), updates: $('b-updates').checked, website: $('b-web').value};
+    fetch('/booking.php', {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)})
+      .then(function(r){ return r.json().then(function(j){ return {ok: r.ok, j: j}; }); })
+      .then(function(res){
+        btn.disabled = false; btn.textContent = 'Send booking request';
+        if (!res.ok) return fail(err, res.j.error || 'Something went wrong. Please call or text 647.888.3098.');
+        var out = $('bookResult'); out.innerHTML = '<h3>Booking request sent</h3><p>Your reference is <b>' + res.j.ref + '</b>. A copy is on its way to <b>' + (window.bsVerifiedEmail || '') + '</b>. Nick will confirm the date, time and final price with you personally.</p><p><a class="lk" href="#booking" id="bookAgain">Make another request</a></p>';
+        $('bookForm').hidden = true; out.hidden = false; out.scrollIntoView({behavior: 'smooth', block: 'center'});
+        $('bookAgain').addEventListener('click', function(e){ e.preventDefault(); out.hidden = true; $('bookForm').hidden = false; });
+      })
+      .catch(function(){ btn.disabled = false; btn.textContent = 'Send booking request'; fail(err, 'Could not reach the server. Please try again or call 647.888.3098.'); });
   });
   $('contactForm').addEventListener('submit', function(e){
     e.preventDefault();

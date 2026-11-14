@@ -2,7 +2,7 @@
 // GET  /quote.php?catalog=1  → price list for the pricing page
 // POST /quote.php            → numbers a quote, emails the client (PDF attached) and Nick (PDF + full details).
 // Nothing about the client is stored on this server: the quote lives in the emails and in its signed link.
-require __DIR__ . '/bs-lib.php';
+require __DIR__ . '/bs-auth.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   if (isset($_GET['catalog'])) bs_json(['catalog' => bs_catalog(), 'hst' => BS_HST, 'validDays' => BS_VALID_DAYS]);
@@ -12,7 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') bs_json(['error' => 'Method not allow
 
 $in = bs_input();
 if (!empty($in['website'])) bs_json(['ok' => true]); // honeypot: bots fill hidden fields
-$name = bs_clean($in['name'] ?? '', 80); $email = strtolower(bs_clean($in['email'] ?? '', 120));
+$email = bs_verified_email();
+if ($email === '') bs_json(['error' => 'Please verify your email first (the code step at the top of the form).', 'verify' => true], 401);
+$name = bs_clean($in['name'] ?? '', 80);
 $phone = bs_clean($in['phone'] ?? '', 40); $company = bs_clean($in['company'] ?? '', 100);
 if ($name === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) bs_json(['error' => 'Please add your name and a valid email so we can send your quote.'], 422);
 // Site-wide limit (no visitor IPs are kept): stops a flood of fake requests without tracking anyone.
@@ -53,4 +55,5 @@ $ownText = "New quote $num from $name <$email>\n" . strip_tags(str_replace(['<br
   . "\n\nBSQ-RECORD:" . base64_encode(json_encode(['event' => 'quote', 'quote' => $q, 'pdf' => $L['pdf'], 'approve' => $L['approve'], 'sent' => ['subject' => "Your BlackSheep quote $num", 'text' => $text, 'delivered' => (bool)$sentClient]], JSON_UNESCAPED_UNICODE)) . "\n";
 bs_mail(BS_OWNER_EMAIL, "New quote $num · " . bs_money($price['total']) . " · $name", bs_email_shell('New quote ' . $num, $own), $ownText, ["BlackSheep-Quote-$num.pdf", $pdf], $email);
 
+bs_list_add($email, $name, !empty($in['updates']) ? 'express' : 'inquiry');
 bs_json(['ok' => true, 'number' => $num, 'validUntil' => $valid, 'validUntilTs' => $q['valid_until'], 'price' => $price, 'pdf' => $L['pdf'], 'approve' => $L['approve'], 'emailed' => (bool)$sentClient]);

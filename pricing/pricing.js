@@ -144,14 +144,14 @@
     if (seg === 'ev' && !state.ev.pkg) return fail('Pick an event coverage package (1, 2 or 3 hours).');
     if (!name) return fail('Add your name.'); if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail('Add a valid email so we can send your quote.');
     var st = state[seg], btn = $('qGo'); btn.disabled = true; btn.textContent = 'Preparing your quote…';
-    var body = {segment: seg, package: st.pkg, addons: st.add, size: st.size, cars: st.cars, rvs: st.rvs, hours: st.hours || 0, name: name, email: email,
+    var body = {segment: seg, package: st.pkg, addons: st.add, size: st.size, cars: st.cars, rvs: st.rvs, hours: st.hours || 0, updates: $('q-updates').checked, name: name, email: email,
       phone: $('q-phone').value.trim(), company: $('q-company').value.trim(), type: $('q-type').value, address: $('q-addr').value.trim(),
       date: selDate, slot: selSlot, notes: $('q-notes').value, website: $('q-web').value};
     fetch('../quote.php', {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)})
       .then(function(r){ return r.json().then(function(j){ return {ok: r.ok, j: j}; }); })
       .then(function(res){
         btn.disabled = false; btn.textContent = 'Email my quote';
-        if (!res.ok || !res.j.ok) return fail(res.j.error || 'Something went wrong. Please call 647.888.3098.');
+        if (!res.ok || !res.j.ok) { if (res.j.verify) document.querySelector('.bk-gate').scrollIntoView({behavior: 'smooth', block: 'center'}); return fail(res.j.error || 'Something went wrong. Please call 647.888.3098.'); }
         var j = res.j, d = $('qDone');
         keepQuote({number: j.number, total: j.price.total, validUntil: j.validUntil, validUntilTs: j.validUntilTs, pdf: j.pdf, approve: j.approve, segment: seg, date: selDate, slot: selSlot, made: Date.now()});
         try { localStorage.setItem('bsMe', JSON.stringify({name: name, email: email})); } catch(e){}
@@ -165,5 +165,6 @@
       .catch(function(){ btn.disabled = false; btn.textContent = 'Email my quote'; fail('Could not reach the server. Please try again or call 647.888.3098.'); });
   });
 
+  document.addEventListener('bk-verified', function(){ drawBuilder(); });
   var h = (location.hash || '').match(/^#book-(re|auto|ev)$/); setSeg(h ? h[1] : 're'); requestAnimationFrame(movePill);
 })();
