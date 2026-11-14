@@ -145,3 +145,8 @@ article.entry blockquote{margin:38px 0;padding:0;font-family:var(--display);font
 .name{top:3%!important}
 .figure{height:min(70%,600px)!important;bottom:15%!important}
 @media (max-width:820px){.name{top:2%!important}.figure{height:56%!important;bottom:20%!important}}
+.name{font-size:clamp(60px,12.5vw,190px)!important;top:4%!important}
+.figure{height:min(86%,760px)!important;bottom:12%!important}
+@media (max-width:820px){.name{font-size:23vw!important;top:2%!important}.figure{height:66%!important;bottom:18%!important}}
+.name i{margin-left:1.15em}
+@media (max-width:820px){.name i{margin-left:0}.figure{height:60%!important;bottom:13%!important}}
