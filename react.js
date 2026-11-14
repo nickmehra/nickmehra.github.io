@@ -83,11 +83,48 @@
     var img = findImg(e.target);
     if (img && ok(img)) show(img); else if (cur) hideSoon();
   });
-  document.addEventListener('touchstart', function (e) {
-    if (bar.contains(e.target)) return;
-    var img = findImg(e.target);
-    if (img && ok(img)) { show(img); hideSoon(4000); }
-  }, { passive: true });
+  /* Touch screens: double-tap a photo to like it (never unlikes), with a heart that swells over the photo.
+     A single tap keeps doing whatever the photo normally does. */
+  var heartCss = document.createElement('style');
+  heartCss.textContent = '.rx-heart{position:fixed;z-index:95;width:96px;height:96px;margin:-48px 0 0 -48px;pointer-events:none;animation:rxHeart 1.1s cubic-bezier(.2,.9,.25,1) forwards}' +
+    '.rx-heart svg{width:100%;height:100%;filter:drop-shadow(0 8px 22px rgba(0,0,0,.45))}' +
+    '@keyframes rxHeart{0%{opacity:0;transform:scale(.2)}18%{opacity:1;transform:scale(1.18)}32%{transform:scale(.95)}46%{transform:scale(1.04)}70%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.08) translateY(-14px)}}' +
+    'img{-webkit-touch-callout:default}';
+  document.head.appendChild(heartCss);
+  function burstHeart(x, y) {
+    var h = document.createElement('div'); h.className = 'rx-heart';
+    h.style.left = x + 'px'; h.style.top = y + 'px';
+    h.innerHTML = '<svg viewBox="0 0 24 24"><defs><linearGradient id="rxg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#ff4d5a"/><stop offset=".55" stop-color="#e2622b"/><stop offset="1" stop-color="#e9a42c"/></linearGradient></defs><path fill="url(#rxg)" d="M12 21s-7.5-4.6-7.5-10.6A4.4 4.4 0 0 1 12 7.6a4.4 4.4 0 0 1 7.5 2.8C19.5 16.4 12 21 12 21z"/></svg>';
+    document.body.appendChild(h); setTimeout(function () { h.remove(); }, 1200);
+  }
+  function likeImg(img, x, y) {
+    var r = img.getBoundingClientRect();
+    burstHeart(x == null ? r.left + r.width / 2 : x, y == null ? r.top + r.height / 2 : y);
+    cur = img; var k = keyOf(img);
+    var apply = function () { var c = counts[k] || { up: 0, down: 0, mine: 'none' }; if (c.mine !== 'up') vote('up'); else paint(); show(img); hideSoon(2500); };
+    if (counts[k]) apply(); else fetch(API + '?keys=' + encodeURIComponent(k), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) { for (var q in d) counts[q] = d[q]; apply(); }).catch(apply);
+  }
+  var lastTap = { t: 0, img: null, x: 0, y: 0 }, lastTouchEnd = 0, pending = null, passClick = false;
+  /* For photos that do something on a single tap (open full size, follow a link), hold that single tap
+     for a moment so a second tap can turn it into a like instead. */
+  document.addEventListener('click', function (e) {
+    if (passClick || Date.now() - lastTouchEnd > 500) return;
+    var img = findImg(e.target); if (!img || !ok(img)) return;
+    var act = e.target.closest('a,button,[onclick],.tilt'); if (!act) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    clearTimeout(pending && pending.timer);
+    pending = { el: act, timer: setTimeout(function () { var el = pending && pending.el; pending = null; if (!el) return; passClick = true; try { el.click(); } finally { passClick = false; } }, 340) };
+  }, true);
+  document.addEventListener('touchend', function (e) {
+    if (bar.contains(e.target) || e.changedTouches.length !== 1) return;
+    var img = findImg(e.target); if (!img || !ok(img)) { lastTap.img = null; return; }
+    var t = e.changedTouches[0], now = Date.now(); lastTouchEnd = now;
+    if (lastTap.img === img && now - lastTap.t < 320 && Math.abs(t.clientX - lastTap.x) < 30 && Math.abs(t.clientY - lastTap.y) < 30) {
+      e.preventDefault(); lastTap.img = null; if (pending) { clearTimeout(pending.timer); pending = null; } likeImg(img, t.clientX, t.clientY);
+    } else lastTap = { t: now, img: img, x: t.clientX, y: t.clientY };
+  }, { passive: false });
+  /* mouse: double-click a photo likes it too */
+  document.addEventListener('dblclick', function (e) { var img = findImg(e.target); if (img && ok(img)) { e.preventDefault(); likeImg(img, e.clientX, e.clientY); } });
   addEventListener('scroll', function () { if (cur) place(); }, { passive: true });
   addEventListener('resize', place);
   (function track() { if (cur && bar.classList.contains('on')) place(); requestAnimationFrame(track); })();
