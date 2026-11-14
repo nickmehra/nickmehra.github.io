@@ -1,9 +1,9 @@
 (function(){
   var C = window.BS_CAT, $ = function(id){ return document.getElementById(id); };
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var HST = 0.13, seg = 're', state = {re:{pkg:'', add:[], size:'s1'}, auto:{pkg:'', add:[], cars:0, rvs:0}};
+  var HST = 0.13, seg = 're', state = {re:{pkg:'', add:[], size:'s1'}, auto:{pkg:'', add:[], cars:0, rvs:0}, ev:{pkg:'', add:[], hours:0}};
   var SLOTS = [['Morning','8–11 am'],['Midday','11 am–2 pm'],['Afternoon','2–5 pm'],['Twilight','around sunset']];
-  var TYPES = {re:['Residential listing','Condo or townhouse','Luxury estate','Commercial property','Builder or new construction'], auto:['Car & truck dealership','RV & trailer dealership','Powersports or marine','Auction or fleet']};
+  var TYPES = {re:['Residential listing','Condo or townhouse','Luxury estate','Commercial property','Builder or new construction'], auto:['Car & truck dealership','RV & trailer dealership','Powersports or marine','Auction or fleet'], ev:['Community festival or fair','Brand activation or launch','Corporate event','Private gathering (not weddings)','Other']};
   function money(n){ return '$' + Number(n).toLocaleString('en-CA', {minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2}); }
   function find(list, id){ for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i]; return null; }
   function el(tag, cls, html){ var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
@@ -47,9 +47,14 @@
       box.appendChild(opt('radio', 'pkg', p.id, p.name, p.perunit ? 'Per unit pricing' : p.items.slice(0, 2).join(' · '), p.perunit ? 'From $35 / unit' : money(p.price), st.pkg === p.id));
     });
     if (seg === 'auto' && !st.pkg) { st.pkg = 'au-fleet'; box.querySelector('input[value="au-fleet"]').checked = true; }
-    $('sizeBox').hidden = seg !== 're'; $('unitBox').hidden = seg !== 'auto';
+    $('sizeBox').hidden = seg !== 're'; $('unitBox').hidden = seg !== 'auto'; $('hoursBox').hidden = seg !== 'ev';
     var pk = find(c.packages, st.pkg);
-    if (seg === 're') {
+    if (seg === 'ev') {
+      var room = pk ? c.maxHours - pk.hours : 0, hs = $('q-hours'); st.hours = Math.min(st.hours, room);
+      hs.innerHTML = ''; for (var hr = 0; hr <= room; hr++) hs.innerHTML += '<option value="' + hr + '">' + (hr ? hr + ' extra hour' + (hr > 1 ? 's' : '') + ' (+' + money(hr * c.hourPrice) + ')' : (pk ? 'None (' + pk.hours + ' hour' + (pk.hours > 1 ? 's' : '') + ' total)' : 'Pick a package first')) + '</option>';
+      hs.value = st.hours; hs.disabled = !room;
+      c.addons.forEach(function(a){ var inc = pk && pk.id === 'ev-showcase' && a.id === 'ev-drone'; add.appendChild(opt('checkbox', 'add', a.id, a.name, '', inc ? 'Included' : '+ ' + money(a.price), inc || st.add.indexOf(a.id) >= 0, inc, inc)); });
+    } else if (seg === 're') {
       c.addons.forEach(function(a){ add.appendChild(opt('checkbox', 'add', a.id, a.name, '', a.quote ? 'On request' : '+ ' + money(a.price), st.add.indexOf(a.id) >= 0)); });
     } else {
       c.unitAddons.forEach(function(a){
@@ -71,6 +76,7 @@
     var a = state[seg].add, v = e.target.value, i = a.indexOf(v);
     if (e.target.checked && i < 0) a.push(v); if (!e.target.checked && i >= 0) a.splice(i, 1); price();
   });
+  $('q-hours').addEventListener('change', function(){ state.ev.hours = +this.value || 0; price(); });
   var sz = $('q-size'); sz.innerHTML = C.re.sizes.map(function(s){ return '<option value="' + s.id + '">' + esc(s.name) + (s.quote ? ' (quoted)' : s.price ? ' (+' + money(s.price) + ')' : '') + '</option>'; }).join('');
   sz.addEventListener('change', function(){ state.re.size = sz.value; price(); });
   document.querySelectorAll('.ctr button').forEach(function(b){ b.addEventListener('click', function(){ var u = b.getAttribute('data-u'), inp = $('q-' + u); inp.value = Math.max(0, Math.min(500, (parseInt(inp.value, 10) || 0) + +b.getAttribute('data-d'))); state.auto[u] = +inp.value; price(); }); });
@@ -135,9 +141,10 @@
     var r = calc(), name = $('q-name').value.trim(), email = $('q-email').value.trim();
     function fail(m){ err.textContent = m; err.hidden = false; }
     if (!r.lines.length && !r.flags.length) return fail('Pick a package or at least one service.');
+    if (seg === 'ev' && !state.ev.pkg) return fail('Pick an event coverage package (1, 2 or 3 hours).');
     if (!name) return fail('Add your name.'); if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail('Add a valid email so we can send your quote.');
     var st = state[seg], btn = $('qGo'); btn.disabled = true; btn.textContent = 'Preparing your quote…';
-    var body = {segment: seg, package: st.pkg, addons: st.add, size: st.size, cars: st.cars, rvs: st.rvs, name: name, email: email,
+    var body = {segment: seg, package: st.pkg, addons: st.add, size: st.size, cars: st.cars, rvs: st.rvs, hours: st.hours || 0, name: name, email: email,
       phone: $('q-phone').value.trim(), company: $('q-company').value.trim(), type: $('q-type').value, address: $('q-addr').value.trim(),
       date: selDate, slot: selSlot, notes: $('q-notes').value, website: $('q-web').value};
     fetch('../quote.php', {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)})
@@ -158,5 +165,5 @@
       .catch(function(){ btn.disabled = false; btn.textContent = 'Email my quote'; fail('Could not reach the server. Please try again or call 647.888.3098.'); });
   });
 
-  var h = (location.hash || '').match(/^#book-(re|auto)$/); setSeg(h ? h[1] : 're'); requestAnimationFrame(movePill);
+  var h = (location.hash || '').match(/^#book-(re|auto|ev)$/); setSeg(h ? h[1] : 're'); requestAnimationFrame(movePill);
 })();

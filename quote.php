@@ -20,6 +20,7 @@ if (!bs_rate_ok('all', 40, 3600)) bs_json(['error' => 'We are getting a lot of r
 
 $price = bs_price($in);
 if (!$price['lines'] && !$price['flags']) bs_json(['error' => 'Choose a package or at least one service.'], 422);
+if ($price['segment'] === 'ev' && !bs_find(bs_catalog()['ev']['packages'], (string)($in['package'] ?? ''))) bs_json(['error' => 'Choose an event coverage package (1, 2 or 3 hours).'], 422);
 
 $date = preg_match('~^\d{4}-\d{2}-\d{2}$~', (string)($in['date'] ?? '')) ? $in['date'] : '';
 $slots = ['Morning (8–11 am)', 'Midday (11 am–2 pm)', 'Afternoon (2–5 pm)', 'Twilight (around sunset)'];

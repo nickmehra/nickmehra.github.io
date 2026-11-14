@@ -3,7 +3,11 @@
 window.bsCalc = function (C, seg, st) {
   function find(list, id) { for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i]; return null; }
   var c = C[seg], lines = [], flags = [], pk = find(c.packages, st.pkg);
-  if (seg === 're') {
+  if (seg === 'ev') {
+    if (pk) { lines.push([pk.name, 1, pk.price]); var xh = Math.max(0, Math.min(c.maxHours - pk.hours, st.hours || 0)); if (xh) lines.push(['Extra coverage hour', xh, xh * c.hourPrice]); }
+    else if (st.add.length) flags.push('Pick a coverage package so we know how long to stay');
+    st.add.forEach(function (id) { var a = find(c.addons, id); if (!a) return; if (id === 'ev-drone' && pk && pk.id === 'ev-showcase') return; lines.push([a.name, 1, a.price]); });
+  } else if (seg === 're') {
     if (pk) lines.push([pk.name, 1, pk.price]);
     st.add.forEach(function (id) { var a = find(c.addons, id); if (!a) return; if (a.quote) flags.push(a.name + ': priced on request'); else lines.push([a.name, 1, a.price]); });
     var s = find(c.sizes, st.size) || c.sizes[0];

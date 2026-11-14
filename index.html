@@ -485,8 +485,8 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
 }
 </script>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>
-<script src="pricing/catalog.js?v=1"></script>
-<script src="pricing/calc.js?v=1"></script>
+<script src="pricing/catalog.js?v=2"></script>
+<script src="pricing/calc.js?v=2"></script>
 </head>
 <body>
 
@@ -541,7 +541,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
         <article class="svc panel tilt"><span class="spec">4K · STABILIZED</span><h3>Videography</h3><p>Cinematic walkthroughs and short vertical cuts built for Instagram and Reels.</p></article>
         <article class="svc panel tilt"><span class="spec">AERIAL</span><h3>Drone</h3><p>Lot lines, neighbourhood context and the approach to the front door, captured from above.</p></article>
         <article class="svc panel tilt"><span class="spec">2D PLANS · 3D TOURS</span><h3>Floor Plans &amp; Tours</h3><p>Measured plans and self-guided virtual tours so buyers understand the layout before a showing.</p></article>
-        <article class="svc panel tilt"><span class="spec">PHOTO · FILM · REELS</span><h3>Events</h3><p>Community festivals, brand activations and private gatherings, covered from wide scene to candid moment.</p></article>
+        <article class="svc panel tilt"><span class="spec">PHOTO · FILM · REELS</span><h3>Events</h3><p>Community festivals, brand activations and private gatherings, covered from wide scene to candid moment, up to 3 hours. Weddings are not offered.</p></article>
         <article class="svc panel tilt"><span class="spec">CARS · TRUCKS · RVS</span><h3>Dealership</h3><p>Consistent lot and inventory photography that keeps every listing uniform.</p></article>
       </div>
     </div>
@@ -697,7 +697,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
             <div class="checks" id="bSeg">
               <label class="check"><input type="radio" name="bseg" value="re" checked><span>Real estate</span></label>
               <label class="check"><input type="radio" name="bseg" value="auto"><span>Dealership</span></label>
-              <label class="check"><input type="radio" name="bseg" value="event"><span>Event or other</span></label>
+              <label class="check"><input type="radio" name="bseg" value="ev"><span>Event</span></label>
             </div>
           </fieldset>
           <fieldset id="bPkgSet">
@@ -711,6 +711,10 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
           <div class="row" id="bSizeRow">
             <div class="field"><label for="b-size">Home size</label><select id="b-size"></select></div>
           </div>
+          <div class="row" id="bHourRow" hidden>
+            <div class="field"><label for="b-hours">Extra coverage hours</label><select id="b-hours"></select></div>
+          </div>
+          <p class="muted" id="bEvNote" hidden style="font-size:.95rem;text-align:center">Event coverage runs up to 3 hours, with unlimited edited photos. Weddings are not offered.</p>
           <div class="row" id="bUnitRow" hidden>
             <div class="field"><label for="b-cars">Cars &amp; trucks</label><input type="tel" inputmode="numeric" id="b-cars" value="0"></div>
             <div class="field"><label for="b-rvs">RVs &amp; trailers</label><input type="tel" inputmode="numeric" id="b-rvs" value="0"></div>
@@ -1345,11 +1349,10 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   })();
 
   /* Booking chooser: same packages, add-ons and prices as /pricing/ (pricing/catalog.js, built from bs-lib.php) */
-  var BC = window.BS_CAT, bk = {seg: 're', re: {pkg: '', add: [], size: 's1'}, auto: {pkg: '', add: [], cars: 0, rvs: 0}, event: {add: []}};
+  var BC = window.BS_CAT, bk = {seg: 're', re: {pkg: '', add: [], size: 's1'}, auto: {pkg: '', add: [], cars: 0, rvs: 0}, ev: {pkg: '', add: [], hours: 0}};
   var BTYPES = {re: ['Residential listing', 'Condo or townhouse', 'Luxury estate', 'Commercial property', 'Builder or new construction'],
     auto: ['Car & truck dealership', 'RV & trailer dealership', 'Powersports or marine', 'Auction or fleet'],
-    event: ['Community festival or fair', 'Brand activation or launch', 'Private gathering', 'Corporate event', 'Other']};
-  var EVENT_OPTS = ['Event photography', 'Event video', 'Vertical social reels', 'Drone coverage'];
+    ev: ['Community festival or fair', 'Brand activation or launch', 'Corporate event', 'Private gathering (not weddings)', 'Other']};
   function bMoney(n){ return '$' + Number(n).toLocaleString('en-CA', {minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2}); }
   function bFind(list, id){ for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i]; return null; }
   function bEsc(t){ return String(t).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
@@ -1359,25 +1362,27 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   function bDraw(){
     if (!BC) return;
     var sg = bk.seg, st = bk[sg], P = $('bPkgs'), A = $('bAdds');
-    $('bPkgSet').hidden = sg === 'event'; $('bSizeRow').hidden = sg !== 're'; $('bUnitRow').hidden = sg !== 'auto';
-    $('bAddLbl').textContent = sg === 'event' ? 'What do you need?' : 'Add-ons';
+    $('bSizeRow').hidden = sg !== 're'; $('bUnitRow').hidden = sg !== 'auto'; $('bHourRow').hidden = sg !== 'ev'; $('bEvNote').hidden = sg !== 'ev';
     var ty = $('b-type'), keep = ty.value; ty.innerHTML = BTYPES[sg].map(function(t){ return '<option>' + bEsc(t) + '</option>'; }).join(''); if (BTYPES[sg].indexOf(keep) >= 0) ty.value = keep;
-    if (sg === 'event') { P.innerHTML = ''; A.innerHTML = EVENT_OPTS.map(function(o){ return chip('checkbox', 'badd', o, o, 'Quoted per event', st.add.indexOf(o) >= 0); }).join(''); return bEst(); }
     var c = BC[sg], pk = bFind(c.packages, st.pkg), h = '';
     if (sg === 're') h += chip('radio', 'bpkg', '', 'No package', 'Add-ons only', !st.pkg);
     c.packages.forEach(function(p){ h += chip('radio', 'bpkg', p.id, p.name, p.perunit ? 'From $35 / unit' : bMoney(p.price), st.pkg === p.id); });
     P.innerHTML = h; h = '';
-    if (sg === 're') c.addons.forEach(function(a){ h += chip('checkbox', 'badd', a.id, a.name, a.quote ? 'On request' : '+ ' + bMoney(a.price), st.add.indexOf(a.id) >= 0); });
+    if (sg === 'ev') {
+      var room = pk ? c.maxHours - pk.hours : 0, hs = $('b-hours'), o = ''; st.hours = Math.min(st.hours, room);
+      for (var hr = 0; hr <= room; hr++) o += '<option value="' + hr + '">' + (hr ? hr + ' extra hour' + (hr > 1 ? 's' : '') + ' (+' + bMoney(hr * c.hourPrice) + ')' : (pk ? 'None (' + pk.hours + ' hour' + (pk.hours > 1 ? 's' : '') + ' total)' : 'Pick a package first')) + '</option>';
+      hs.innerHTML = o; hs.value = st.hours; hs.disabled = !room;
+      c.addons.forEach(function(a){ var inc = pk && pk.id === 'ev-showcase' && a.id === 'ev-drone'; h += chip('checkbox', 'badd', a.id, a.name, inc ? 'Included' : '+ ' + bMoney(a.price), inc || st.add.indexOf(a.id) >= 0, inc, inc); });
+    } else if (sg === 're') c.addons.forEach(function(a){ h += chip('checkbox', 'badd', a.id, a.name, a.quote ? 'On request' : '+ ' + bMoney(a.price), st.add.indexOf(a.id) >= 0); });
     else {
       c.unitAddons.forEach(function(a){ var inc = pk && !pk.perunit && pk.unitType === a.unitType; h += chip('checkbox', 'badd', a.id, a.name, inc ? 'Included' : bMoney(a.price) + ' / unit', inc || st.add.indexOf(a.id) >= 0, inc, inc); });
       c.addons.forEach(function(a){ var inc = pk && !pk.perunit && a.id === 'au-aerial'; h += chip('checkbox', 'badd', a.id, a.name, inc ? 'Included' : a.quote ? 'On request' : '+ ' + bMoney(a.price), inc || st.add.indexOf(a.id) >= 0, inc, inc); });
     }
     A.innerHTML = h; bEst();
   }
-  function bCalc(){ return bk.seg === 'event' ? null : window.bsCalc(BC, bk.seg, bk[bk.seg]); }
+  function bCalc(){ return window.bsCalc(BC, bk.seg, bk[bk.seg]); }
   function bEst(){
     var r = bCalc(), box = $('bEst');
-    if (!r) { box.innerHTML = 'Events are quoted to fit the day. Tell us the date, place and what you need, and we will reply with a price.'; return; }
     if (!r.lines.length) { box.innerHTML = 'Pick a package or add-ons to see your estimate. <a class="lk" href="pricing/">Full pricing</a>'; return; }
     box.innerHTML = '<ul>' + r.lines.map(function(l){ return '<li>' + bEsc(l[0]) + (l[1] > 1 ? ' × ' + l[1] : '') + ' · ' + bMoney(l[2]) + '</li>'; }).join('') + '</ul>'
       + 'Estimated total <b>' + bMoney(r.total) + '</b> incl. 13% HST' + (r.flags.length ? '<div class="fl">' + bEsc(r.flags.join(' · ')) + '</div>' : '')
@@ -1386,6 +1391,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   if (BC) {
     $('b-size').innerHTML = BC.re.sizes.map(function(z){ return '<option value="' + z.id + '">' + bEsc(z.name) + (z.quote ? ' (quoted)' : z.price ? ' (+' + bMoney(z.price) + ')' : '') + '</option>'; }).join('');
     $('b-size').addEventListener('change', function(){ bk.re.size = this.value; bEst(); });
+    $('b-hours').addEventListener('change', function(){ bk.ev.hours = +this.value || 0; bEst(); });
     ['cars', 'rvs'].forEach(function(u){ $('b-' + u).addEventListener('input', function(){ bk.auto[u] = Math.max(0, Math.min(500, parseInt(this.value, 10) || 0)); bEst(); }); });
     $('bSeg').addEventListener('change', function(e){ bk.seg = e.target.value; if (bk.seg === 'auto' && !bk.auto.pkg) bk.auto.pkg = 'au-fleet'; bDraw(); });
     $('bPkgs').addEventListener('change', function(e){ bk[bk.seg].pkg = e.target.value; bDraw(); });
@@ -1397,22 +1403,23 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
     e.preventDefault();
     var err = $('bookErr'); err.hidden = true;
     var sg = bk.seg, st = bk[sg], r = bCalc(), c = BC && BC[sg];
-    if (sg === 'event' ? !st.add.length : (!r || (!r.lines.length && !r.flags.length))) return fail(err, sg === 'event' ? 'Choose what you need for the event.' : 'Choose a package or at least one add-on.');
+    if (sg === 'ev' && !st.pkg) return fail(err, 'Choose an event coverage package (1, 2 or 3 hours).');
+    if (!r.lines.length && !r.flags.length) return fail(err, 'Choose a package or at least one add-on.');
     if (!val('b-addr')) return fail(err, 'Add the address or city for the shoot.');
     if (!val('b-date')) return fail(err, 'Pick a date on the calendar.');
     if (!val('b-time')) return fail(err, 'Pick a time slot.');
     if (!val('b-name')) return fail(err, 'Add your name.');
     if (!val('b-phone') && !val('b-email')) return fail(err, 'Add a phone number or email so we can confirm.');
     if (val('b-email') && !/^\S+@\S+\.\S+$/.test(val('b-email'))) return fail(err, 'That email address looks incomplete.');
-    var lines = ['BOOKING REQUEST · BlackSheep Digital Works', '', 'Shoot: ' + ({re: 'Real estate', auto: 'Dealership', event: 'Event or other'})[sg] + ' · ' + $('b-type').value];
-    if (sg === 'event') lines.push('Needs: ' + st.add.join(', '));
-    else {
+    var lines = ['BOOKING REQUEST · BlackSheep Digital Works', '', 'Shoot: ' + ({re: 'Real estate', auto: 'Dealership', ev: 'Event'})[sg] + ' · ' + $('b-type').value];
+    {
       var pk = bFind(c.packages, st.pkg);
       lines.push('Package: ' + (pk ? pk.name + (pk.perunit ? ' (per unit)' : ' (' + bMoney(pk.price) + ')') : 'None, add-ons only'));
       var adds = st.add.map(function(id){ var a = bFind(c.addons, id) || bFind(c.unitAddons || [], id); return a ? a.name : id; });
       if (adds.length) lines.push('Add-ons: ' + adds.join(', '));
       if (sg === 're') lines.push('Home size: ' + (bFind(c.sizes, st.size) || c.sizes[0]).name);
       if (sg === 'auto') lines.push('Units: ' + st.cars + ' cars/trucks, ' + st.rvs + ' RVs/trailers');
+      if (sg === 'ev' && pk) lines.push('Coverage: ' + (pk.hours + Math.min(st.hours, c.maxHours - pk.hours)) + ' hour(s)');
       lines.push('', 'Estimate:');
       r.lines.forEach(function(l){ lines.push('- ' + l[0] + (l[1] > 1 ? ' x ' + l[1] : '') + ': ' + bMoney(l[2])); });
       lines.push('Subtotal ' + bMoney(r.sub) + ' · HST ' + bMoney(r.hst) + ' · Estimated total ' + bMoney(r.total));

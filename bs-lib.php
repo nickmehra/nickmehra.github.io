@@ -107,6 +107,22 @@ function bs_catalog() {
         ['id' => 'au-show', 'name' => 'RV show & event coverage', 'price' => 0, 'quote' => true],
       ],
     ],
+    'ev' => [
+      'label' => 'Events',
+      'maxHours' => 3,
+      'packages' => [
+        ['id' => 'ev-snapshot', 'name' => 'Snapshot', 'price' => 199, 'hours' => 1, 'items' => ['1 hour of coverage', 'Unlimited edited photos']],
+        ['id' => 'ev-highlight', 'name' => 'Highlight', 'price' => 499, 'hours' => 2, 'items' => ['2 hours of coverage', 'Unlimited edited photos', '60–90 s highlight reel']],
+        ['id' => 'ev-showcase', 'name' => 'Showcase', 'price' => 849, 'hours' => 3, 'flag' => 'Full coverage', 'items' => ['3 hours of photo + video coverage', 'Unlimited edited photos', '2–3 min recap film', '3 vertical social reels', 'Drone coverage where permitted']],
+      ],
+      'hourPrice' => 125,
+      'addons' => [
+        ['id' => 'ev-drone', 'name' => 'Drone coverage', 'price' => 199],
+        ['id' => 'ev-reel', 'name' => 'Extra vertical reel', 'price' => 99],
+        ['id' => 'ev-rush', 'name' => '48-hour rush delivery', 'price' => 149],
+      ],
+      'note' => 'Event coverage runs up to 3 hours. Weddings are not offered.',
+    ],
     'notes' => ['Prices in CAD, plus 13% HST.', 'Travel within the GTA included; beyond the GTA quoted per km.', 'Delivery in 24–72 hours depending on volume, most within 24–48.'],
   ];
 }
@@ -114,11 +130,20 @@ function bs_find($list, $id) { foreach ($list as $x) if ($x['id'] === $id) retur
 
 // Builds the priced line items from a request. Never trusts prices sent by the browser.
 function bs_price($req) {
-  $cat = bs_catalog(); $seg = ($req['segment'] ?? '') === 'auto' ? 'auto' : 're'; $c = $cat[$seg];
+  $cat = bs_catalog(); $seg = in_array($req['segment'] ?? '', ['auto', 'ev'], true) ? $req['segment'] : 're'; $c = $cat[$seg];
   $lines = []; $flags = [];
   $pkg = bs_find($c['packages'], (string)($req['package'] ?? ''));
   $addons = array_values(array_unique(array_filter((array)($req['addons'] ?? []), 'is_string')));
-  if ($seg === 're') {
+  if ($seg === 'ev') {
+    if ($pkg) {
+      $lines[] = ['name' => 'Package · ' . $pkg['name'], 'qty' => 1, 'unit' => $pkg['price'], 'amount' => $pkg['price'], 'detail' => implode(' · ', $pkg['items'])];
+      $xh = max(0, min($c['maxHours'] - $pkg['hours'], (int)($req['hours'] ?? 0)));
+      if ($xh) $lines[] = ['name' => 'Extra coverage hour', 'qty' => $xh, 'unit' => $c['hourPrice'], 'amount' => $xh * $c['hourPrice']];
+    }
+    foreach ($addons as $id) { $a = bs_find($c['addons'], $id); if (!$a) continue;
+      if ($id === 'ev-drone' && $pkg && $pkg['id'] === 'ev-showcase') continue; // already included
+      $lines[] = ['name' => $a['name'], 'qty' => 1, 'unit' => $a['price'], 'amount' => $a['price']]; }
+  } elseif ($seg === 're') {
     if ($pkg) $lines[] = ['name' => 'Package · ' . $pkg['name'], 'qty' => 1, 'unit' => $pkg['price'], 'amount' => $pkg['price'], 'detail' => implode(' · ', $pkg['items'])];
     foreach ($addons as $id) { $a = bs_find($c['addons'], $id); if (!$a) continue;
       if (!empty($a['quote'])) { $flags[] = $a['name'] . ': priced on request'; continue; }
@@ -225,7 +250,7 @@ function bs_pdf($q) {
   $txt(48, $y, 8, 'PREPARED FOR', 'F2', '0.6 0.07 0.1'); $txt(320, $y, 8, 'SHOOT DETAILS', 'F2', '0.6 0.07 0.1');
   $c = $q['client']; $s = $q['shoot'];
   $L = array_values(array_filter([$c['name'], $c['email'], $c['phone'] ?? '', $c['company'] ?? '']));
-  $R = array_values(array_filter([($q['segment'] === 'auto' ? 'Dealership' : 'Real estate') . ($s['type'] ? ' - ' . $s['type'] : ''), $s['address'] ?? '', trim(($s['date'] ? date('D M j, Y', strtotime($s['date'])) : 'Date to be confirmed') . ($s['slot'] ? ' - ' . $s['slot'] : ''))]));
+  $R = array_values(array_filter([(['auto' => 'Dealership', 'ev' => 'Event'][$q['segment']] ?? 'Real estate') . ($s['type'] ? ' - ' . $s['type'] : ''), $s['address'] ?? '', trim(($s['date'] ? date('D M j, Y', strtotime($s['date'])) : 'Date to be confirmed') . ($s['slot'] ? ' - ' . $s['slot'] : ''))]));
   for ($i = 0; $i < max(count($L), count($R)); $i++) { $yy = $y - 16 - $i * 14; if (isset($L[$i])) $txt(48, $yy, 10.5, $L[$i]); if (isset($R[$i])) $txt(320, $yy, 10.5, $R[$i]); }
   $y -= 30 + max(count($L), count($R)) * 14;
   $rect(48, $y - 6, $W - 96, 22, '0.95 0.94 0.92');
