@@ -157,7 +157,7 @@ header{--bg:#0A0B0D;--panel:rgba(12,14,18,.74);--fg:#EFEBE3;--muted:#A9ADB3;--li
 :root[data-theme="dark"]{color-scheme:dark}
 
 /* mobile note under the theme toggle: a faded, closable pop-up, outside the header */
-.view-note{position:fixed;left:50%;z-index:60;width:min(340px,calc(100% - 28px));box-sizing:border-box;padding:10px 38px 10px 14px;background:rgba(10,11,13,.84);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#D6D7DB;border:1px solid rgba(239,235,227,.18);border-radius:10px;font-size:13px;line-height:1.4;text-align:center;letter-spacing:0;text-transform:none;opacity:0;transform:translate(-50%,-6px);transition:opacity .5s ease,transform .5s ease;pointer-events:none;box-shadow:0 10px 28px rgba(0,0,0,.25)}
+.view-note{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));z-index:60;width:min(340px,calc(100% - 28px));box-sizing:border-box;padding:10px 38px 10px 14px;background:rgba(10,11,13,.84);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#D6D7DB;border:1px solid rgba(239,235,227,.18);border-radius:10px;font-size:13px;line-height:1.4;text-align:center;letter-spacing:0;text-transform:none;opacity:0;transform:translate(-50%,10px);transition:opacity .5s ease,transform .5s ease;pointer-events:none;box-shadow:0 10px 28px rgba(0,0,0,.25)}
 .view-note.on{opacity:.9;transform:translate(-50%,0);pointer-events:auto}
 .view-note b{color:#F2EEE7;font-weight:600}
 .vn-x{position:absolute;top:3px;right:4px;width:32px;height:32px;background:none;border:0;color:#D6D7DB;font-size:20px;line-height:1;cursor:pointer}

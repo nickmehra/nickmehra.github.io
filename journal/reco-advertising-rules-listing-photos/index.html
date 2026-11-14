@@ -173,7 +173,7 @@ header{--bg:#0A0B0D;--panel:rgba(12,14,18,.74);--fg:#EFEBE3;--muted:#A9ADB3;--li
 :root[data-theme="dark"]{color-scheme:dark}
 
 /* mobile note under the theme toggle: a faded, closable pop-up, outside the header */
-.view-note{position:fixed;left:50%;z-index:60;width:min(340px,calc(100% - 28px));box-sizing:border-box;padding:10px 38px 10px 14px;background:rgba(10,11,13,.84);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#D6D7DB;border:1px solid rgba(239,235,227,.18);border-radius:10px;font-size:13px;line-height:1.4;text-align:center;letter-spacing:0;text-transform:none;opacity:0;transform:translate(-50%,-6px);transition:opacity .5s ease,transform .5s ease;pointer-events:none;box-shadow:0 10px 28px rgba(0,0,0,.25)}
+.view-note{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));z-index:60;width:min(340px,calc(100% - 28px));box-sizing:border-box;padding:10px 38px 10px 14px;background:rgba(10,11,13,.84);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#D6D7DB;border:1px solid rgba(239,235,227,.18);border-radius:10px;font-size:13px;line-height:1.4;text-align:center;letter-spacing:0;text-transform:none;opacity:0;transform:translate(-50%,10px);transition:opacity .5s ease,transform .5s ease;pointer-events:none;box-shadow:0 10px 28px rgba(0,0,0,.25)}
 .view-note.on{opacity:.9;transform:translate(-50%,0);pointer-events:auto}
 .view-note b{color:#F2EEE7;font-weight:600}
 .vn-x{position:absolute;top:3px;right:4px;width:32px;height:32px;background:none;border:0;color:#D6D7DB;font-size:20px;line-height:1;cursor:pointer}
@@ -272,10 +272,6 @@ header{--bg:#0A0B0D;--panel:rgba(12,14,18,.74);--fg:#EFEBE3;--muted:#A9ADB3;--li
 <script src="/comments.js?v=4" defer></script>
 <script src="/type-fx.js?v=11" defer></script>
 <div class="view-note" role="note" hidden>Best viewed in light mode on Chrome, Safari, Firefox or Edge. Using Opera? Turn off its <b>Dark web pages</b> setting, or switch this site to Dark.<button type="button" class="vn-x" aria-label="Close this note">&times;</button></div>
-<script>(function(){var n=document.querySelector('.view-note');if(!n)return;try{if(localStorage.getItem('vn-off')){n.remove();return}}catch(e){}
-if(!window.matchMedia||!matchMedia('(max-width:760px)').matches){n.remove();return}
-document.body.appendChild(n);function place(){var h=document.querySelector('header');n.style.top=Math.max(10,(h?h.getBoundingClientRect().bottom:0)+10)+'px'}
-place();n.hidden=false;setTimeout(function(){n.classList.add('on')},600);addEventListener('resize',place);addEventListener('scroll',place,{passive:true});
-n.querySelector('.vn-x').addEventListener('click',function(){n.classList.remove('on');try{localStorage.setItem('vn-off','1')}catch(e){}setTimeout(function(){n.remove()},500)});})();</script>
+<script>(function(){var n=document.querySelector('.view-note');if(!n)return;try{if(localStorage.getItem('vn-off')||sessionStorage.getItem('vn-seen')){n.remove();return}}catch(e){}if(!window.matchMedia||!matchMedia('(max-width:760px)').matches){n.remove();return}document.body.appendChild(n);n.hidden=false;try{sessionStorage.setItem('vn-seen','1')}catch(e){}var gone=false;function hide(keep){if(gone)return;gone=true;n.classList.remove('on');if(keep){try{localStorage.setItem('vn-off','1')}catch(e){}}setTimeout(function(){n.remove()},600)}setTimeout(function(){n.classList.add('on')},900);setTimeout(function(){hide(false)},8000);addEventListener('scroll',function(){if(scrollY>240)hide(false)},{passive:true});n.querySelector('.vn-x').addEventListener('click',function(){hide(true)});})();</script>
 </body>
 </html>
