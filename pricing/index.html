@@ -177,7 +177,7 @@ header{--bg:#0A0B0D;--panel:rgba(12,14,18,.74);--fg:#EFEBE3;--muted:#A9ADB3;--li
 .view-note b{color:#F2EEE7;font-weight:600}
 .vn-x{position:absolute;top:3px;right:4px;width:32px;height:32px;background:none;border:0;color:#D6D7DB;font-size:20px;line-height:1;cursor:pointer}
 .vn-x:focus-visible{outline:2px solid #D11F26}
-</style>
+footer .fcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px 34px;width:100%;max-width:900px;text-align:center}footer .fcol{display:flex;flex-direction:column;align-items:center;gap:9px}footer .fcol h4{margin:0 0 4px;font-family:var(--display);font-size:.68rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#C9CCD2}footer .fcol a{font-size:.98rem;letter-spacing:.01em}@media (max-width:700px){footer .fcols{grid-template-columns:1fr 1fr}footer .fcol:last-child{grid-column:1/-1}}</style>
 <link rel="alternate" type="application/rss+xml" title="The BlackSheep Journal" href="https://blacksheepdigitalworks.ca/journal/feed.xml">
 <meta name="twitter:card" content="summary_large_image">
 <style>/* Pricing + account pages: shared pieces on top of the site's base styles */
@@ -324,6 +324,24 @@ main{position:relative;z-index:2}
 .chip{display:inline-block;font:600 .58rem var(--display);letter-spacing:.2em;text-transform:uppercase;padding:5px 9px;border:1px solid currentColor;margin-left:8px;vertical-align:middle}
 .chip.open{color:#B07A00}.chip.approved{color:#1B8A4A}.chip.expired{color:var(--muted)}
 @media (prefers-reduced-motion:reduce){.pc,.pc.in{opacity:1;translate:none;transition:none}.sum li,.qi,.done{animation:none}}
+
+/* service + legal pages */
+.gets{list-style:none;margin:18px auto 0;padding:0;max-width:720px;display:flex;flex-direction:column;gap:10px;font-size:1.08rem}
+.gets li::before{content:"— ";color:var(--red)}
+.svc-prices>div{align-items:center}
+.svc-prices span{display:flex;flex-direction:column;align-items:flex-start;text-align:left}
+.svc-prices em{font-style:normal;color:var(--muted);font-size:.92rem}
+.steps{list-style:none;counter-reset:s;margin:18px auto 0;padding:0;max-width:900px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.steps li{counter-increment:s;border:1px solid var(--line);padding:18px 16px;display:flex;flex-direction:column;gap:6px;text-align:center}
+.steps li::before{content:counter(s);font-family:var(--display);color:var(--red);font-size:1.4rem}
+.steps span{color:var(--muted);font-size:.98rem}
+@media (max-width:820px){.steps{grid-template-columns:1fr 1fr}}
+.acts{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:18px}
+.legal{max-width:760px;margin:0 auto;text-align:left;font-size:1.06rem;line-height:1.7}
+.legal h2{font-size:1.25rem;margin:34px 0 8px;text-align:left}
+.legal h3{font-size:1.02rem;margin:22px 0 4px;font-family:var(--display);letter-spacing:.06em}
+.legal ul{padding-left:1.2em}.legal li{margin:6px 0}
+.legal .upd{color:var(--muted);font-size:.95rem}
 </style>
 </head>
 <body>
@@ -440,10 +458,7 @@ main{position:relative;z-index:2}
 <footer>
   <div class="wrap">
     <a class="lk" href="../#home" aria-label="BlackSheep Digital Works home"><img class="logo-foot" src="../img/logo.png" alt="BlackSheep Digital Works"></a>
-    <div class="links">
-      <a class="lk" href="../#about">About</a><a class="lk" href="../#portfolio">Portfolio</a><a class="lk" href="../journal/">Journal</a><a class="lk" href="../pricing/">Pricing</a><a class="lk" href="../account/">My quotes</a><a class="lk" href="../#contact">Contact</a>
-      <a class="lk" href="https://www.instagram.com/BlackSheepDigitalWorks/" target="_blank" rel="noopener">Instagram</a><a class="lk" href="../comments-admin.php" rel="nofollow">Admin</a>
-    </div>
+    <div class="fcols"><div class="fcol"><h4>Studio</h4><a class="lk" href="../#about">About</a><a class="lk" href="../#portfolio">Portfolio</a><a class="lk" href="../journal/">Journal</a><a class="lk" href="../pricing/">Pricing</a><a class="lk" href="../#contact">Contact</a><a class="lk" href="https://www.instagram.com/BlackSheepDigitalWorks/" target="_blank" rel="noopener">Instagram</a></div><div class="fcol"><h4>Services</h4><a class="lk" href="../services/real-estate-photography/">Real estate photography</a><a class="lk" href="../services/video/">Video &amp; social reels</a><a class="lk" href="../services/drone/">Drone &amp; aerial</a><a class="lk" href="../services/floor-plans/">Floor plans &amp; 3D</a><a class="lk" href="../services/events/">Event coverage</a><a class="lk" href="../services/dealerships/">Dealership inventory</a></div><div class="fcol"><h4>Inquiries</h4><a class="lk" href="../#booking">Book a shoot</a><a class="lk" href="../pricing/#book">Get a quote</a><a class="lk" href="../account/">My quotes</a><a class="lk" href="../privacy/">Privacy &amp; data</a><a class="lk" href="../terms/">Terms of service</a><a class="lk" href="../disclaimer/">Disclaimer</a><a class="lk" href="../accessibility/">Accessibility</a><a class="lk" href="../comments-admin.php" rel="nofollow">Admin</a></div></div>
     <span>© 2026 BlackSheep Digital Works · From Conviction to Legacy</span>
   </div>
 </footer>

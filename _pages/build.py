@@ -163,3 +163,28 @@ open(os.path.join(ROOT, 'pricing', 'index.html'), 'w', encoding='utf-8').write(p
 open(os.path.join(ROOT, 'pricing', 'catalog.js'), 'w', encoding='utf-8').write('window.BS_CAT=' + json.dumps(CAT, ensure_ascii=False) + ';\n')
 open(os.path.join(ROOT, 'account', 'index.html'), 'w', encoding='utf-8').write(account())
 print('Built pricing/ and account/')
+
+
+# ---------- service pages, legal pages, homepage footer ----------
+import content as C
+def simple(path, title, desc, body, depth, current=None):
+    page = blog.page(title + ' | BlackSheep Digital Works', desc, blog.SITE + '/' + path + '/', body, depth, 'img/og-image.jpg', '<style>' + CSS + '</style>')
+    page = page.replace('<meta property="og:type" content="article">', '<meta property="og:type" content="website">')
+    os.makedirs(os.path.join(ROOT, path), exist_ok=True)
+    open(os.path.join(ROOT, path, 'index.html'), 'w', encoding='utf-8').write(nav_fix(page, current))
+
+svc = C.services(CAT)
+for x in svc:
+    simple('services/' + x['slug'], x['title'], re.sub('<[^>]+>', '', x['lede'])[:155], C.service_body(x), 2)
+cards = ''.join('<a class="pc in" href="%s/" style="text-decoration:none"><span class="eyebrow">%s</span><h3>%s</h3><p class="sub">%s</p><span class="btn lk">Learn more</span></a>' % (x['slug'], x['kicker'], E(x['title']), x['lede'].split('. ')[0] + '.') for x in svc)
+simple('services', 'Services', 'Real estate photography, video, drone, floor plans, event coverage and dealership inventory media.',
+       '<section class="pg"><div class="wrap"><span class="eyebrow">Services</span><h1>What we <em>shoot.</em></h1><div class="pk">' + cards + '</div></div></section>', 1)
+for L in C.legal_pages():
+    simple(L['slug'], L['title'], L['desc'], '<section class="pg"><div class="wrap"><span class="eyebrow">' + E(L['title']) + '</span><h1>' + E(L['title']) + '</h1><div class="legal">' + L['body'] + '</div></div></section>', 1)
+
+# homepage footer + footer styles come from the same template as every other page
+hp = os.path.join(ROOT, 'index.html'); h = open(hp, encoding='utf-8').read()
+h = re.sub(r'<footer>.*?</footer>', lambda m: blog.footer_html(''), h, count=1, flags=re.S)
+if 'footer .fcols' not in h: h = h.replace('</style>', blog.FOOTER_CSS + '</style>', 1)
+open(hp, 'w', encoding='utf-8').write(h)
+print('Built services, legal pages and homepage footer')

@@ -88,6 +88,28 @@ def nice(d):
     return d.strftime('%B ') + str(d.day) + d.strftime(', %Y')
 
 
+SERVICES = [('real-estate-photography', 'Real estate photography'), ('video', 'Video &amp; social reels'), ('drone', 'Drone &amp; aerial'),
+            ('floor-plans', 'Floor plans &amp; 3D'), ('events', 'Event coverage'), ('dealerships', 'Dealership inventory')]
+
+def footer_html(up):
+    """Site footer with three link columns (Studio / Services / Inquiries), shared by every page."""
+    col = lambda title, links: '<div class="fcol"><h4>' + title + '</h4>' + ''.join('<a class="lk" href="%s"%s>%s</a>' % (h, x, t) for h, t, x in links) + '</div>'
+    studio = [(up + '#about', 'About', ''), (up + '#portfolio', 'Portfolio', ''), (up + 'journal/', 'Journal', ''), (up + 'pricing/', 'Pricing', ''),
+              (up + '#contact', 'Contact', ''), ('https://www.instagram.com/BlackSheepDigitalWorks/', 'Instagram', ' target="_blank" rel="noopener"')]
+    services = [(up + 'services/' + slug + '/', name, '') for slug, name in SERVICES]
+    inquiries = [(up + '#booking', 'Book a shoot', ''), (up + 'pricing/#book', 'Get a quote', ''), (up + 'account/', 'My quotes', ''),
+                 (up + 'privacy/', 'Privacy &amp; data', ''), (up + 'terms/', 'Terms of service', ''), (up + 'disclaimer/', 'Disclaimer', ''),
+                 (up + 'accessibility/', 'Accessibility', ''), (up + 'comments-admin.php', 'Admin', ' rel="nofollow"')]
+    return ('<footer>\n  <div class="wrap">\n    <a class="lk" href="' + up + '#home" aria-label="BlackSheep Digital Works home"><img class="logo-foot" src="' + up + 'img/logo.png" alt="BlackSheep Digital Works"></a>\n'
+            '    <div class="fcols">' + col('Studio', studio) + col('Services', services) + col('Inquiries', inquiries) + '</div>\n'
+            '    <span>© ' + str(datetime.date.today().year) + ' BlackSheep Digital Works · From Conviction to Legacy</span>\n  </div>\n</footer>')
+
+FOOTER_CSS = ('footer .fcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px 34px;width:100%;max-width:900px;text-align:center}'
+              'footer .fcol{display:flex;flex-direction:column;align-items:center;gap:9px}'
+              'footer .fcol h4{margin:0 0 4px;font-family:var(--display);font-size:.68rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#C9CCD2}'
+              'footer .fcol a{font-size:.98rem;letter-spacing:.01em}'
+              '@media (max-width:700px){footer .fcols{grid-template-columns:1fr 1fr}footer .fcol:last-child{grid-column:1/-1}}')
+
 def page(title, desc, canonical, body, depth, og_image, extra_head=''):
     up = '../' * depth
     return f'''<!doctype html>
@@ -105,7 +127,7 @@ def page(title, desc, canonical, body, depth, og_image, extra_head=''):
 <link rel="icon" href="{up}img/ram.png">
 <link rel="stylesheet" href="{up}fonts/fonts.css">
 <script>try{{var t=localStorage.getItem('bs-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}}catch(e){{}}</script>
-<style>{CSS}</style>
+<style>{CSS}{FOOTER_CSS}</style>
 <link rel="alternate" type="application/rss+xml" title="The BlackSheep Journal" href="{SITE}/journal/feed.xml">
 <meta name="twitter:card" content="summary_large_image">
 {extra_head}
@@ -135,16 +157,7 @@ def page(title, desc, canonical, body, depth, og_image, extra_head=''):
 <main>
 {body}
 </main>
-<footer>
-  <div class="wrap">
-    <a class="lk" href="{up}#home" aria-label="BlackSheep Digital Works home"><img class="logo-foot" src="{up}img/logo.png" alt="BlackSheep Digital Works"></a>
-    <div class="links">
-      <a class="lk" href="{up}#about">About</a><a class="lk" href="{up}#portfolio">Portfolio</a><a class="lk" href="{up}journal/">Journal</a><a class="lk" href="{up}pricing/">Pricing</a><a class="lk" href="{up}account/">My quotes</a><a class="lk" href="{up}#contact">Contact</a>
-      <a class="lk" href="https://www.instagram.com/BlackSheepDigitalWorks/" target="_blank" rel="noopener">Instagram</a><a class="lk" href="{up}comments-admin.php" rel="nofollow">Admin</a>
-    </div>
-    <span>© {datetime.date.today().year} BlackSheep Digital Works · From Conviction to Legacy</span>
-  </div>
-</footer>
+{footer_html(up)}
 <script>
 (function(){{
   var root=document.documentElement, sw=document.getElementById('themeSwitch'), lab=document.getElementById('modeLabel'), knob=document.getElementById('knob');
