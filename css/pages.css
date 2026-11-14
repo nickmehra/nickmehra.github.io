@@ -138,3 +138,7 @@ article.entry blockquote{margin:38px 0;padding:0;font-family:var(--display);font
 .reel .beam{position:absolute;inset:-20% 0;z-index:1;pointer-events:none;background:linear-gradient(100deg,transparent 40%,rgba(255,190,110,.10) 52%,transparent 64%);mix-blend-mode:screen;animation:beam 14s ease-in-out infinite alternate}
 @keyframes beam{0%{transform:translate3d(-12%,0,0);opacity:.5}100%{transform:translate3d(12%,0,0);opacity:1}}
 @media (prefers-reduced-motion:reduce){.reel img.on,.reel .beam{animation:none!important}}
+/* keep the name legible over the backdrop */
+.name{filter:drop-shadow(0 6px 28px rgba(0,0,0,.9)) drop-shadow(0 0 2px rgba(0,0,0,.6))}
+.name i{background:linear-gradient(100deg,#e0303c 0%,#f07a3a 48%,#f7bd4a 100%);-webkit-background-clip:text;background-clip:text}
+.reel img.on{filter:blur(1.4px) saturate(.85) brightness(.48)!important}
