@@ -134,7 +134,7 @@ main{padding-block:56px 72px}
 .sources{max-width:680px;width:100%;text-align:left;border-top:1px solid var(--line);padding-top:22px;margin-top:10px}
 .sources h2{font-size:.8rem;letter-spacing:.28em;text-transform:uppercase;text-align:left;max-width:none;text-shadow:none}
 .sources ul{padding-left:1.1em;font-size:.92rem;color:var(--muted)}
-.cta{display:flex;flex-direction:column;align-items:center;gap:16px;padding:40px 28px;margin-top:40px;width:100%;max-width:760px;background:#0A0B0D;color:#EFEBE3;--fg:#EFEBE3;--ts:rgba(0,0,0,.9)}
+.cta{display:flex;flex-direction:column;align-items:center;gap:16px;padding:40px 28px;margin-top:40px;width:100%;max-width:760px;background:var(--panel);color:var(--fg);border-top:2px solid var(--red)}
 .pager{display:flex;justify-content:space-between;gap:20px;width:100%;max-width:760px;margin-top:30px;font-family:var(--display);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .pager a{text-decoration:none;max-width:48%}
 @media (prefers-reduced-motion:reduce){.card,.card:hover{transform:none}}
@@ -143,9 +143,28 @@ footer{background:#0A0B0D!important;color:#A9ADB3;border-top-color:rgba(239,235,
 footer a{color:#EFEBE3}
 
 /* Light mode legibility + brand rule: the header (with the ram logo) always stays dark, the big logo always sits on a dark plate,
-   and the dark call-to-action panel keeps dark-mode colours in light mode. */
+   (the call-to-action panel now follows the page theme; see the light mode rebuild below). */
 header{--bg:#0A0B0D;--panel:rgba(12,14,18,.74);--fg:#EFEBE3;--muted:#A9ADB3;--line:rgba(239,235,227,.16);--hdr:rgba(10,11,13,.92);--field:rgba(10,11,13,.72);--ghost:rgba(10,11,13,.4);--ts:rgba(0,0,0,.92);--shadow:rgba(0,0,0,.7);--on-fg:#0B0C0E;--red:#D11F26;--red-hi:#FF3B42;--red-1:#9E141A;--red-2:#7A0E12;--red-3:#560A0D;color:var(--fg)}
-.cta{--bg:#0A0B0D;--panel:rgba(12,14,18,.74);--fg:#EFEBE3;--muted:#A9ADB3;--line:rgba(239,235,227,.16);--hdr:rgba(10,11,13,.92);--field:rgba(10,11,13,.72);--ghost:rgba(10,11,13,.4);--ts:rgba(0,0,0,.92);--shadow:rgba(0,0,0,.7);--on-fg:#0B0C0E;--red:#D11F26;--red-hi:#FF3B42;--red-1:#9E141A;--red-2:#7A0E12;--red-3:#560A0D}
+
+/* ---------- Light mode rebuild: no dark boxes around text. Light-on-dark text flips to dark-on-light, a stronger light veil
+   keeps the floating photos from fighting the copy, and a soft page-coloured halo replaces dark plates.
+   Brand rule kept: the ram logo (header, footer, big logo) still sits on dark. ---------- */
+:root[data-theme="light"]{--veil:rgba(245,245,242,.9)}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]){--veil:rgba(245,245,242,.9)}}
+:root[data-theme="light"] .veil{background:radial-gradient(ellipse 62% 78% at 50% 48%,var(--veil) 0%,rgba(245,245,242,.78) 55%,rgba(245,245,242,.32) 100%)}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) .veil{background:radial-gradient(ellipse 62% 78% at 50% 48%,var(--veil) 0%,rgba(245,245,242,.78) 55%,rgba(245,245,242,.32) 100%)}}
+:root[data-theme="light"] main :is(h1,h2,h3,.lede,.eyebrow,.hint,.muted,p,li,figcaption,label,.spec){text-shadow:0 0 1px #F5F5F2,0 0 6px #F5F5F2,0 0 18px #F5F5F2,0 0 34px #F5F5F2}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) main :is(h1,h2,h3,.lede,.eyebrow,.hint,.muted,p,li,figcaption,label,.spec){text-shadow:0 0 1px #F5F5F2,0 0 6px #F5F5F2,0 0 18px #F5F5F2,0 0 34px #F5F5F2}}
+:root[data-theme="light"] main .panel :is(h1,h2,h3,p,li,label,.spec,.eyebrow,.muted){text-shadow:none}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) main .panel :is(h1,h2,h3,p,li,label,.spec,.eyebrow,.muted){text-shadow:none}}
+:root[data-theme="light"] .hint{color:#25292E}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) .hint{color:#25292E}}
+:root[data-theme="light"] .panel{background:rgba(255,255,255,.96)}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) .panel{background:rgba(255,255,255,.96)}}
+:root[data-theme="light"] .rx{background:rgba(255,255,255,.92)!important;color:#08090A!important;box-shadow:0 10px 30px rgba(0,0,0,.18)!important;border:1px solid rgba(8,9,10,.18)}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) .rx{background:rgba(255,255,255,.92)!important;color:#08090A!important;box-shadow:0 10px 30px rgba(0,0,0,.18)!important;border:1px solid rgba(8,9,10,.18)}}
+:root[data-theme="light"] .rx button:hover{background:rgba(0,0,0,.07)}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) .rx button:hover{background:rgba(0,0,0,.07)}}
 </style>
 <link rel="alternate" type="application/rss+xml" title="The BlackSheep Journal" href="https://blacksheepdigitalworks.ca/journal/feed.xml">
 <meta name="twitter:card" content="summary_large_image">

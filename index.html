@@ -369,6 +369,26 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
 .film-frame{width:min(960px,100%);max-width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--line);box-shadow:0 40px 90px var(--shadow);overflow:hidden}
 .film-frame video{display:block;width:100%;height:100%;object-fit:contain;background:#000}
 .film-frame.tilt:hover{--tz:10px}
+
+/* ---------- Light mode rebuild: no dark boxes around text. Light-on-dark text flips to dark-on-light, a stronger light veil
+   keeps the floating photos from fighting the copy, and a soft page-coloured halo replaces dark plates.
+   Brand rule kept: the ram logo (header, footer, big logo) still sits on dark. ---------- */
+:root[data-theme="light"]{--veil:rgba(245,245,242,.9)}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]){--veil:rgba(245,245,242,.9)}}
+:root[data-theme="light"] .veil{background:radial-gradient(ellipse 62% 78% at 50% 48%,var(--veil) 0%,rgba(245,245,242,.78) 55%,rgba(245,245,242,.32) 100%)}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) .veil{background:radial-gradient(ellipse 62% 78% at 50% 48%,var(--veil) 0%,rgba(245,245,242,.78) 55%,rgba(245,245,242,.32) 100%)}}
+:root[data-theme="light"] main :is(h1,h2,h3,.lede,.eyebrow,.hint,.muted,p,li,figcaption,label,.spec){text-shadow:0 0 1px #F5F5F2,0 0 6px #F5F5F2,0 0 18px #F5F5F2,0 0 34px #F5F5F2}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) main :is(h1,h2,h3,.lede,.eyebrow,.hint,.muted,p,li,figcaption,label,.spec){text-shadow:0 0 1px #F5F5F2,0 0 6px #F5F5F2,0 0 18px #F5F5F2,0 0 34px #F5F5F2}}
+:root[data-theme="light"] main .panel :is(h1,h2,h3,p,li,label,.spec,.eyebrow,.muted){text-shadow:none}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) main .panel :is(h1,h2,h3,p,li,label,.spec,.eyebrow,.muted){text-shadow:none}}
+:root[data-theme="light"] .hint{color:#25292E}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) .hint{color:#25292E}}
+:root[data-theme="light"] .panel{background:rgba(255,255,255,.96)}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) .panel{background:rgba(255,255,255,.96)}}
+:root[data-theme="light"] .rx{background:rgba(255,255,255,.92)!important;color:#08090A!important;box-shadow:0 10px 30px rgba(0,0,0,.18)!important;border:1px solid rgba(8,9,10,.18)}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) .rx{background:rgba(255,255,255,.92)!important;color:#08090A!important;box-shadow:0 10px 30px rgba(0,0,0,.18)!important;border:1px solid rgba(8,9,10,.18)}}
+:root[data-theme="light"] .rx button:hover{background:rgba(0,0,0,.07)}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]) .rx button:hover{background:rgba(0,0,0,.07)}}
 </style>
 <title>BlackSheep Digital Works | Real Estate &amp; Event Media in Ontario</title>
 <meta name="description" content="Real estate, dealership and event photography, 4K video and drone coverage from Pickering to Kingston and Peterborough. Edited in-house, delivered in 24 to 48 hours.">
