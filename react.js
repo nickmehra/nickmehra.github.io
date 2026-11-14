@@ -83,25 +83,31 @@
     var img = findImg(e.target);
     if (img && ok(img)) show(img); else if (cur) hideSoon();
   });
-  /* Touch screens: double-tap a photo to like it (never unlikes), with a heart that swells over the photo.
+  /* Touch screens: double-tap a photo to like it; double-tap again to withdraw the like. A big heart pops,
+     then lingers faintly as it drifts up through the photo (filled for a like, hollow for a withdrawn like).
      A single tap keeps doing whatever the photo normally does. */
   var heartCss = document.createElement('style');
-  heartCss.textContent = '.rx-heart{position:fixed;z-index:95;width:96px;height:96px;margin:-48px 0 0 -48px;pointer-events:none;animation:rxHeart 1.1s cubic-bezier(.2,.9,.25,1) forwards}' +
+  heartCss.textContent = '.rx-heart{position:fixed;z-index:95;width:var(--hs,120px);height:var(--hs,120px);margin:calc(var(--hs,120px)/-2) 0 0 calc(var(--hs,120px)/-2);pointer-events:none;animation:rxHeart 3.2s cubic-bezier(.2,.8,.3,1) forwards}' +
     '.rx-heart svg{width:100%;height:100%;filter:drop-shadow(0 8px 22px rgba(0,0,0,.45))}' +
-    '@keyframes rxHeart{0%{opacity:0;transform:scale(.2)}18%{opacity:1;transform:scale(1.18)}32%{transform:scale(.95)}46%{transform:scale(1.04)}70%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.08) translateY(-14px)}}' +
+    '@keyframes rxHeart{0%{opacity:0;transform:scale(.2) translateY(0)}10%{opacity:1;transform:scale(1.18)}18%{transform:scale(.95)}26%{opacity:1;transform:scale(1.04)}38%{opacity:.32;transform:scale(1.02) translateY(-6%)}100%{opacity:0;transform:scale(1.1) translateY(var(--rise,-120px))}}' +
     'img{-webkit-touch-callout:default}';
   document.head.appendChild(heartCss);
-  function burstHeart(x, y) {
+  var HEART = 'M12 21s-7.5-4.6-7.5-10.6A4.4 4.4 0 0 1 12 7.6a4.4 4.4 0 0 1 7.5 2.8C19.5 16.4 12 21 12 21z';
+  function burstHeart(x, y, img, filled) {
+    var r = img.getBoundingClientRect(), size = Math.max(90, Math.min(220, Math.min(r.width, r.height) * .45));
     var h = document.createElement('div'); h.className = 'rx-heart';
     h.style.left = x + 'px'; h.style.top = y + 'px';
-    h.innerHTML = '<svg viewBox="0 0 24 24"><defs><linearGradient id="rxg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#ff4d5a"/><stop offset=".55" stop-color="#e2622b"/><stop offset="1" stop-color="#e9a42c"/></linearGradient></defs><path fill="url(#rxg)" d="M12 21s-7.5-4.6-7.5-10.6A4.4 4.4 0 0 1 12 7.6a4.4 4.4 0 0 1 7.5 2.8C19.5 16.4 12 21 12 21z"/></svg>';
-    document.body.appendChild(h); setTimeout(function () { h.remove(); }, 1200);
+    h.style.setProperty('--hs', size + 'px'); h.style.setProperty('--rise', -Math.max(60, (y - r.top) * .9) + 'px');
+    h.innerHTML = filled
+      ? '<svg viewBox="0 0 24 24"><defs><linearGradient id="rxg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#ff4d5a"/><stop offset=".55" stop-color="#e2622b"/><stop offset="1" stop-color="#e9a42c"/></linearGradient></defs><path fill="url(#rxg)" d="' + HEART + '"/></svg>'
+      : '<svg viewBox="0 0 24 24"><path fill="none" stroke="rgba(244,242,238,.95)" stroke-width="1.1" stroke-linejoin="round" d="' + HEART + '"/></svg>';
+    document.body.appendChild(h); setTimeout(function () { h.remove(); }, 3400);
   }
   function likeImg(img, x, y) {
-    var r = img.getBoundingClientRect();
-    burstHeart(x == null ? r.left + r.width / 2 : x, y == null ? r.top + r.height / 2 : y);
+    var r = img.getBoundingClientRect(); x = x == null ? r.left + r.width / 2 : x; y = y == null ? r.top + r.height / 2 : y;
     cur = img; var k = keyOf(img);
-    var apply = function () { var c = counts[k] || { up: 0, down: 0, mine: 'none' }; if (c.mine !== 'up') vote('up'); else paint(); show(img); hideSoon(2500); };
+    /* double-tap toggles: like, or withdraw an existing like */
+    var apply = function () { var c = counts[k] || { up: 0, down: 0, mine: 'none' }; var liking = c.mine !== 'up'; burstHeart(x, y, img, liking); vote('up'); show(img); hideSoon(2500); };
     if (counts[k]) apply(); else fetch(API + '?keys=' + encodeURIComponent(k), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) { for (var q in d) counts[q] = d[q]; apply(); }).catch(apply);
   }
   var lastTap = { t: 0, img: null, x: 0, y: 0 }, lastTouchEnd = 0, pending = null, passClick = false;
