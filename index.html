@@ -327,6 +327,11 @@ input[type=date]{width:100%;background:var(--field);color:var(--fg);border:1px s
 footer{border-top:1px solid var(--line);padding-block:44px;color:var(--muted);font-size:.9rem;background:var(--hdr)}
 /* logo always sits on dark */
 footer{background:#0A0B0D;color:#A9ADB3;border-top-color:rgba(239,235,227,.16)}footer a{color:#EFEBE3}
+/* Light mode legibility + brand rule: the header (with the ram logo) always stays dark, the big logo always sits on a dark plate,
+   and the dark call-to-action panel keeps dark-mode colours in light mode. */
+header{--bg:#0A0B0D;--panel:rgba(12,14,18,.74);--fg:#EFEBE3;--muted:#A9ADB3;--line:rgba(239,235,227,.16);--hdr:rgba(10,11,13,.92);--field:rgba(10,11,13,.72);--ghost:rgba(10,11,13,.4);--ts:rgba(0,0,0,.92);--shadow:rgba(0,0,0,.7);--on-fg:#0B0C0E;--red:#D11F26;--red-hi:#FF3B42;--red-1:#9E141A;--red-2:#7A0E12;--red-3:#560A0D;color:var(--fg)}
+.logo-full{background:#0A0B0D;padding:clamp(18px,4vw,34px);border-radius:28px;box-sizing:border-box}
+
 footer .wrap{gap:20px}
 .logo-foot{display:block;width:150px;height:auto}
 footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;font-family:var(--display);font-size:.7rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase}
