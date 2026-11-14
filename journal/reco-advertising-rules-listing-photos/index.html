@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Listing photos and RECO&#x27;s advertising rules: consent, accuracy and the expiry date | BlackSheep Journal</title>
+<meta name="description" content="Listing photos and video are advertising under Ontario&#x27;s real estate rules. Here is what RECO&#x27;s bulletins say about consent, accuracy and how long media can stay online.">
+<link rel="canonical" href="https://blacksheepdigitalworks.ca/journal/reco-advertising-rules-listing-photos/">
+<meta property="og:type" content="article"><meta property="og:title" content="Listing photos and RECO&#x27;s advertising rules: consent, accuracy and the expiry date | BlackSheep Journal">
+<meta property="og:description" content="Listing photos and video are advertising under Ontario&#x27;s real estate rules. Here is what RECO&#x27;s bulletins say about consent, accuracy and how long media can stay online."><meta property="og:url" content="https://blacksheepdigitalworks.ca/journal/reco-advertising-rules-listing-photos/">
+<meta property="og:image" content="https://blacksheepdigitalworks.ca/img/nick-portrait-cam.webp">
+<link rel="icon" href="../../img/ram.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..800&family=EB+Garamond:ital,wght@0,400..600;1,400..600&display=swap">
+<script>try{var t=localStorage.getItem('bs-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<style>:root{
+  --bg:#F5F5F2; --panel:rgba(255,255,255,.93); --fg:#08090A; --muted:#25292E; --line:rgba(8,9,10,.24);
+  --hdr:rgba(248,248,246,.95); --field:#FFFFFF; --ghost:rgba(255,255,255,.88); --ts:rgba(255,255,255,1); --veil:rgba(245,245,242,.5); --shadow:rgba(18,20,22,.28); --on-fg:#F5F5F2;
+  --red:#9A1219; --red-hi:#9A1219; --red-1:#86111A; --red-2:#6A0D13; --red-3:#4C090D; --err:#9C2B1E;
+  --display:"Cinzel","Trajan Pro","Optima","Palatino Linotype",Georgia,serif;
+  --body:"EB Garamond","Garamond","Iowan Old Style",Georgia,serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0A0B0D; --panel:rgba(12,14,18,.74); --fg:#EFEBE3; --muted:#A9ADB3; --line:rgba(239,235,227,.16);
+  --hdr:rgba(10,11,13,.72); --field:rgba(10,11,13,.72); --ghost:rgba(10,11,13,.4); --ts:rgba(0,0,0,.92); --veil:rgba(10,11,13,.6); --shadow:rgba(0,0,0,.7); --on-fg:#0B0C0E;
+  --red:#D11F26; --red-hi:#FF3B42; --red-1:#9E141A; --red-2:#7A0E12; --red-3:#560A0D; --err:#FF9A8F; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0A0B0D; --panel:rgba(12,14,18,.74); --fg:#EFEBE3; --muted:#A9ADB3; --line:rgba(239,235,227,.16);
+  --hdr:rgba(10,11,13,.72); --field:rgba(10,11,13,.72); --ghost:rgba(10,11,13,.4); --ts:rgba(0,0,0,.92); --veil:rgba(10,11,13,.6); --shadow:rgba(0,0,0,.7); --on-fg:#0B0C0E;
+  --red:#D11F26; --red-hi:#FF3B42; --red-1:#9E141A; --red-2:#7A0E12; --red-3:#560A0D; --err:#FF9A8F; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;font-size:18.5px}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:21px;line-height:1.6;text-align:center;overflow-x:hidden}
+@media (max-width:560px){html{font-size:17.5px}body{font-size:20px}}
+/* Light mode: heavier type weight for small labels so they hold up on white */
+:root:not([data-theme="dark"]) .eyebrow,:root:not([data-theme="dark"]) label,:root:not([data-theme="dark"]) legend,:root:not([data-theme="dark"]) .lbl,:root:not([data-theme="dark"]) figcaption,:root:not([data-theme="dark"]) nav a{font-weight:700}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .eyebrow,:root:not([data-theme="light"]) label,:root:not([data-theme="light"]) legend,:root:not([data-theme="light"]) .lbl,:root:not([data-theme="light"]) figcaption,:root:not([data-theme="light"]) nav a{font-weight:600}}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+p{margin:0}
+#scene{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+.veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 60% 70% at 50% 45%,var(--veil),transparent 100%)}
+body.no3d #scene{display:none}
+body.no3d .veil{background:linear-gradient(var(--veil),var(--bg)),url(img/estate.jpg) center/cover}
+body{transition:background-color .5s,color .5s}
+main,header,footer{position:relative;z-index:2}
+main{overflow-x:clip}
+/* every page ends at the footer: short pages stretch so the footer sits on the bottom edge */
+body{display:flex;flex-direction:column;min-height:100vh;min-height:100svh;margin:0}
+/* the 3D tilt must never add scroll room past the footer */
+main{overflow:clip}
+main{flex:1 0 auto}
+header,footer{flex:none}
+.wrap{max-width:1100px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;align-items:center}
+
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:.03em;line-height:1.15;margin:0;text-wrap:balance;text-shadow:0 2px 24px var(--ts),0 0 2px var(--ts)}
+h1 em,h2 em{font-style:normal;color:var(--red-hi)}
+h1{font-size:clamp(2rem,6vw,4.2rem);max-width:16ch}
+h2{font-size:clamp(1.5rem,3.6vw,2.5rem);max-width:22ch}
+h3{font-size:1.05rem;letter-spacing:.06em}
+.eyebrow{font-family:var(--display);font-size:.72rem;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--red-hi);text-shadow:0 1px 10px var(--ts)}
+.muted{color:var(--muted)}
+.lede{max-width:46ch;font-size:1.18rem;text-shadow:0 1px 14px var(--ts),0 0 2px var(--ts)}
+.head{display:flex;flex-direction:column;align-items:center;gap:14px;max-width:720px;margin-bottom:40px}
+.head p{color:var(--muted);text-shadow:0 1px 12px var(--ts),0 0 2px var(--ts)}
+.panel{background:var(--panel);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--line)}
+
+/* ---------- Links: red, lifted toward the viewer on hover ---------- */
+a{color:inherit}
+.lk{display:inline-block;text-decoration:none;transform:perspective(500px) translateZ(0) rotateX(0) scale(1);transform-origin:50% 60%;transition:transform .45s cubic-bezier(.2,.9,.25,1.2),color .25s ease,text-shadow .45s ease,background-color .25s,border-color .25s,box-shadow .45s ease;will-change:transform}
+.lk:hover,.lk:focus-visible{color:var(--red-hi);transform:perspective(500px) translateZ(46px) rotateX(14deg) scale(1.18);text-shadow:0 1px 0 var(--red-1),0 2px 0 var(--red-2),0 3px 0 var(--red-2),0 4px 0 var(--red-3),0 5px 0 var(--red-3),0 14px 22px var(--shadow);outline:none;position:relative;z-index:5}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font:600 .74rem var(--display);letter-spacing:.2em;text-transform:uppercase;padding:15px 26px;border:1px solid var(--fg);background:var(--ghost);color:var(--fg);cursor:pointer}
+.btn.primary{background:var(--fg);color:var(--on-fg)}
+.btn.red{background:var(--red);border-color:var(--red);color:#fff}
+.btn.lk:hover,.btn.lk:focus-visible{background:var(--red);border-color:var(--red-hi);color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.5);transform:perspective(600px) translateZ(36px) rotateX(16deg) scale(1.12);box-shadow:0 1px 0 var(--red-1),0 2px 0 var(--red-1),0 3px 0 var(--red-2),0 4px 0 var(--red-2),0 5px 0 var(--red-3),0 6px 0 var(--red-3),0 22px 34px rgba(209,31,38,.38)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.lk,.tilt{transition:color .2s,background-color .2s!important}.lk:hover,.lk:focus-visible,.btn.lk:hover,.btn.lk:focus-visible{transform:none}}
+
+/* ---------- Header ---------- */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--hdr);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.bar{display:flex;flex-direction:column;align-items:center;gap:6px;padding-block:10px}
+.brand{display:flex;align-items:center;gap:12px;color:var(--fg)}
+.brand img{height:40px;width:auto}
+.brand .wm{display:flex;flex-direction:column;line-height:1;text-align:left}
+.brand b{font-family:var(--display);font-weight:700;font-size:1.05rem;letter-spacing:.08em;text-transform:uppercase}
+.brand .wm span{font-family:var(--display);font-size:.56rem;letter-spacing:.42em;text-transform:uppercase;color:var(--muted);margin-top:5px}
+nav{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 26px}
+.theme-switch{position:absolute;right:max(16px,env(safe-area-inset-right,0px));top:14px;display:flex;align-items:center;gap:10px;background:none;border:1px solid var(--line);border-radius:999px;padding:5px 14px 5px 6px;cursor:pointer;color:var(--fg);font:600 .64rem var(--display);letter-spacing:.18em;text-transform:uppercase}
+.theme-switch:hover{border-color:var(--red)}
+.theme-switch:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.track{position:relative;width:46px;height:24px;border-radius:999px;background:var(--field);border:1px solid var(--line)}
+.knob{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:var(--fg);transition:transform .35s cubic-bezier(.5,1.6,.5,1);display:grid;place-items:center}
+.knob svg{width:11px;height:11px;stroke:var(--bg);fill:none;stroke-width:2}
+.theme-switch[aria-checked="false"] .knob{transform:translateX(22px)}
+.mode-label{min-width:3.4em;text-align:left}
+.bar{position:relative}
+@media (max-width:760px){.theme-switch{position:static}}
+nav a{font-family:var(--display);font-size:.74rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);padding:6px 2px}
+nav a[aria-current="page"]{color:var(--fg);box-shadow:inset 0 -1px 0 var(--red)}
+footer{border-top:1px solid var(--line);padding-block:44px;color:var(--muted);font-size:.9rem;background:var(--hdr)}
+footer .wrap{gap:20px}
+.logo-foot{display:block;width:150px;height:auto}
+footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;font-family:var(--display);font-size:.7rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase}
+
+/* ---------- Journal ---------- */
+body{background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(209,31,38,.08),transparent 70%),var(--bg)}
+main{padding-block:56px 72px}
+.jhead{gap:16px;margin-bottom:48px}
+.cards{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:28px;align-items:stretch}
+.card{display:flex;flex-direction:column;text-decoration:none;color:var(--fg);overflow:hidden;transition:transform .5s cubic-bezier(.2,.9,.25,1.1),border-color .3s,box-shadow .5s;transform:perspective(900px) rotateX(0)}
+.card:hover,.card:focus-visible{transform:perspective(900px) translateZ(30px) rotateX(5deg);border-color:var(--red);box-shadow:0 30px 50px var(--shadow);outline:none}
+.thumb{display:block;aspect-ratio:16/10;overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s}
+.card:hover .thumb img{transform:scale(1.06)}
+.txt{display:flex;flex-direction:column;gap:10px;padding:22px 24px 26px}
+.ct{font-family:var(--display);font-weight:600;font-size:1.15rem;letter-spacing:.03em;line-height:1.25}
+.cd{color:var(--muted);font-size:1rem;line-height:1.5}
+.more{font-family:var(--display);font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--red-hi);margin-top:auto}
+.post{gap:18px}
+.post h1{max-width:20ch}
+.post .back{margin-bottom:6px}
+.cover{margin:22px 0 10px;width:100%;max-width:980px;border:1px solid var(--line)}
+.cover img{display:block;width:100%;height:auto}
+.prose{max-width:680px;text-align:left;font-size:1.06rem}
+.prose p{margin:0 0 1.15em}
+.prose h2{font-size:1.45rem;margin:1.7em 0 .7em;text-align:left;max-width:none}
+.prose h3{margin:1.4em 0 .5em}
+.prose ul{margin:0 0 1.2em;padding-left:1.2em}
+.prose li{margin:.35em 0}
+.prose li::marker{color:var(--red-hi)}
+.prose blockquote{margin:1.4em 0;padding:4px 0 4px 22px;border-left:2px solid var(--red);font-style:italic;font-size:1.12rem}
+.tl{color:var(--red-hi);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.sources{max-width:680px;width:100%;text-align:left;border-top:1px solid var(--line);padding-top:22px;margin-top:10px}
+.sources h2{font-size:.8rem;letter-spacing:.28em;text-transform:uppercase;text-align:left;max-width:none;text-shadow:none}
+.sources ul{padding-left:1.1em;font-size:.92rem;color:var(--muted)}
+.cta{display:flex;flex-direction:column;align-items:center;gap:16px;padding:40px 28px;margin-top:40px;width:100%;max-width:760px;background:#0A0B0D;color:#EFEBE3;--fg:#EFEBE3;--ts:rgba(0,0,0,.9)}
+.pager{display:flex;justify-content:space-between;gap:20px;width:100%;max-width:760px;margin-top:30px;font-family:var(--display);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.pager a{text-decoration:none;max-width:48%}
+@media (prefers-reduced-motion:reduce){.card,.card:hover{transform:none}}
+.cards{grid-template-columns:repeat(auto-fit,minmax(300px,360px));justify-content:center}
+footer{background:#0A0B0D!important;color:#A9ADB3;border-top-color:rgba(239,235,227,.16)}
+footer a{color:#EFEBE3}
+
+/* Light mode legibility + brand rule: the header (with the ram logo) always stays dark, the big logo always sits on a dark plate,
+   and the dark call-to-action panel keeps dark-mode colours in light mode. */
+header{--bg:#0A0B0D;--panel:rgba(12,14,18,.74);--fg:#EFEBE3;--muted:#A9ADB3;--line:rgba(239,235,227,.16);--hdr:rgba(10,11,13,.92);--field:rgba(10,11,13,.72);--ghost:rgba(10,11,13,.4);--ts:rgba(0,0,0,.92);--shadow:rgba(0,0,0,.7);--on-fg:#0B0C0E;--red:#D11F26;--red-hi:#FF3B42;--red-1:#9E141A;--red-2:#7A0E12;--red-3:#560A0D;color:var(--fg)}
+.cta{--bg:#0A0B0D;--panel:rgba(12,14,18,.74);--fg:#EFEBE3;--muted:#A9ADB3;--line:rgba(239,235,227,.16);--hdr:rgba(10,11,13,.92);--field:rgba(10,11,13,.72);--ghost:rgba(10,11,13,.4);--ts:rgba(0,0,0,.92);--shadow:rgba(0,0,0,.7);--on-fg:#0B0C0E;--red:#D11F26;--red-hi:#FF3B42;--red-1:#9E141A;--red-2:#7A0E12;--red-3:#560A0D}
+</style>
+<link rel="alternate" type="application/rss+xml" title="The BlackSheep Journal" href="https://blacksheepdigitalworks.ca/journal/feed.xml">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Listing photos and RECO's advertising rules: consent, accuracy and the expiry date","datePublished":"2026-11-14","description":"Listing photos and video are advertising under Ontario's real estate rules. Here is what RECO's bulletins say about consent, accuracy and how long media can stay online.","image":"https://blacksheepdigitalworks.ca/img/nick-portrait-cam.webp","author":{"@type":"Person","name":"Nick Mehra"},"publisher":{"@type":"Organization","name":"BlackSheep Digital Works"},"mainEntityOfPage":"https://blacksheepdigitalworks.ca/journal/reco-advertising-rules-listing-photos/"}</script>
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <a class="brand lk" href="../../#home" aria-label="BlackSheep Digital Works home">
+      <img src="../../img/ram.png" alt="">
+      <span class="wm"><b>BlackSheep</b><span>Digital Works</span></span>
+    </a>
+    <nav aria-label="Main">
+      <a class="lk" href="../../#home">Home</a>
+      <a class="lk" href="../../#about">About</a>
+      <a class="lk" href="../../#portfolio">Portfolio</a>
+      <a class="lk" href="../../journal/" aria-current="page">Journal</a>
+      <a class="lk" href="../../#booking">Booking</a>
+      <a class="lk" href="../../#contact">Contact</a>
+    </nav>
+    <button class="theme-switch" id="themeSwitch" type="button" role="switch" aria-checked="true" aria-label="Dark mode">
+      <span class="track"><span class="knob" id="knob"></span></span>
+      <span class="mode-label" id="modeLabel">Dark</span>
+    </button>
+  </div>
+</header>
+<main>
+<article class="wrap post">
+  <a class="eyebrow lk back" href="../">&#8249; The Journal</a>
+  <p class="eyebrow date"><time datetime="2026-11-14">November 14, 2026</time></p>
+  <h1>Listing photos and RECO&#x27;s advertising rules: consent, accuracy and the expiry date</h1>
+  <p class="lede">Listing photos and video are advertising under Ontario&#x27;s real estate rules. Here is what RECO&#x27;s bulletins say about consent, accuracy and how long media can stay online.</p>
+  <figure class="cover"><img src="../../img/nick-portrait-cam.webp" alt="Nick Mehra of BlackSheep Digital Works in a black blazer and turtleneck, holding his Sony camera"></figure>
+  <div class="prose">
+<p>Most agents think of listing photos as marketing. The Real Estate Council of Ontario (RECO) thinks of them as advertising, and that puts them under the same rules as a sign, a flyer or a paid post.</p>
+<p>That matters for anyone who shoots, edits or posts property media in Ontario. The rules are set out in the <em>Trust in Real Estate Services Act, 2002</em> and its regulations, and RECO explains them in a series of advertising bulletins. Here is what those bulletins say that touches photos and video directly.</p>
+<h2>Advertising is broader than you might think</h2>
+<p>RECO defines advertising as any public notice or representation made by or for a brokerage or agent to promote the brokerage, an agent, or their services. That covers print, broadcast, websites and social media. A listing gallery, a walkthrough video posted to Instagram and a reel of a sold home all fall inside it.</p>
+<p>Two baseline requirements follow every one of those pieces. The brokerage has to be clearly and prominently identified, including in ads run by agents on a team. And where an agent is named, it has to be the name registered with RECO, with a permitted title such as salesperson or broker. Nicknames and short forms are not allowed.</p>
+<p>For media, that usually means the brokerage name belongs on the branded video end card, the social caption or the account profile, not just on the MLS listing the post links to.</p>
+<h2>A photo can identify a property, and that needs consent</h2>
+<p>RECO's advertising bulletin says you cannot include anything, image or text, that could reasonably identify a specific property without the owner's consent. The same goes for anything that could reasonably identify a party to a transaction.</p>
+<p>For a new listing this is normally handled in the listing paperwork. Where it gets tricky is everywhere else media ends up:</p>
+<ul><li><strong>Sold posts.</strong> RECO's bulletin on sold property says a photo counts as identifying the property. Before closing, a "sold" ad from either brokerage needs the seller's consent. After closing, it needs the buyer's consent. If the ad shows the price or other terms, both parties have to consent.</li><li><strong>Happy-buyer photos.</strong> Showing buyers and their names needs their written consent.</li><li><strong>Someone else's media.</strong> Using another person's images, logos or word-for-word property descriptions needs the owner's written consent. Sharing showing footage of another agent's listing needs the seller's or tenant's permission, obtained through their agent, and the post has to credit the listing brokerage.</li></ul>
+<p>RECO also says consent should be in writing and, for sold ads, state clear effective and expiry dates.</p>
+<h2>Media has an end date</h2>
+<p>This is the rule that catches people. RECO's online advertising bulletin says photos and video, including virtual showings, cannot stay online past the end date in the written consent. Brokerages and agents are expected to review their content regularly and take down what they no longer have permission to use. If a buyer or seller later asks for something to be removed, RECO says removing it promptly shows integrity and professionalism.</p>
+<p>In practice, that means keeping track of where every gallery and video has been posted: the brokerage site, the agent's personal and business accounts, YouTube, and any third-party listing pages you control. RECO is clear that a third-party-managed website does not exempt a brokerage or agent from keeping information current and accurate.</p>
+<h2>Accurate means accurate, in pictures too</h2>
+<p>RECO's bulletins require advertising to be factually correct, accurate and verifiable, and online content must not misrepresent facts. RECO separates three kinds of problem statements: false (factually wrong), misleading (leaves a wrong impression, even if it does not mislead everyone) and deceptive (purposely misleading).</p>
+<p>The bulletins do not set separate photo-editing rules. But the same standard is a useful test for the edits a listing gallery goes through. Correcting exposure, straightening verticals and replacing a grey sky are generally about showing a room as it looks on a good day. Removing a hydro tower from the backyard view, hiding a cracked foundation wall, or furnishing an empty room without saying so starts to leave buyers with the wrong idea about what they are walking into. If an edit changes what a buyer would reasonably expect to find on a showing, it deserves a second look, and virtually staged images are best labelled as such.</p>
+<h2>A short checklist for your next listing</h2>
+<ul><li>Confirm the seller's written consent covers photos, video, drone and virtual tour, and note its end date.</li><li>Put the brokerage name, as registered, on every branded video and post.</li><li>Get written consent before posting buyers, sellers or a sold price.</li><li>Keep a list of everywhere the media lives so it can come down on time.</li><li>Ask your photographer what was changed in editing, and label virtual staging.</li></ul>
+<blockquote>Good listing media shows the home at its best. It should never show a different home.</blockquote>
+<p>At BlackSheep Digital Works, edits are meant to show the property as it is on its best day, and any virtual staging is flagged so it can be labelled. If you have a listing coming up, <a class="tl" href="/#booking">book a shoot</a>.</p>
+<p><em>This article is general information, not legal advice. RECO's bulletins are summaries for convenience; the Trust in Real Estate Services Act, 2002 and its regulations contain the complete requirements, and your brokerage's advertising policy also applies.</em></p>
+  </div>
+  <section class="sources"><h2>Sources</h2><ul><li><a class="tl" href="https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-1-advertising-requirements/" target="_blank" rel="noopener">RECO Bulletin 5.1: Advertising requirements</a></li><li><a class="tl" href="https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-3-advertising-online/" target="_blank" rel="noopener">RECO Bulletin 5.3: Advertising online</a></li><li><a class="tl" href="https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-4-advertising-sold-property/" target="_blank" rel="noopener">RECO Bulletin 5.4: Advertising sold property</a></li></ul></section>
+  <div class="cta panel">
+    <p class="eyebrow">Real estate · Dealership · Event media</p>
+    <h2>Make your next listing <em>stand apart.</em></h2>
+    <a class="btn red lk" href="../../#booking">Book a shoot</a>
+  </div>
+  <section data-comments="bs:reco-advertising-rules-listing-photos"></section>
+  <nav class="pager" aria-label="More entries"><a class="lk" href="../drone-listing-rules-ontario/">&#8249; Drone shots for your listing: what Canada&#x27;s rules actually require</a><span></span></nav>
+</article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="lk" href="../../#home" aria-label="BlackSheep Digital Works home"><img class="logo-foot" src="../../img/logo.png" alt="BlackSheep Digital Works"></a>
+    <div class="links">
+      <a class="lk" href="../../#about">About</a><a class="lk" href="../../#portfolio">Portfolio</a><a class="lk" href="../../journal/">Journal</a><a class="lk" href="../../#booking">Booking</a><a class="lk" href="../../#contact">Contact</a>
+      <a class="lk" href="https://www.instagram.com/BlackSheepDigitalWorks/" target="_blank" rel="noopener">Instagram</a>
+    </div>
+    <span>© 2026 BlackSheep Digital Works · From Conviction to Legacy</span>
+  </div>
+</footer>
+<script>
+(function(){
+  var root=document.documentElement, sw=document.getElementById('themeSwitch'), lab=document.getElementById('modeLabel'), knob=document.getElementById('knob');
+  var moon='<svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>';
+  var sun='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+  var mq=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
+  function isDark(){var a=root.getAttribute('data-theme');return a?a==='dark':!!(mq&&mq.matches);}
+  function sync(){var d=isDark();sw.setAttribute('aria-checked',d?'true':'false');lab.textContent=d?'Dark':'Light';knob.innerHTML=d?moon:sun;}
+  sw.addEventListener('click',function(){var n=isDark()?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('bs-theme',n);}catch(e){}sync();});
+  if(mq&&mq.addEventListener)mq.addEventListener('change',sync);
+  sync();
+})();
+</script>
+<script src="/react.js?v=6" defer></script>
+<script src="/comments.js?v=4" defer></script>
+<script src="/type-fx.js?v=11" defer></script>
+</body>
+</html>
