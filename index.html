@@ -118,7 +118,7 @@ section{padding-block:clamp(44px,6.5vw,80px)}
 /* 3D photo carousel: each photo swings in on a turn, the outgoing one swings away */
 .frame.wide{width:min(700px,100%);aspect-ratio:3/2}
 .cslides{position:absolute;inset:0;z-index:1;perspective:1500px;overflow:hidden}
-.cslides img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;cursor:zoom-in;opacity:0;transform:translateX(45%) rotateY(-50deg) scale(.86);transition:transform 2.1s cubic-bezier(.25,.75,.2,1),opacity 1.7s ease;backface-visibility:hidden}
+.cslides img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;cursor:zoom-in;opacity:0;transform:translateX(45%) rotateY(-50deg) scale(.86);transition:transform 1.6s cubic-bezier(.22,.8,.24,1),opacity 1.6s cubic-bezier(.22,.8,.24,1);backface-visibility:hidden}
 .cslides img.from-left{transform:translateX(-45%) rotateY(50deg) scale(.86)}
 .cslides img.on{opacity:1;transform:none}
 .cslides img.out-left{opacity:0;transform:translateX(-45%) rotateY(50deg) scale(.86)}
@@ -162,6 +162,7 @@ figcaption{font-family:var(--display);font-size:.66rem;letter-spacing:.22em;text
 .lens-card{position:relative;display:flex;align-items:center;gap:28px;max-width:640px;margin:40px auto 0;padding:26px 30px;background:var(--panel);border:1px solid var(--line);text-align:left}.lens-card::before{content:'';position:absolute;top:-1px;left:30px;right:30px;height:1px;background:linear-gradient(90deg,transparent,#c2202c,#e2622b,#e9a42c,transparent)}.lens-face{flex:none;width:112px;height:112px;border-radius:50%;object-fit:cover;object-position:50% 4%;border:1px solid var(--line);box-shadow:0 0 0 4px var(--panel),0 0 0 5px rgba(209,31,38,.45)}.lens-copy{min-width:0}.lens-copy .eyebrow{display:block;margin-bottom:6px}.lens-copy h3{font-family:var(--display);font-weight:600;font-size:1.35rem;letter-spacing:.06em;margin:0 0 8px;color:var(--fg)}.lens-copy p{margin:0 0 16px;color:var(--muted);line-height:1.6}.lens-link{padding:12px 20px}.lens-link .sr,.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}@media (max-width:560px){.lens-card{flex-direction:column;text-align:center;gap:18px;padding:24px 20px}}
 .aside-note{margin:30px auto 0;max-width:600px;padding-top:18px;position:relative;color:var(--muted);font-style:italic;line-height:1.65;text-align:center}.aside-note::before{content:'';position:absolute;top:0;left:50%;width:90px;margin-left:-45px;height:1px;background:linear-gradient(90deg,transparent,#c2202c,#e2622b,#e9a42c,transparent)}.aside-note .eyebrow{display:block;font-style:normal;margin-bottom:6px}.aside-note a.lk{color:#e2622b;font-style:normal;letter-spacing:.02em}
 .no3d .stage{display:none}
+.frame.carousel{aspect-ratio:3/2;width:min(560px,100%)}
 .grid-fallback{display:none;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;width:100%}
 .no3d .grid-fallback{display:grid}
 .grid-fallback button{padding:0;border:1px solid var(--line);background:none;cursor:pointer;aspect-ratio:3/2;max-width:100%;overflow:hidden}
@@ -523,7 +524,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   <section id="approach" data-cam="approach">
     <div class="wrap">
       <figure>
-        <div class="frame tilt carousel" data-photos="harvest-01,ff-252,ff-314@86%,ff-335,ff-246" role="region" aria-roledescription="carousel" aria-label="Fall Fun Fest photos"><div class="cslides"></div></div>
+        <div class="frame tilt carousel" data-photos="random" role="region" aria-roledescription="carousel" aria-label="Fall Fun Fest photos"><div class="cslides"></div></div>
         <div class="cctl"><button type="button" class="cbtn lk" data-dir="-1" aria-label="Previous photo">&#8249;</button><span class="cdots"></span><button type="button" class="cbtn lk" data-dir="1" aria-label="Next photo">&#8250;</button></div>
         <figcaption class="ccap">Fall Fun Fest 2026</figcaption>
       </figure>
@@ -639,7 +640,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
         <p class="sign">Nick Mehra<small>Owner &amp; Creative Director</small></p>
       </div>
       <figure style="margin-top:40px">
-        <div class="frame tilt carousel" data-photos="harvest-02,ff-307,ff-325,ff-298" role="region" aria-roledescription="carousel" aria-label="Fall Fun Fest photos"><div class="cslides"></div></div>
+        <div class="frame tilt carousel" data-photos="random" role="region" aria-roledescription="carousel" aria-label="Fall Fun Fest photos"><div class="cslides"></div></div>
         <div class="cctl"><button type="button" class="cbtn lk" data-dir="-1" aria-label="Previous photo">&#8249;</button><span class="cdots"></span><button type="button" class="cbtn lk" data-dir="1" aria-label="Next photo">&#8250;</button></div>
         <figcaption class="ccap">Fall Fun Fest 2026</figcaption>
       </figure>
@@ -818,30 +819,87 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   var $ = function(id){ return document.getElementById(id); };
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Every Fall Fun Fest photo, all cut to the same 3:2 frame. The order is shuffled on every visit.
   var PHOTOS = [
-    ['ff-307','Families decorating pumpkins at a long outdoor table','Pumpkin table'],
-    ['ff-246','Close view down a row of large orange pumpkins','Detail'],
-    ['ff-252','Painted Welcome Fall sign with hay bales, pumpkins and corn stalks','Set design'],
-    ['ff-342','A crowd of children and parents seated inside a white event tent','The audience'],
-    ['ff-343','A presenter holding a green parrot in front of a seated audience','Live show'],
-    ['ff-254','Giant blue four-in-a-row game on a lawn with event tents behind','Games'],
-    ['ff-312','Volunteers serving food at an outdoor stall with bunting','Food service'],
-    ['ff-327','A man crouching with two young children beside a Fall Fun Fest sign','Portraits'],
-    ['ff-325','Three adults and a toddler standing beside a Fall Fun Fest sign','Portraits'],
-    ['ff-335','A couple posing on the lawn in front of autumn trees','Portraits'],
-    ['ff-328','A couple posing on the lawn with the event behind them','Portraits'],
-    ['ff-309','Two women posing together on the lawn','Portraits'],
-    ['ff-313','A man and a boy smiling beside the lawn games','Portraits'],
-    ['ff-298','Two men seated at a wooden table with pumpkins','Candid'],
-    ['ff-337','A group of guests gathered near the hay bales','Candid'],
-    ['ff-293','Two guests talking near pumpkins and hay bales','Candid'],
-    ['ff-277','Three boys walking across the lawn in bright sun','Candid'],
-    ['ff-314','A man in a cap and jacket holding a cup on the lawn','Portraits'],
-    ['ff-320','A smiling man crouching beside a child in a white knit hat','Portraits'],
-    ['harvest-01','A smiling man crouching beside a young child in a white knit hat','Father and daughter'],
-    ['harvest-02','A man leaning in to speak with a young child in a white knit hat','Father and daughter'],
-    ['hero','Families decorating pumpkins at a long outdoor table on a sunny autumn day','The day']
+    ['ff-229', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
+    ['ff-230', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
+    ['ff-231', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
+    ['ff-232', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
+    ['ff-234', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
+    ['ff-235', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
+    ['ff-236', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
+    ['ff-237', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
+    ['ff-238', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
+    ['ff-241', 'Branded sponsor tote bags on the grass at Fall Fun Fest', 'Detail'],
+    ['ff-243', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
+    ['ff-244', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
+    ['ff-245', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
+    ['ff-246', 'Close view down a row of large orange pumpkins', 'Detail'],
+    ['ff-247', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
+    ['ff-248', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
+    ['ff-249', 'Giant lawn games set up on the grass at Fall Fun Fest', 'Games'],
+    ['ff-250', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
+    ['ff-251', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
+    ['ff-252', 'Painted Welcome Fall sign with hay bales, pumpkins and corn stalks', 'Set design'],
+    ['ff-253', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
+    ['ff-254', 'Giant blue four-in-a-row game on a lawn with event tents behind', 'Games'],
+    ['ff-255', 'Giant lawn games set up on the grass at Fall Fun Fest', 'Games'],
+    ['ff-256', 'Giant lawn games set up on the grass at Fall Fun Fest', 'Games'],
+    ['ff-257', 'Giant lawn games set up on the grass at Fall Fun Fest', 'Games'],
+    ['ff-261', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-268', 'Families decorating pumpkins at a long outdoor table', 'Pumpkin table'],
+    ['ff-269', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-270', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-271', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-272', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-274', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-275', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-276', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-277', 'Three boys walking across the lawn in bright sun', 'Candid'],
+    ['ff-278', 'Food being served at an outdoor stall at Fall Fun Fest', 'Food service'],
+    ['ff-279', 'Food being served at an outdoor stall at Fall Fun Fest', 'Food service'],
+    ['ff-280', 'Food being served at an outdoor stall at Fall Fun Fest', 'Food service'],
+    ['ff-281', 'Food being served at an outdoor stall at Fall Fun Fest', 'Food service'],
+    ['ff-282', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-289', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-290', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-291', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-292', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-293', 'Two guests talking near pumpkins and hay bales', 'Candid'],
+    ['ff-294', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-295', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-296', 'Guests posing for a portrait on the lawn at Fall Fun Fest', 'Portraits'],
+    ['ff-297', 'Guests posing for a portrait on the lawn at Fall Fun Fest', 'Portraits'],
+    ['ff-298', 'Two men seated at a wooden table with pumpkins', 'Candid'],
+    ['ff-299', 'Guests posing for a portrait on the lawn at Fall Fun Fest', 'Portraits'],
+    ['ff-300', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-301', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-302', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-303', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-304', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-305', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-306', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
+    ['ff-307', 'Families decorating pumpkins at a long outdoor table', 'Pumpkin table'],
+    ['ff-308', 'Guests posing for a portrait on the lawn at Fall Fun Fest', 'Portraits'],
+    ['ff-309', 'Two women posing together on the lawn', 'Portraits'],
+    ['ff-311', 'Guests posing for a portrait on the lawn at Fall Fun Fest', 'Portraits'],
+    ['ff-312', 'Volunteers serving food at an outdoor stall with bunting', 'Food service'],
+    ['ff-313', 'A man and a boy smiling beside the lawn games', 'Portraits'],
+    ['ff-314', 'A man in a cap and jacket holding a cup on the lawn', 'Portraits'],
+    ['ff-315', 'Guests posing for a portrait on the lawn at Fall Fun Fest', 'Portraits'],
+    ['ff-318', 'Guests posing for a portrait on the lawn at Fall Fun Fest', 'Portraits'],
+    ['ff-319', 'Guests posing for a portrait on the lawn at Fall Fun Fest', 'Portraits'],
+    ['ff-320', 'A smiling man crouching beside a child in a white knit hat', 'Portraits'],
+    ['ff-325', 'Three adults and a toddler standing beside a Fall Fun Fest sign', 'Portraits'],
+    ['ff-327', 'A man crouching with two young children beside a Fall Fun Fest sign', 'Portraits'],
+    ['ff-328', 'A couple posing on the lawn with the event behind them', 'Portraits'],
+    ['ff-335', 'A couple posing on the lawn in front of autumn trees', 'Portraits'],
+    ['ff-337', 'A group of guests gathered near the hay bales', 'Candid'],
+    ['ff-342', 'A crowd of children and parents seated inside a white event tent', 'The audience'],
+    ['ff-343', 'A presenter holding a green parrot in front of a seated audience', 'Live show'],
+    ['hero', 'Families decorating pumpkins at a long outdoor table on a sunny autumn day', 'The day']
   ];
+  (function(){ for (var i = PHOTOS.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)), t = PHOTOS[i]; PHOTOS[i] = PHOTOS[j]; PHOTOS[j] = t; } })();
 
   /* ---------------- Theme ---------------- */
   var root = document.documentElement;
@@ -1264,9 +1322,12 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
 
   /* 3D photo carousels */
   function photoIndex(id){ for (var i = 0; i < PHOTOS.length; i++) if (PHOTOS[i][0] === id) return i; return -1; }
+  var carouselPool = PHOTOS.map(function(p){ return p[0]; }).filter(function(id){ return id !== 'hero'; }).reverse();
   document.querySelectorAll('.carousel').forEach(function(frame){
     // each entry is a photo id, optionally "@x%" to choose which part of a wide photo the tall frame shows
     var entries = frame.getAttribute('data-photos').split(',');
+    // "random": six photos drawn fresh on every visit, never repeating what the other carousel shows
+    if (entries[0] === 'random'){ entries = []; while (entries.length < 6 && carouselPool.length) entries.push(carouselPool.shift()); }
     var ids = entries.map(function(e){ return e.split('@')[0]; });
     var pos = entries.map(function(e){ return e.split('@')[1] || ''; });
     var box = frame.querySelector('.cslides');
@@ -1297,7 +1358,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
       inc.className = 'on'; inc.removeAttribute('aria-hidden');
       cur = n; label();
     }
-    function restart(){ clearInterval(timer); if (!reduce) timer = setInterval(function(){ if (!hover && lb.hidden) go(cur + 1, 1); }, 8000); }
+    function restart(){ clearInterval(timer); if (!reduce) timer = setInterval(function(){ if (!hover && lb.hidden) go(cur + 1, 1); }, 7000); }
     fig.querySelectorAll('.cbtn').forEach(function(b){ b.addEventListener('click', function(){ var d = +b.getAttribute('data-dir'); go(cur + d, d); restart(); }); });
     frame.addEventListener('pointerenter', function(){ hover = true; });
     frame.addEventListener('pointerleave', function(){ hover = false; });
@@ -1635,7 +1696,6 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   }
 
   // Hero: the festival photograph large behind the headline
-  var HERO_IDX = PHOTOS.length - 1;
   // The opening backdrop: a modern estate at blue hour with a luxury car and motorcoach, no glow, no frame and feathered edges
   var hero = makePrint(['estate', 'A modern estate at dusk with a black sports car and a luxury motorcoach in the driveway', 'Estate'], 34, 'hero');
   hero.mesh.material.fog = false;
@@ -1644,11 +1704,13 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   hero.group.position.set(0, 1.5, -26); hero.baseY = 1.5; hero.baseZ = -26;
   scene.add(hero.group);
 
+  // The ring shows 22 photos picked at random each visit; the corridor shows the rest
+  var RING_N = Math.min(22, PHOTOS.length);
+
   // The corridor: prints floating on both sides of the camera path
   var corridor = [];
   (function(){
-    var seq = [], i, n = PHOTOS.length - 1;
-    for (i = 0; i < n; i++) seq.push(i);
+    var n = PHOTOS.length;
     // Spaced out: one print per side every 10 units, the two sides staggered by 5,
     // alternating high and low so neighbours never stack into one bright patch.
     var k = 0;
@@ -1656,8 +1718,8 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
       for (var s = 0; s < 2; s++){
         var side = s ? 1 : -1, zz = z - s * 5;
         if (Math.abs(zz - RZ) < 25) continue;
-        var idx = seq[(k * 7 + 3) % n];
-        var f = makePrint(idx, 3.7 + Math.random() * 1.1, 'print');
+        var idx = (RING_N + k) % n;
+        var f = makePrint(idx, 4.2, 'print', 1.5);
         f.side = side; f.xn = Math.random();
         f.baseY = ((k + s) % 2 ? 1.9 : -1.7) + (Math.random() - .5) * .6;
         f.baseZ = zz;
@@ -1672,10 +1734,10 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   }
 
   // The portfolio ring
-  var RING_C = new THREE.Vector3(0, 0, RZ), R = 13.5, PW = 4.05, PH = 2.7, RING_N = PHOTOS.length;
+  var RING_C = new THREE.Vector3(0, 0, RZ), R = 13.5, PW = 4.05, PH = 2.7, RING_N_UNUSED = 0;
   var ring = new THREE.Group(); ring.position.copy(RING_C); scene.add(ring);
   var panels = [];
-  PHOTOS.forEach(function(p, i){
+  PHOTOS.slice(0, RING_N).forEach(function(p, i){
     var th = i / RING_N * Math.PI * 2;
     var f = makePrint(i, PW, 'ring', PW / PH);
     f.group.position.set(Math.sin(th) * R, 0, -Math.cos(th) * R);
