@@ -130,7 +130,6 @@ def page(title, desc, canonical, body, depth, og_image, extra_head=''):
       <span class="track"><span class="knob" id="knob"></span></span>
       <span class="mode-label" id="modeLabel">Dark</span>
     </button>
-    <p class="view-note">Best viewed in light mode on Chrome, Safari, Firefox or Edge. Using Opera? Turn off its <b>Dark web pages</b> setting, or switch this site to Dark.</p>
   </div>
 </header>
 <main>
@@ -160,6 +159,12 @@ def page(title, desc, canonical, body, depth, og_image, extra_head=''):
 }})();
 </script>
 <script src="/react.js?v=6" defer></script>\n<script src="/comments.js?v=4" defer></script>\n<script src="/type-fx.js?v=11" defer></script>
+<div class="view-note" role="note" hidden>Best viewed in light mode on Chrome, Safari, Firefox or Edge. Using Opera? Turn off its <b>Dark web pages</b> setting, or switch this site to Dark.<button type="button" class="vn-x" aria-label="Close this note">&times;</button></div>
+<script>(function(){{var n=document.querySelector('.view-note');if(!n)return;try{{if(localStorage.getItem('vn-off')){{n.remove();return}}}}catch(e){{}}
+if(!window.matchMedia||!matchMedia('(max-width:760px)').matches){{n.remove();return}}
+document.body.appendChild(n);function place(){{var h=document.querySelector('header');n.style.top=Math.max(10,(h?h.getBoundingClientRect().bottom:0)+10)+'px'}}
+place();n.hidden=false;setTimeout(function(){{n.classList.add('on')}},600);addEventListener('resize',place);addEventListener('scroll',place,{{passive:true}});
+n.querySelector('.vn-x').addEventListener('click',function(){{n.classList.remove('on');try{{localStorage.setItem('vn-off','1')}}catch(e){{}}setTimeout(function(){{n.remove()}},500)}});}})();</script>
 </body>
 </html>
 '''
