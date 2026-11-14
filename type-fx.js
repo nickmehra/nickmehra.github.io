@@ -1,6 +1,6 @@
-/* Restrained typing effect for every text field: typed text in the site's italic serif, a hairline
-   red -> orange -> amber underline that draws across as the field fills, and a soft warm glow that
-   eases in while typing and fades slowly after. Respects reduced-motion. */
+/* Typewriter typing for every text field: each character drops onto the line like a typewriter strike, in a
+   matte off-white (deep ink on light backgrounds) set in the site's serif. No glow. A hairline brand underline
+   draws across as the field fills. Respects reduced-motion. */
 (function () {
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var PAL = ['194,32,44', '226,98,43', '233,164,44'];
@@ -10,15 +10,11 @@
 
   var css = document.createElement('style');
   css.textContent =
-    'input.tfx,textarea.tfx{font-family:' + FONT + '!important;font-style:italic;font-size:1.06em;letter-spacing:.01em;caret-color:#e2622b;' +
+    'input.tfx,textarea.tfx{font-family:' + FONT + '!important;font-style:normal;font-weight:500;font-size:1.06em;letter-spacing:.025em;' +
     'background-image:linear-gradient(90deg,#c2202c,#e2622b 55%,#e9a42c)!important;background-repeat:no-repeat!important;background-position:0 100%!important;' +
-    'background-size:var(--tfx-fill,0%) 1px!important;transition:background-size .9s cubic-bezier(.22,.61,.36,1),box-shadow 1.2s ease,border-color 1.2s ease}' +
-    'input.tfx::placeholder,textarea.tfx::placeholder{font-style:normal}' +
-    'input.tfx:focus,textarea.tfx:focus{box-shadow:0 0 0 3px rgba(226,98,43,.14)}' +
-    'input.tfx:hover:not(:focus),textarea.tfx:hover:not(:focus){box-shadow:0 0 0 1px rgba(226,98,43,.35),0 10px 28px -16px rgba(226,98,43,.5)}' +
-    '.tfx.tfx-hit{border-color:rgba(226,160,90,.55)!important;box-shadow:0 0 0 1px rgba(226,160,90,.18),0 14px 34px -18px rgba(226,140,70,.55)!important;' +
-    'transition:background-size .9s cubic-bezier(.22,.61,.36,1),box-shadow .25s ease,border-color .25s ease}' +
-    '@media (prefers-reduced-motion:reduce){.tfx,.tfx.tfx-hit,.tfx{transition:none!important}}';
+    'background-size:var(--tfx-fill,0%) 1px!important;transition:background-size .9s cubic-bezier(.22,.61,.36,1)}' +
+    'input.tfx::placeholder,textarea.tfx::placeholder{font-style:normal;font-weight:400}' +
+    '@media (prefers-reduced-motion:reduce){.tfx{transition:none!important}}';
   document.head.appendChild(css);
 
   function eligible(el) {
@@ -49,14 +45,12 @@
   css2.textContent =
     '.tfx-ov{position:fixed;pointer-events:none;overflow:hidden;z-index:15;box-sizing:border-box;margin:0;background:none!important;border-color:transparent!important}' +
     '.tfx-ov .in{display:block;will-change:transform}' +
-    '.tfx-ov .tfx-c{display:inline-block;white-space:pre;margin:0;padding:0;border:0;background:none;box-shadow:none;max-width:none;animation:tfxBorn .26s cubic-bezier(.2,.8,.3,1) both,tfxSnap .12s .24s cubic-bezier(.3,1.6,.6,1) both}' +
-    '.tfx-ov .tfx-u{display:inline-block;white-space:pre-wrap;margin:0;padding:0;border:0;background:none;box-shadow:none;max-width:100%;vertical-align:top;animation:tfxBorn .36s cubic-bezier(.2,.8,.3,1) both,tfxSnap .12s .34s cubic-bezier(.3,1.6,.6,1) both}' +
-    '.tfx-ov .tfx-m{display:inline;white-space:pre-wrap;animation:tfxSoft .4s cubic-bezier(.2,.8,.3,1) both}' +
-    '@keyframes tfxSoft{0%{filter:blur(1.5px);opacity:.45;color:#e9a42c;text-shadow:0 0 14px rgba(233,164,44,.9)}75%{filter:blur(.4px);opacity:1;color:#e2622b}100%{filter:none;text-shadow:none}}' +
-    '@keyframes tfxBorn{0%{clip-path:circle(28% at 50% 55%);filter:blur(1.2px);color:#e9a42c;text-shadow:0 0 14px rgba(233,164,44,.9);transform:scale(.82)}' +
-    '70%{clip-path:circle(62% at 50% 52%);filter:blur(.6px);color:#e2622b;text-shadow:0 0 8px rgba(226,98,43,.55)}' +
-    '100%{clip-path:circle(80% at 50% 50%);filter:blur(.3px);transform:scale(.97)}}' +
-    '@keyframes tfxSnap{0%{transform:scale(.97);filter:blur(.3px)}55%{transform:scale(1.05)}100%{transform:scale(1);filter:none;text-shadow:none;clip-path:none}}' +
+    '.tfx-ov .tfx-c{display:inline-block;white-space:pre;margin:0;padding:0;border:0;background:none;box-shadow:none;max-width:none;transform-origin:50% 100%;animation:tfxStrike .3s cubic-bezier(.2,.9,.25,1) both}' +
+    '.tfx-ov .tfx-u{display:inline-block;white-space:pre-wrap;margin:0;padding:0;border:0;background:none;box-shadow:none;max-width:100%;vertical-align:top;animation:tfxStrike .36s cubic-bezier(.2,.9,.25,1) both}' +
+    '.tfx-ov .tfx-m{display:inline;white-space:pre-wrap;animation:tfxFade .3s ease-out both}' +
+    '@keyframes tfxStrike{0%{opacity:0;transform:translateY(-.7em) rotate(-5deg) scale(1.08)}55%{opacity:1;transform:translateY(.07em) rotate(0) scale(.98)}' +
+    '75%{transform:translateY(-.025em) scale(1.01)}100%{opacity:1;transform:none}}' +
+    '@keyframes tfxFade{0%{opacity:0;transform:translateY(-.25em)}100%{opacity:1;transform:none}}' +
     'input.tfx-live,textarea.tfx-live{-webkit-text-fill-color:transparent!important}' +
     'input.tfx-live::placeholder,textarea.tfx-live::placeholder{color:rgba(160,162,170,.75)!important;-webkit-text-fill-color:rgba(160,162,170,.75)!important}' +
     'input.tfx-live::selection,textarea.tfx-live::selection{background:rgba(226,98,43,.35)}';
@@ -76,20 +70,12 @@
     render(el, st, 0, 0); sync(el, st);
     return st;
   }
-  /* Text colour steps through the brand gradient across a form's fields in order (dark red -> orange -> amber).
-     On light backgrounds a deeper version of the same gradient keeps it readable. */
-  var DARK_BG = [[224, 64, 72], [240, 122, 58], [247, 189, 74]], LIGHT_BG = [[154, 18, 25], [176, 64, 20], [150, 92, 0]];
+  /* Matte off-white on dark fields, deep warm ink on light ones: always high contrast, never glowing. */
   function lum(c) { var m = (c || '').match(/\d+(\.\d+)?/g); if (!m || (m.length > 3 && +m[3] === 0)) return null; return (0.299 * m[0] + 0.587 * m[1] + 0.114 * m[2]) / 255; }
   function bgLum(el) { for (var n = el; n && n.nodeType === 1; n = n.parentElement) { var l = lum(getComputedStyle(n).backgroundColor); if (l !== null) return l; } return 0; }
-  function mix(a, b, t) { return a.map(function (v, i) { return Math.round(v + (b[i] - v) * t); }); }
   function textColor(el) {
-    var scope = el.form || el.closest('form, section, main') || document;
-    var list = [].filter.call(scope.querySelectorAll('input, textarea'), eligible);
-    var i = Math.max(0, list.indexOf(el)), n = list.length, t = n > 1 ? i / (n - 1) : 0;
-    var P = bgLum(el) > 0.55 ? LIGHT_BG : DARK_BG;
-    var c = t <= .5 ? mix(P[0], P[1], t * 2) : mix(P[1], P[2], (t - .5) * 2);
-    var col = 'rgb(' + c.join(',') + ')';
-    el.style.setProperty('color', col, 'important'); el.style.setProperty('-webkit-text-fill-color', col);
+    var col = bgLum(el) > 0.55 ? 'rgb(30,28,25)' : 'rgb(236,231,222)';
+    el.style.setProperty('color', col, 'important'); el.style.setProperty('-webkit-text-fill-color', col); el.style.setProperty('caret-color', col);
     return col;
   }
   function sync(el, st) {
@@ -142,21 +128,20 @@
   });
   addEventListener('scroll', function () { live.forEach(function (st, el) { sync(el, st); }); }, { passive: true });
   addEventListener('resize', function () { live.forEach(function (st, el) { sync(el, st); }); });
-  /* Custom caret: a fine vertical bar in the brand gradient with a soft glow. It breathes slowly instead of
-     blinking hard, holds solid while typing, and each keystroke gives a small visual "tap": the caret flares
-     and a faint ring of light opens from it, matching the haptic tick. */
+  /* Custom caret: a fine matte bar in the same ink as the text. It breathes slowly instead of blinking hard,
+     holds solid while typing, and gives a small carriage-style nudge on each keystroke. No glow. */
   var css4 = document.createElement('style');
   css4.textContent =
     'input.tfx-cc,textarea.tfx-cc{caret-color:transparent!important}' +
     '.tfx-caret{position:fixed;z-index:2147483000;width:2px;pointer-events:none;border-radius:2px;display:none;' +
-    'background:linear-gradient(180deg,#e9a42c,#e2622b 50%,#c2202c);box-shadow:0 0 6px rgba(226,98,43,.75),0 0 14px rgba(233,164,44,.35);' +
+    'background:var(--tfx-ink,#ece7de);' +
     'animation:tfxBreathe 1.25s ease-in-out infinite;transform-origin:50% 50%}' +
     '.tfx-caret.typing{animation:none;opacity:1}' +
     '.tfx-caret.flare{animation:tfxFlare .32s cubic-bezier(.2,.8,.3,1)}' +
     '@keyframes tfxBreathe{0%,100%{opacity:1}50%{opacity:.12}}' +
-    '@keyframes tfxFlare{0%{transform:scaleY(1.35);box-shadow:0 0 10px rgba(233,164,44,1),0 0 26px rgba(226,98,43,.8)}100%{transform:scaleY(1)}}' +
+    '@keyframes tfxFlare{0%{transform:translateX(-2px)}100%{transform:none}}' +
     '.tfx-ring{position:fixed;z-index:2147482999;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;pointer-events:none;' +
-    'border:1px solid rgba(233,164,44,.8);box-shadow:0 0 10px rgba(226,98,43,.45),inset 0 0 6px rgba(233,164,44,.3);animation:tfxRing .5s cubic-bezier(.2,.75,.3,1) forwards}' +
+    'display:none}' +
     '@keyframes tfxRing{0%{transform:scale(.25);opacity:.9}100%{transform:scale(1.5);opacity:0}}';
   if (!reduce) document.head.appendChild(css4);
   var caret = null, typingT = 0;
@@ -194,7 +179,7 @@
     if (!st) { if (c) c.style.display = 'none'; return; }
     var p = caretPos(el, st);
     if (!p) { if (c) c.style.display = 'none'; el.classList.remove('tfx-cc'); return; }
-    c = caretEl(); el.classList.add('tfx-cc');
+    c = caretEl(); el.classList.add('tfx-cc'); c.style.setProperty('--tfx-ink', st.color || '#ece7de');
     c.style.display = 'block'; c.style.left = (p.x - 1) + 'px'; c.style.top = (p.y - p.h / 2) + 'px'; c.style.height = p.h + 'px';
     return p;
   }
@@ -203,29 +188,18 @@
     sync(el, st); var p = placeCaret(); if (!p) return;
     caret.classList.add('typing'); caret.classList.remove('flare'); void caret.offsetWidth; caret.classList.add('flare');
     clearTimeout(typingT); typingT = setTimeout(function () { caret.classList.remove('typing', 'flare'); }, 650);
-    var ring = document.createElement('div'); ring.className = 'tfx-ring'; ring.setAttribute('aria-hidden', 'true');
-    ring.style.left = p.x + 'px'; ring.style.top = p.y + 'px'; document.body.appendChild(ring);
-    setTimeout(function () { ring.remove(); }, 560);
   }
   if (!reduce) document.addEventListener('input', function (e) { if (eligible(e.target)) tap(e.target); }, true);
   document.addEventListener('focusout', function (e) { e.target.classList && e.target.classList.remove('tfx-cc'); if (caret) caret.style.display = 'none'; }, true);
   (function loop() { live.forEach(function (st, el) { if (!document.contains(el)) drop(el); else sync(el, st); }); if (!reduce) placeCaret(); requestAnimationFrame(loop); })();
   document.addEventListener('reset', function () { setTimeout(function () { live.forEach(function (st, el) { st.prev = el.value; render(el, st, 0, 0); }); }, 0); }, true);
 
-  /* Cinematic opening glow for the box around any form (same as the journal comment box): the frame warms
-     from dark to a faint edge, a soft line of light sweeps once across the top, then the full glow blooms in. */
+  /* The box around a form gets a crisp thin red edge while you're typing in it. No glow. */
   var css3 = document.createElement('style');
   css3.textContent =
-    '.tfx-frame{transition:border-color 1.2s ease,box-shadow 1.2s ease}' +
-    '.tfx-frame:hover,.tfx-frame:focus-within{animation:tfxOpen 2.2s cubic-bezier(.22,.61,.36,1) both}' +
-    '.tfx-sweep{position:absolute;left:0;right:0;top:0;height:1px;pointer-events:none;opacity:0;z-index:3;border-radius:inherit;' +
-    'background:linear-gradient(90deg,transparent,rgba(255,214,150,.95),transparent) no-repeat;background-size:40% 1px;background-position:-60% 0}' +
-    '.tfx-frame:hover>.tfx-sweep,.tfx-frame:focus-within>.tfx-sweep{animation:tfxSweep 1.6s .35s cubic-bezier(.45,.05,.25,1) both}' +
-    '@keyframes tfxOpen{0%{box-shadow:0 0 0 0 rgba(226,98,43,0),0 0 0 0 rgba(226,98,43,0)}' +
-    '30%{box-shadow:0 0 0 1px rgba(233,164,44,.22),0 0 0 0 rgba(226,98,43,0)}' +
-    '100%{box-shadow:0 0 0 1px rgba(226,98,43,.55),0 0 0 5px rgba(226,98,43,.07),0 24px 50px -24px rgba(226,98,43,.6)}}' +
-    '@keyframes tfxSweep{0%{opacity:0;background-position:-60% 0}25%{opacity:1}100%{opacity:0;background-position:160% 0}}' +
-    '@media (prefers-reduced-motion:reduce){.tfx-frame:hover,.tfx-frame:focus-within,.tfx-frame:hover>.tfx-sweep,.tfx-frame:focus-within>.tfx-sweep{animation:none}.tfx-frame:focus-within{box-shadow:0 0 0 1px rgba(226,98,43,.55)}}';
+    '.tfx-frame{transition:border-color .4s ease,box-shadow .4s ease}' +
+    '.tfx-frame:focus-within{box-shadow:0 0 0 1px rgba(194,32,44,.55)}' +
+    '.tfx-sweep{display:none}';
   document.head.appendChild(css3);
   function frameFor(el) {
     if (el.closest('.cm')) return null; /* the journal comment box has its own version */
