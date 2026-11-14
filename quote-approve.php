@@ -14,15 +14,16 @@ if ($allowed && $_SERVER['REQUEST_METHOD'] === 'POST' && $state === 'open') {
   if ($first) {
     $q['approved_at'] = time(); $L = bs_links($q); $pdf = bs_pdf($q); $c = $q['client']; $s = $q['shoot'];
     $when = $s['date'] ? date('l, F j, Y', strtotime($s['date'])) . ($s['slot'] ? ', ' . $s['slot'] : '') : 'date to be confirmed';
+    $ctext = "You approved quote {$q['number']} for $when. Nick will confirm the final details shortly.\nPDF: {$L['pdf']}\n";
     bs_mail($c['email'], "Booking confirmed · quote {$q['number']}", bs_email_shell('You are booked in',
       '<p>Thanks, ' . $e(explode(' ', $c['name'])[0]) . '. You approved quote <b>' . $e($q['number']) . '</b> for ' . $e($when) . '.</p>'
       . '<p>Nick will be in touch shortly to confirm the final details, access and timing. If the date or address changes, just reply to this email.</p>'
       . bs_lines_table($q) . '<p>' . bs_btn($L['pdf'], 'Download quote PDF') . '</p>'),
-      "You approved quote {$q['number']} for $when. Nick will confirm the final details shortly.\nPDF: {$L['pdf']}\n", ["BlackSheep-Quote-{$q['number']}.pdf", $pdf]);
+      $ctext, ["BlackSheep-Quote-{$q['number']}.pdf", $pdf]);
     bs_mail(BS_OWNER_EMAIL, "APPROVED {$q['number']} · " . bs_money($q['price']['total']) . " · {$c['name']}", bs_email_shell('Quote approved: ' . $q['number'],
       '<p><b>' . $e($c['name']) . '</b> approved their quote and confirmed the booking.</p><p>' . $e($c['email']) . ($c['phone'] ? ' · ' . $e($c['phone']) : '') . '<br>' . $e($s['address']) . '<br>' . $e($when) . '</p>'
       . bs_lines_table($q) . '<p>' . bs_btn('mailto:' . $c['email'] . '?subject=' . rawurlencode("Your booking {$q['number']}"), 'Email client') . '</p>'),
-      "{$c['name']} approved {$q['number']} for $when.\n\nBSQ-RECORD:" . base64_encode(json_encode(['event' => 'approved', 'at' => time(), 'quote' => $q, 'pdf' => $L['pdf']], JSON_UNESCAPED_UNICODE)) . "\n",
+      "{$c['name']} approved {$q['number']} for $when.\n\nBSQ-RECORD:" . base64_encode(json_encode(['event' => 'approved', 'at' => time(), 'quote' => $q, 'pdf' => $L['pdf'], 'sent' => ['subject' => "Booking confirmed · quote {$q['number']}", 'text' => $ctext]], JSON_UNESCAPED_UNICODE)) . "\n",
       ["BlackSheep-Quote-{$q['number']}.pdf", $pdf], $c['email']);
   }
   $msg = 'approved-now';

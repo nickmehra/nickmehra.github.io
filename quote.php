@@ -43,12 +43,12 @@ $text = "Hi $name,\n\nYour BlackSheep quote $num (valid until $valid):\n\n" . im
   . "\nSubtotal " . bs_money($price['subtotal']) . "\nHST " . bs_money($price['hst']) . "\nEstimated total " . bs_money($price['total']) . "\n\nApprove and confirm: {$L['approve']}\nDownload PDF: {$L['pdf']}\nQuestions: " . BS_OWNER_EMAIL . ' / ' . BS_OWNER_PHONE . "\n";
 $sentClient = bs_mail($email, "Your BlackSheep quote $num", bs_email_shell('Your quote ' . $num, $inner), $text, ["BlackSheep-Quote-$num.pdf", $pdf]);
 
-// Nick's copy: readable details + a data line his computer uses to file the record in WEBSITE ASSETS/CLIENT RECORDS
+// Nick's copy: readable details + a data line his computer uses to file the record in WEBSITE ASSETS/Bookings
 $own = '<p><b>' . $e($name) . '</b> requested a quote.</p><p>' . $e($email) . ($phone ? ' · ' . $e($phone) : '') . ($company ? '<br>' . $e($company) : '') . '<br>' . $e($q['shoot']['type']) . ' · ' . $e($q['shoot']['address']) . '<br>' . $e($when) . '</p>'
   . bs_lines_table($q) . ($q['notes'] ? '<p><b>Notes:</b> ' . nl2br($e($q['notes'])) . '</p>' : '')
   . '<p>' . bs_btn('mailto:' . $email . '?subject=' . rawurlencode("Your BlackSheep quote $num"), 'Reply to client') . bs_btn($L['pdf'], 'Open PDF', false) . '</p>';
 $ownText = "New quote $num from $name <$email>\n" . strip_tags(str_replace(['<br>', '</p>', '</tr>'], "\n", bs_lines_table($q)))
-  . "\n\nBSQ-RECORD:" . base64_encode(json_encode(['event' => 'quote', 'quote' => $q, 'pdf' => $L['pdf'], 'approve' => $L['approve']], JSON_UNESCAPED_UNICODE)) . "\n";
+  . "\n\nBSQ-RECORD:" . base64_encode(json_encode(['event' => 'quote', 'quote' => $q, 'pdf' => $L['pdf'], 'approve' => $L['approve'], 'sent' => ['subject' => "Your BlackSheep quote $num", 'text' => $text, 'delivered' => (bool)$sentClient]], JSON_UNESCAPED_UNICODE)) . "\n";
 bs_mail(BS_OWNER_EMAIL, "New quote $num · " . bs_money($price['total']) . " · $name", bs_email_shell('New quote ' . $num, $own), $ownText, ["BlackSheep-Quote-$num.pdf", $pdf], $email);
 
 bs_json(['ok' => true, 'number' => $num, 'validUntil' => $valid, 'validUntilTs' => $q['valid_until'], 'price' => $price, 'pdf' => $L['pdf'], 'approve' => $L['approve'], 'emailed' => (bool)$sentClient]);
