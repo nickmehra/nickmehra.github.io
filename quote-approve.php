@@ -33,7 +33,7 @@ $L = $q ? bs_links($q) : null;
 ?><!doctype html>
 <html lang="en-CA"><head><meta charset="utf-8"><meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>Your quote · BlackSheep Digital Works</title><link rel="icon" href="/img/ram.png">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..700&family=EB+Garamond:wght@400..600&display=swap">
+<link rel="stylesheet" href="/fonts/fonts.css">
 <style>
 :root{--bg:#F5F5F2;--panel:#fff;--fg:#08090A;--muted:#3a3e44;--line:rgba(8,9,10,.18);--red:#9A1219;color-scheme:only light}
 @media (prefers-color-scheme:dark){:root{--bg:#0A0B0D;--panel:#121418;--fg:#EFEBE3;--muted:#A9ADB3;--line:rgba(239,235,227,.16);--red:#D11F26;color-scheme:dark}}

@@ -103,8 +103,7 @@ def page(title, desc, canonical, body, depth, og_image, extra_head=''):
 <meta property="og:description" content="{html.escape(desc)}"><meta property="og:url" content="{canonical}">
 <meta property="og:image" content="{SITE}/{og_image}">
 <link rel="icon" href="{up}img/ram.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..800&family=EB+Garamond:ital,wght@0,400..600;1,400..600&display=swap">
+<link rel="stylesheet" href="{up}fonts/fonts.css">
 <script>try{{var t=localStorage.getItem('bs-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}}catch(e){{}}</script>
 <style>{CSS}</style>
 <link rel="alternate" type="application/rss+xml" title="The BlackSheep Journal" href="{SITE}/journal/feed.xml">
