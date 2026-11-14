@@ -171,6 +171,10 @@ header{--bg:#0A0B0D;--panel:rgba(12,14,18,.74);--fg:#EFEBE3;--muted:#A9ADB3;--li
 :root[data-theme="light"]{color-scheme:only light}
 @media not all and (prefers-color-scheme: dark){:root:not([data-theme]){color-scheme:only light}}
 :root[data-theme="dark"]{color-scheme:dark}
+
+/* mobile note under the theme toggle */
+.view-note{display:none}
+@media (max-width:760px){.view-note{display:block;width:100%;margin:2px auto 0;max-width:36ch;font:400 .8rem/1.4 var(--body);color:#A9ADB3;text-align:center;letter-spacing:0;text-transform:none}.view-note b{color:#EFEBE3;font-weight:600}}
 </style>
 <link rel="alternate" type="application/rss+xml" title="The BlackSheep Journal" href="https://blacksheepdigitalworks.ca/journal/feed.xml">
 <meta name="twitter:card" content="summary_large_image">
@@ -195,6 +199,7 @@ header{--bg:#0A0B0D;--panel:rgba(12,14,18,.74);--fg:#EFEBE3;--muted:#A9ADB3;--li
       <span class="track"><span class="knob" id="knob"></span></span>
       <span class="mode-label" id="modeLabel">Dark</span>
     </button>
+    <p class="view-note">Best viewed in light mode on Chrome, Safari, Firefox or Edge. Using Opera? Turn off its <b>Dark web pages</b> setting, or switch this site to Dark.</p>
   </div>
 </header>
 <main>

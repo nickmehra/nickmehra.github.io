@@ -398,6 +398,10 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
 :root[data-theme="light"]{color-scheme:only light}
 @media not all and (prefers-color-scheme: dark){:root:not([data-theme]){color-scheme:only light}}
 :root[data-theme="dark"]{color-scheme:dark}
+
+/* mobile note under the theme toggle */
+.view-note{display:none}
+@media (max-width:760px){.view-note{display:block;width:100%;margin:2px auto 0;max-width:36ch;font:400 .8rem/1.4 var(--body);color:#A9ADB3;text-align:center;letter-spacing:0;text-transform:none}.view-note b{color:#EFEBE3;font-weight:600}}
 </style>
 <title>BlackSheep Digital Works | Real Estate &amp; Event Media in Ontario</title>
 <meta name="description" content="Real estate, dealership and event photography, 4K video and drone coverage from Pickering to Kingston and Peterborough. Edited in-house, delivered in 24 to 48 hours.">
@@ -494,6 +498,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
       <span class="track"><span class="knob" id="knob"></span></span>
       <span class="mode-label" id="modeLabel">Dark</span>
     </button>
+    <p class="view-note">Best viewed in light mode on Chrome, Safari, Firefox or Edge. Using Opera? Turn off its <b>Dark web pages</b> setting, or switch this site to Dark.</p>
   </div>
 </header>
 

@@ -130,6 +130,7 @@ def page(title, desc, canonical, body, depth, og_image, extra_head=''):
       <span class="track"><span class="knob" id="knob"></span></span>
       <span class="mode-label" id="modeLabel">Dark</span>
     </button>
+    <p class="view-note">Best viewed in light mode on Chrome, Safari, Firefox or Edge. Using Opera? Turn off its <b>Dark web pages</b> setting, or switch this site to Dark.</p>
   </div>
 </header>
 <main>
