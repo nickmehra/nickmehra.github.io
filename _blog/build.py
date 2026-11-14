@@ -157,7 +157,7 @@ def page(title, desc, canonical, body, depth, og_image, extra_head=''):
   sync();
 }})();
 </script>
-<script src="/react.js?v=1" defer></script>
+<script src="/react.js?v=1" defer></script>\n<script src="/comments.js?v=1" defer></script>
 </body>
 </html>
 '''
@@ -206,6 +206,7 @@ def build():
     <h2>Make your next listing <em>stand apart.</em></h2>
     <a class="btn red lk" href="../../#booking">Book a shoot</a>
   </div>
+  <section data-comments="bs:{p['slug']}"></section>
   {pager}
 </article>'''
         d = os.path.join(OUT, p['slug'])
