@@ -2,6 +2,7 @@
 <html lang="en-CA">
 <head>
 <meta charset="utf-8">
+<meta name="color-scheme" content="light dark">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>The Journal | BlackSheep Digital Works</title>
 <meta name="description" content="Notes on real estate, dealership and event media in Ontario from BlackSheep Digital Works.">
@@ -165,6 +166,11 @@ header{--bg:#0A0B0D;--panel:rgba(12,14,18,.74);--fg:#EFEBE3;--muted:#A9ADB3;--li
 @media not all and (prefers-color-scheme: dark){:root:not([data-theme]) .rx{background:rgba(255,255,255,.92)!important;color:#08090A!important;box-shadow:0 10px 30px rgba(0,0,0,.18)!important;border:1px solid rgba(8,9,10,.18)}}
 :root[data-theme="light"] .rx button:hover{background:rgba(0,0,0,.07)}
 @media not all and (prefers-color-scheme: dark){:root:not([data-theme]) .rx button:hover{background:rgba(0,0,0,.07)}}
+
+/* Stop Android/Chrome "auto dark mode" from repainting the light theme */
+:root[data-theme="light"]{color-scheme:only light}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]){color-scheme:only light}}
+:root[data-theme="dark"]{color-scheme:dark}
 </style>
 <link rel="alternate" type="application/rss+xml" title="The BlackSheep Journal" href="https://blacksheepdigitalworks.ca/journal/feed.xml">
 <meta name="twitter:card" content="summary_large_image">

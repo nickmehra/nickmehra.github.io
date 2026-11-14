@@ -2,6 +2,7 @@
 <html lang="en-CA">
 <head>
 <meta charset="utf-8">
+<meta name="color-scheme" content="light dark">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -392,6 +393,11 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
 @media not all and (prefers-color-scheme: dark){:root:not([data-theme]) .rx button:hover{background:rgba(0,0,0,.07)}}
 :root[data-theme="light"] :is(h1,h2,h3,.lede,.eyebrow,p){text-shadow:none!important}
 @media not all and (prefers-color-scheme: dark){:root:not([data-theme]) :is(h1,h2,h3,.lede,.eyebrow,p){text-shadow:none!important}}
+
+/* Stop Android/Chrome "auto dark mode" from repainting the light theme */
+:root[data-theme="light"]{color-scheme:only light}
+@media not all and (prefers-color-scheme: dark){:root:not([data-theme]){color-scheme:only light}}
+:root[data-theme="dark"]{color-scheme:dark}
 </style>
 <title>BlackSheep Digital Works | Real Estate &amp; Event Media in Ontario</title>
 <meta name="description" content="Real estate, dealership and event photography, 4K video and drone coverage from Pickering to Kingston and Peterborough. Edited in-house, delivered in 24 to 48 hours.">

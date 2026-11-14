@@ -94,6 +94,7 @@ def page(title, desc, canonical, body, depth, og_image, extra_head=''):
 <html lang="en-CA">
 <head>
 <meta charset="utf-8">
+<meta name="color-scheme" content="light dark">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(desc)}">
