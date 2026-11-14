@@ -5,9 +5,9 @@
   var SKIP = 'header,footer,nav,.logo,.logo-full,.logo-foot,.brand,.reel,[aria-hidden="true"],.no-react';
   var counts = {}, cur = null, hideT = null;
 
-  function keyOf(img) { var s = img.currentSrc || img.src || ''; try { s = new URL(s, location.href).pathname; } catch (e) {} return s; }
+  function keyOf(img) { var s = img.currentSrc || img.src || (img.tagName === 'VIDEO' && img.querySelector('source') ? img.querySelector('source').src : '') || img.poster || ''; try { s = new URL(s, location.href).pathname; } catch (e) {} return s; }
   function ok(img) {
-    if (!img || img.tagName !== 'IMG' || !img.src || img.closest(SKIP)) return false;
+    if (!img || (img.tagName !== 'IMG' && img.tagName !== 'VIDEO') || !keyOf(img) || img.closest(SKIP)) return false;
     var r = img.getBoundingClientRect(); return r.width >= 140 && r.height >= 100;
   }
 
@@ -26,7 +26,7 @@
   document.head.appendChild(css);
 
   var bar = document.createElement('div');
-  bar.className = 'rx'; bar.setAttribute('role', 'group'); bar.setAttribute('aria-label', 'Rate this image');
+  bar.className = 'rx'; bar.setAttribute('role', 'group'); bar.setAttribute('aria-label', 'Rate this');
   bar.innerHTML =
     '<button type="button" class="up" aria-label="Love it"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg><span class="n"></span></button>' +
     '<button type="button" class="down" aria-label="Not for me"><svg viewBox="0 0 24 24"><path d="M7 4h9l3 7v3h-6l1 5-2 1-5-7V4zM4 4h3v10H4z"/></svg><span class="n"></span></button>';
@@ -45,7 +45,8 @@
     if (!cur) return;
     var r = cur.getBoundingClientRect();
     bar.style.left = Math.max(8, r.right - bar.offsetWidth - 10) + 'px';
-    bar.style.top = Math.max(8, Math.min(innerHeight - bar.offsetHeight - 8, r.bottom - bar.offsetHeight - 10)) + 'px';
+    var lift = cur.tagName === 'VIDEO' ? 62 : 10;
+    bar.style.top = Math.max(8, Math.min(innerHeight - bar.offsetHeight - 8, r.bottom - bar.offsetHeight - lift)) + 'px';
   }
   function load(k) {
     if (counts[k]) return paint();
@@ -54,9 +55,9 @@
   }
   function findImg(t) {
     if (!t || !t.closest) return null;
-    var img = t.closest('img'); if (img) return img;
+    var img = t.closest('img,video'); if (img) return img;
     var box = t.closest('a,button,figure,.door,.tilt,.card,.cover,.lightbox');
-    return box ? box.querySelector('img') : null;
+    return box ? box.querySelector('img,video') : null;
   }
   function show(img) {
     clearTimeout(hideT); cur = img; paint(); bar.classList.add('on'); place(); load(keyOf(img));
@@ -115,7 +116,7 @@
      for a moment so a second tap can turn it into a like instead. */
   document.addEventListener('click', function (e) {
     if (passClick || Date.now() - lastTouchEnd > 500) return;
-    var img = findImg(e.target); if (!img || !ok(img)) return;
+    var img = findImg(e.target); if (!img || !ok(img) || img.tagName === 'VIDEO') return;
     var act = e.target.closest('a,button,[onclick],.tilt'); if (!act) return;
     e.preventDefault(); e.stopImmediatePropagation();
     clearTimeout(pending && pending.timer);
