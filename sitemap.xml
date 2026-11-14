@@ -10,4 +10,14 @@
     <image:image><image:loc>https://blacksheepdigitalworks.ca/img/harvest-01.jpg</image:loc></image:image>
     <image:image><image:loc>https://blacksheepdigitalworks.ca/img/ff-307.jpg</image:loc></image:image>
   </url>
+  <!-- journal -->
+  <url>
+    <loc>https://blacksheepdigitalworks.ca/journal/</loc>
+    <lastmod>2026-11-13</lastmod>
+  </url>
+  <url>
+    <loc>https://blacksheepdigitalworks.ca/journal/drone-listing-rules-ontario/</loc>
+    <lastmod>2026-11-13</lastmod>
+  </url>
+  <!-- /journal -->
 </urlset>
