@@ -2,7 +2,7 @@
    and every light-on-dark colour flips to dark-on-light. Only the BlackSheep logo keeps a small dark plate (brand rule). */
 :root[data-theme="light"]{--bg:#f4f1eb;--bg2:#e9e4da;--ink:#111113;--mute:#3f4046;--line:#cbc4b6;--card:#fdfcf9;
   --red:#a3141f;--chrome:#5b5f68;--lens:linear-gradient(100deg,#a3141f 0%,#c2410f 50%,#9a5b00 100%);
-  --shadow:0 30px 60px -32px rgba(40,30,20,.35);color-scheme:light}
+  --shadow:0 30px 60px -32px rgba(40,30,20,.35);color-scheme:only light}
 :root[data-theme="light"] body{font-weight:500}
 :root[data-theme="light"] .eyebrow{color:#55565d}
 :root[data-theme="light"] .lead{color:#3c3d44}
