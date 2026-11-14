@@ -159,6 +159,7 @@ figcaption{font-family:var(--display);font-size:.66rem;letter-spacing:.22em;text
 .stage-ctl{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:10px;flex-wrap:wrap}
 .stage-ctl .muted{font-size:.95rem}
 .soon{margin-top:30px;padding:20px 26px;max-width:640px;color:var(--muted)}
+.lens-card{position:relative;display:flex;align-items:center;gap:28px;max-width:640px;margin:40px auto 0;padding:26px 30px;background:var(--panel);border:1px solid var(--line);text-align:left}.lens-card::before{content:'';position:absolute;top:-1px;left:30px;right:30px;height:1px;background:linear-gradient(90deg,transparent,#c2202c,#e2622b,#e9a42c,transparent)}.lens-face{flex:none;width:112px;height:112px;border-radius:50%;object-fit:cover;object-position:50% 9%;border:1px solid var(--line);box-shadow:0 0 0 4px var(--panel),0 0 0 5px rgba(209,31,38,.45)}.lens-copy{min-width:0}.lens-copy .eyebrow{display:block;margin-bottom:6px}.lens-copy h3{font-family:var(--display);font-weight:600;font-size:1.35rem;letter-spacing:.06em;margin:0 0 8px;color:var(--fg)}.lens-copy p{margin:0 0 16px;color:var(--muted);line-height:1.6}.lens-link{padding:12px 20px}.lens-link .sr,.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}@media (max-width:560px){.lens-card{flex-direction:column;text-align:center;gap:18px;padding:24px 20px}}
 .aside-note{margin:30px auto 0;max-width:600px;padding-top:18px;position:relative;color:var(--muted);font-style:italic;line-height:1.65;text-align:center}.aside-note::before{content:'';position:absolute;top:0;left:50%;width:90px;margin-left:-45px;height:1px;background:linear-gradient(90deg,transparent,#c2202c,#e2622b,#e9a42c,transparent)}.aside-note .eyebrow{display:block;font-style:normal;margin-bottom:6px}.aside-note a.lk{color:#e2622b;font-style:normal;letter-spacing:.02em}
 .no3d .stage{display:none}
 .grid-fallback{display:none;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;width:100%}
@@ -577,7 +578,15 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
         <p class="muted">3:25 · Photo, film and drone coverage of the full day.</p>
       </div>
       <p class="soon panel">Real estate, dealership and aerial work join the collection soon. More on Instagram: <a class="lk" href="https://www.instagram.com/BlackSheepDigitalWorks/" target="_blank" rel="noopener">@BlackSheepDigitalWorks</a></p>
-      <p class="aside-note"><span class="eyebrow">Behind the lens</span>Every frame here is shot by Nick Mehra, who spent almost two decades in law enforcement before picking up the camera for good. His own story, portraits and a daily journal live at <a class="lk" href="https://nickmehra.ca/" target="_blank" rel="noopener">nickmehra.ca</a>.</p>
+      <aside class="lens-card" aria-labelledby="lensName">
+        <img class="lens-face" src="img/nick-portrait.webp" alt="Portrait of Nick Mehra" width="663" height="1442" loading="lazy">
+        <div class="lens-copy">
+          <span class="eyebrow">Behind the lens</span>
+          <h3 id="lensName">Nick Mehra</h3>
+          <p>Every frame here is shot by Nick, who spent almost two decades in law enforcement before picking up the camera for good. His story, portraits and journal live on his personal site.</p>
+          <a class="btn lk lens-link" href="https://nickmehra.ca/" target="_blank" rel="noopener">Visit nickmehra.ca <span aria-hidden="true">&#8599;</span><span class="sr">(opens in a new tab)</span></a>
+        </div>
+      </aside>
     </div>
   </section>
 
