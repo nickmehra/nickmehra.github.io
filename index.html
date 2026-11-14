@@ -27,7 +27,7 @@
   <div class="scene" id="scene">
     <div class="reel" id="reel" aria-hidden="true"><img src="/img/hero-bg.jpg" alt="" class="on"><span class="beam"></span></div>
     <div class="glow"></div><div class="ring r2"></div><div class="ring"></div>
-    <p class="name" aria-hidden="true">Nick <i>Mehra</i></p>
+    <p class="name" aria-hidden="true"><span class="nN">Nick</span> <i>Mehra</i></p>
     <span class="tagL">Enforcement</span><span class="tagR">Creative</span>
     <img class="figure" src="/img/nick-hero.webp?v=4" alt="Nick Mehra, half in an enforcement uniform and half in a red henley, holding a BlackSheep Digital Works coffee mug" width="618" height="1009">
     <div class="front">
@@ -66,5 +66,18 @@
 <script src="/type-fx.js?v=11" defer></script>
 <div class="view-note" role="note" hidden>Best viewed in light mode on Chrome, Safari, Firefox or Edge. Using Opera? Turn off its <b>Dark web pages</b> setting, or switch this site to Dark.<button type="button" class="vn-x" aria-label="Close this note">&times;</button></div>
 <script>(function(){var n=document.querySelector('.view-note');if(!n)return;try{if(localStorage.getItem('vn-off')||sessionStorage.getItem('vn-seen')){n.remove();return}}catch(e){}if(!window.matchMedia||!matchMedia('(max-width:760px)').matches){n.remove();return}document.body.appendChild(n);n.hidden=false;try{sessionStorage.setItem('vn-seen','1')}catch(e){}var gone=false;function hide(keep){if(gone)return;gone=true;n.classList.remove('on');if(keep){try{localStorage.setItem('vn-off','1')}catch(e){}}setTimeout(function(){n.remove()},600)}setTimeout(function(){n.classList.add('on')},900);setTimeout(function(){hide(false)},8000);addEventListener('scroll',function(){if(scrollY>240)hide(false)},{passive:true});n.querySelector('.vn-x').addEventListener('click',function(){hide(true)});})();</script>
+<script>/* Hero name: NICK and MEHRA sit the same distance from either side of the head (laptop and desktop). */
+(function(){var p=document.querySelector('.name'),f=document.querySelector('.figure');if(!p||!f)return;var n=p.querySelector('.nN'),m=p.querySelector('i'),mq=matchMedia('(min-width:821px)');
+var HL=.36,HR=.645,PER=1400,ZN=-60,ZF=70;
+function fit(){p.style.removeProperty('font-size');p.style.removeProperty('transform');m.style.removeProperty('margin-left');p.style.removeProperty('word-spacing');
+if(!mq.matches||!f.offsetWidth)return;
+var vw=innerWidth,sN=PER/(PER-ZN),sF=PER/(PER-ZF),fw=f.offsetWidth,g=Math.max(14,vw*.022);
+var cx=((HL+HR)/2-.5)*fw*sF,half=(HR-HL)/2*fw*sF,E=(half+g)/sN,off=cx/sN;
+p.style.setProperty('word-spacing','0');var wN=n.offsetWidth,wM=m.offsetWidth;
+var B=.17,fs0=parseFloat(getComputedStyle(p).fontSize),room=vw/2/sN-44/sN,need=Math.max(E+wM+off-B*fs0,E+wN-off);
+if(need>room){var k=Math.max(.55,(room-E)/(need-E));fs0=fs0*k;p.style.setProperty('font-size',fs0+'px','important');wN=n.offsetWidth;wM=m.offsetWidth}
+m.style.setProperty('margin-left',(2*E-B*fs0)+'px','important');
+p.style.transform='translate3d('+(off-E-wN)+'px,0,'+ZN+'px)'}
+if(f.complete)fit();else f.addEventListener('load',fit);addEventListener('resize',fit);if(document.fonts)document.fonts.ready.then(fit);})();</script>
 </body>
 </html>
