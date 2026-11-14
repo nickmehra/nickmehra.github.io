@@ -48,9 +48,9 @@
   css2.textContent =
     '.tfx-ov{position:fixed;pointer-events:none;overflow:hidden;z-index:15;box-sizing:border-box;margin:0;background:none!important;border-color:transparent!important}' +
     '.tfx-ov .in{display:block;will-change:transform}' +
-    '.tfx-ov .tfx-c{display:inline-block;white-space:pre;margin:0;padding:0;border:0;background:none;box-shadow:none;max-width:none;animation:tfxBorn .52s cubic-bezier(.16,.84,.3,1) both,tfxSnap .16s .5s cubic-bezier(.3,1.8,.6,1) both}' +
-    '.tfx-ov .tfx-u{display:inline-block;white-space:pre-wrap;margin:0;padding:0;border:0;background:none;box-shadow:none;max-width:100%;vertical-align:top;animation:tfxBorn .75s cubic-bezier(.16,.84,.3,1) both,tfxSnap .18s .72s cubic-bezier(.3,1.8,.6,1) both}' +
-    '.tfx-ov .tfx-m{display:inline;white-space:pre-wrap;animation:tfxSoft .8s cubic-bezier(.16,.84,.3,1) both}' +
+    '.tfx-ov .tfx-c{display:inline-block;white-space:pre;margin:0;padding:0;border:0;background:none;box-shadow:none;max-width:none;animation:tfxBorn 1.15s cubic-bezier(.19,.7,.22,1) both,tfxSnap .2s 1.12s cubic-bezier(.3,1.8,.6,1) both}' +
+    '.tfx-ov .tfx-u{display:inline-block;white-space:pre-wrap;margin:0;padding:0;border:0;background:none;box-shadow:none;max-width:100%;vertical-align:top;animation:tfxBorn 1.5s cubic-bezier(.19,.7,.22,1) both,tfxSnap .22s 1.46s cubic-bezier(.3,1.8,.6,1) both}' +
+    '.tfx-ov .tfx-m{display:inline;white-space:pre-wrap;animation:tfxSoft 1.6s cubic-bezier(.19,.7,.22,1) both}' +
     '@keyframes tfxSoft{0%{filter:blur(3px);opacity:.2;color:#e9a42c;text-shadow:0 0 14px rgba(233,164,44,.9)}75%{filter:blur(.4px);opacity:1;color:#e2622b}100%{filter:none;text-shadow:none}}' +
     '@keyframes tfxBorn{0%{clip-path:circle(0% at 50% 58%);filter:blur(2.4px);color:#e9a42c;text-shadow:0 0 14px rgba(233,164,44,.9);transform:scale(.82)}' +
     '70%{clip-path:circle(62% at 50% 52%);filter:blur(.6px);color:#e2622b;text-shadow:0 0 8px rgba(226,98,43,.55)}' +
@@ -125,7 +125,7 @@
   document.addEventListener('focusin', function (e) { if (eligible(e.target)) { textColor(e.target); ensure(e.target); } }, true);
   document.addEventListener('focusout', function (e) {
     var el = e.target; if (!live.has(el)) return;
-    setTimeout(function () { if (document.activeElement !== el) drop(el); }, 700);
+    setTimeout(function () { if (document.activeElement !== el) drop(el); }, 1800);
   }, true);
   document.addEventListener('input', function (e) {
     var el = e.target; if (!eligible(el)) return;
