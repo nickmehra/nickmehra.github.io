@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /comments-admin.php
+Disallow: /quote-approve.php
+Disallow: /quote-pdf.php
+Disallow: /account/
 
 Sitemap: https://blacksheepdigitalworks.ca/sitemap.xml
