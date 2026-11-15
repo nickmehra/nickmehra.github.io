@@ -344,6 +344,16 @@ main{position:relative;z-index:2}
 .legal .upd{color:var(--muted);font-size:.95rem}
 
 .optin{display:flex;gap:10px;align-items:flex-start;font-size:.95rem;color:var(--muted);margin-top:12px;text-align:left}.optin input{margin-top:5px}
+
+.partner{position:relative;border:1px solid var(--line);padding:30px clamp(18px,4vw,40px);max-width:980px;margin:0 auto;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center}
+.partner.pinned{border-color:var(--red);box-shadow:0 0 0 1px var(--red) inset}
+.partner .pin{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;font-family:var(--display);font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;padding:5px 12px}
+.partner .pcols{display:grid;grid-template-columns:1.3fr 1fr;gap:28px;text-align:left;width:100%;margin-top:6px}
+.partner h3{font-family:var(--display);font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;font-weight:500;margin:0 0 10px}
+.offers{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.offers li{display:flex;flex-direction:column;border-left:2px solid var(--red);padding-left:12px}.offers span{color:var(--muted);font-size:.96rem}
+.partner .gets{margin:0;max-width:none}
+@media (max-width:760px){.partner .pcols{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -461,7 +471,7 @@ main{position:relative;z-index:2}
 <footer>
   <div class="wrap">
     <a class="lk" href="../#home" aria-label="BlackSheep Digital Works home"><img class="logo-foot" src="../img/logo.png" alt="BlackSheep Digital Works"></a>
-    <div class="fcols"><div class="fcol"><h4>Studio</h4><a class="lk" href="../#about">About</a><a class="lk" href="../#portfolio">Portfolio</a><a class="lk" href="../journal/">Journal</a><a class="lk" href="../pricing/">Pricing</a><a class="lk" href="../#contact">Contact</a><a class="lk" href="https://www.instagram.com/BlackSheepDigitalWorks/" target="_blank" rel="noopener">Instagram</a></div><div class="fcol"><h4>Services</h4><a class="lk" href="../services/real-estate-photography/">Real estate photography</a><a class="lk" href="../services/video/">Video &amp; social reels</a><a class="lk" href="../services/drone/">Drone &amp; aerial</a><a class="lk" href="../services/floor-plans/">Floor plans &amp; 3D</a><a class="lk" href="../services/events/">Event coverage</a><a class="lk" href="../services/dealerships/">Dealership inventory</a></div><div class="fcol"><h4>Inquiries</h4><a class="lk" href="../#booking">Book a shoot</a><a class="lk" href="../pricing/#book">Get a quote</a><a class="lk" href="../account/">My quotes</a><a class="lk" href="../privacy/">Privacy &amp; data</a><a class="lk" href="../terms/">Terms of service</a><a class="lk" href="../disclaimer/">Disclaimer</a><a class="lk" href="../accessibility/">Accessibility</a><a class="lk" href="../comments-admin.php" rel="nofollow">Admin</a></div></div>
+    <div class="fcols"><div class="fcol"><h4>Studio</h4><a class="lk" href="../#about">About</a><a class="lk" href="../#portfolio">Portfolio</a><a class="lk" href="../journal/">Journal</a><a class="lk" href="../pricing/">Pricing</a><a class="lk" href="../partners/">Partners</a><a class="lk" href="../resources/">Resources</a><a class="lk" href="../#contact">Contact</a><a class="lk" href="https://www.instagram.com/BlackSheepDigitalWorks/" target="_blank" rel="noopener">Instagram</a></div><div class="fcol"><h4>Services</h4><a class="lk" href="../services/real-estate-photography/">Real estate photography</a><a class="lk" href="../services/video/">Video &amp; social reels</a><a class="lk" href="../services/drone/">Drone &amp; aerial</a><a class="lk" href="../services/floor-plans/">Floor plans &amp; 3D</a><a class="lk" href="../services/events/">Event coverage</a><a class="lk" href="../services/dealerships/">Dealership inventory</a></div><div class="fcol"><h4>Inquiries</h4><a class="lk" href="../#booking">Book a shoot</a><a class="lk" href="../pricing/#book">Get a quote</a><a class="lk" href="../account/">My quotes</a><a class="lk" href="../privacy/">Privacy &amp; data</a><a class="lk" href="../terms/">Terms of service</a><a class="lk" href="../disclaimer/">Disclaimer</a><a class="lk" href="../accessibility/">Accessibility</a><a class="lk" href="../comments-admin.php" rel="nofollow">Admin</a></div></div>
     <span>© 2026 BlackSheep Digital Works · From Conviction to Legacy</span>
   </div>
 </footer>

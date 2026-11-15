@@ -95,7 +95,7 @@ def footer_html(up):
     """Site footer with three link columns (Studio / Services / Inquiries), shared by every page."""
     col = lambda title, links: '<div class="fcol"><h4>' + title + '</h4>' + ''.join('<a class="lk" href="%s"%s>%s</a>' % (h, x, t) for h, t, x in links) + '</div>'
     studio = [(up + '#about', 'About', ''), (up + '#portfolio', 'Portfolio', ''), (up + 'journal/', 'Journal', ''), (up + 'pricing/', 'Pricing', ''),
-              (up + '#contact', 'Contact', ''), ('https://www.instagram.com/BlackSheepDigitalWorks/', 'Instagram', ' target="_blank" rel="noopener"')]
+              (up + 'partners/', 'Partners', ''), (up + 'resources/', 'Resources', ''), (up + '#contact', 'Contact', ''), ('https://www.instagram.com/BlackSheepDigitalWorks/', 'Instagram', ' target="_blank" rel="noopener"')]
     services = [(up + 'services/' + slug + '/', name, '') for slug, name in SERVICES]
     inquiries = [(up + '#booking', 'Book a shoot', ''), (up + 'pricing/#book', 'Get a quote', ''), (up + 'account/', 'My quotes', ''),
                  (up + 'privacy/', 'Privacy &amp; data', ''), (up + 'terms/', 'Terms of service', ''), (up + 'disclaimer/', 'Disclaimer', ''),

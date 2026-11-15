@@ -222,3 +222,76 @@ def legal_pages():
 <p>We welcome feedback on accessibility and will reply within a few business days.</p>
 '''))
     return P
+
+
+PARTNERS = [
+    dict(name='Praetorian Security', url='https://praetoriansecurityinc.ca/', pinned=True, area='Toronto',
+         kicker='TOP PARTNER · SECURITY ASSESSMENT & ADVISORY',
+         lede='Toronto security assessment and advisory firm for executives, families and organizations: they find the gaps at home, at work and on the road, then help close them.',
+         offers=[('Executive residential security assessments', 'A close look at the home: entry points, lighting, cameras, routines and how a property presents to the outside world.'),
+                 ('Executive and family security advisory', 'Ongoing advice for principals and their families, not a one-time report.'),
+                 ('Estate and family protection planning', 'Security planning that covers the whole household and estate.'),
+                 ('Workplace violence prevention', 'Programs to prevent and respond to violence in the workplace.'),
+                 ('Emergency preparedness and crisis planning', 'Plans in place before something happens, so people know what to do when it does.'),
+                 ('Travel security planning', 'Preparation for executives and families travelling.')],
+         why=['One advisory firm for the home, the family, the workplace and travel.',
+              'Built around assessment and planning: clear findings and a plan to act on.',
+              'A natural fit for BlackSheep clients: a listing shoot shows a home to the world, and Praetorian helps owners think about what that exposure means for their security.']),
+]
+
+def partners_body():
+    cards = ''
+    for p in PARTNERS:
+        offers = ''.join('<li><b>%s</b><span>%s</span></li>' % (a, b) for a, b in p['offers'])
+        why = ''.join('<li>%s</li>' % w for w in p['why'])
+        cards += f'''<article class="partner{' pinned' if p.get('pinned') else ''}">
+  {'<span class="pin">Pinned · Top partner</span>' if p.get('pinned') else ''}
+  <span class="eyebrow">{p['kicker']}</span>
+  <h2>{p['name']}</h2>
+  <p class="sub">{p['lede']}</p>
+  <div class="pcols"><div><h3>What they offer</h3><ul class="offers">{offers}</ul></div>
+  <div><h3>Why we recommend them</h3><ul class="gets">{why}</ul><p class="note">Based in {p['area']}.</p></div></div>
+  <div class="acts"><a class="btn primary lk" href="{p['url']}" target="_blank" rel="noopener">Visit {p['name']} ↗</a></div>
+</article>'''
+    return f'''
+<section class="pg"><div class="wrap">
+  <span class="eyebrow">Preferred partners</span>
+  <h1>People we <em>trust.</em></h1>
+  <p class="lede sub">Businesses we're glad to recommend to our clients. BlackSheep doesn't provide their services; reach out to them directly.</p>
+</div></section>
+<section class="sec"><div class="wrap">{cards}</div></section>
+<section class="sec"><div class="wrap">
+  <span class="eyebrow">Become a partner</span>
+  <h2>Work with <em>BlackSheep.</em></h2>
+  <p class="sub">Brokerages, dealerships, stagers, event organizers and other trusted local businesses: if our clients would be glad to know you, let's talk.</p>
+  <div class="acts"><a class="btn lk" href="../#contact">Get in touch</a></div>
+</div></section>
+'''
+
+def resources_body():
+    return '''
+<section class="pg"><div class="wrap">
+  <span class="eyebrow">Resources</span>
+  <h1>Useful, <em>free.</em></h1>
+  <p class="lede sub">Guides, rate cards and answers for realtors, dealerships and event organizers.</p>
+</div></section>
+<section class="sec"><div class="wrap">
+  <div class="pk">
+    <a class="pc in" href="../journal/" style="text-decoration:none"><span class="eyebrow">Journal</span><h3>Guides &amp; market notes</h3><p class="sub">Listing media practice, drone rules, advertising rules and local market notes, with sources.</p><span class="btn lk">Read the journal</span></a>
+    <a class="pc in" href="../pricing/#flyers" style="text-decoration:none"><span class="eyebrow">Rate cards</span><h3>Printable flyers</h3><p class="sub">Real estate, dealership and event rate cards as PDFs for your office or team.</p><span class="btn lk">Download flyers</span></a>
+    <a class="pc in" href="../partners/" style="text-decoration:none"><span class="eyebrow">Partners</span><h3>Preferred partners</h3><p class="sub">Trusted local businesses we recommend to our clients.</p><span class="btn lk">See partners</span></a>
+  </div>
+</div></section>
+<section class="sec"><div class="wrap">
+  <span class="eyebrow">Quick answers</span>
+  <h2>Before you <em>book.</em></h2>
+  <div class="legal">
+  <h3>How fast do I get my photos?</h3><p>Typically within 24–72 hours depending on volume, most within 24–48.</p>
+  <h3>Where do you work?</h3><p>Pickering to Kingston and north to Peterborough, plus the GTA. Travel within the GTA is included; beyond it is quoted per km.</p>
+  <h3>How many photos do I get?</h3><p>Every package includes unlimited photos, as many as the property, unit or event needs.</p>
+  <h3>Can you fly a drone at my property?</h3><p>Often, but it depends on airspace, weather and the site. If a site can't be flown safely or legally, we tell you before the shoot. See our <a class="lk" href="../journal/drone-listing-rules-ontario/">drone rules guide</a>.</p>
+  <h3>Do you shoot weddings?</h3><p>No. Event coverage is for festivals, brand activations, corporate and private events, up to 3 hours.</p>
+  <h3>How do I get a quote?</h3><p>Build one on the <a class="lk" href="../pricing/#book">pricing page</a> for a numbered PDF quote by email, valid 30 days, or call or text 647.888.3098.</p>
+  </div>
+</div></section>
+'''
