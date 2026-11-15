@@ -417,6 +417,8 @@ main{position:relative;z-index:2}
 <p>Before you can request a booking or a quote, you confirm you're human (your browser solves a small puzzle by itself; no tracking and no third-party service) and enter a 6-digit code we email you. The code is stored only in scrambled form and is deleted as soon as it's used or after 15 minutes. Once verified, your browser keeps a signed cookie for 30 days so you don't have to repeat the code. It contains only your email address and an expiry date.</p>
 <h3>Messages (homepage contact form)</h3>
 <p>The contact form opens your own email app with your message written out. Nothing is sent until you press send, and nothing is stored on the website.</p>
+<h3 id="chat">Website chat</h3>
+<p>The chat bubble is an automated assistant that answers from the information on this website; it is not a live person and it does not use an outside AI service. Your messages, and any email or phone number you choose to give, are emailed to Nick so he can read the conversation and reply to questions the assistant couldn't answer. Chat messages are not stored on the website. The conversation is kept in your browser tab only until you close it. Please don't share sensitive personal information in the chat.</p>
 <h3>Comments</h3>
 <p>If you comment, we store the name you enter, your comment, when you posted it, and (for comments on our photos) which photo and which comment you replied to, so we can show it in the right thread after we approve it. We do not store your email, IP address or device details with comments. Please don't put private information in a comment, because approved comments are public.</p>
 <h3>Likes and dislikes</h3>
@@ -475,5 +477,6 @@ main{position:relative;z-index:2}
 <script src="/type-fx.js?v=12" defer></script>
 <div class="view-note" role="note" hidden>Best viewed in light mode on Chrome, Safari, Firefox or Edge. Using Opera? Turn off its <b>Dark web pages</b> setting, or switch this site to Dark.<button type="button" class="vn-x" aria-label="Close this note">&times;</button></div>
 <script>(function(){var n=document.querySelector('.view-note');if(!n)return;try{if(localStorage.getItem('vn-off')||sessionStorage.getItem('vn-seen')){n.remove();return}}catch(e){}if(!window.matchMedia||!matchMedia('(max-width:760px)').matches){n.remove();return}document.body.appendChild(n);n.hidden=false;try{sessionStorage.setItem('vn-seen','1')}catch(e){}var gone=false;function hide(keep){if(gone)return;gone=true;n.classList.remove('on');if(keep){try{localStorage.setItem('vn-off','1')}catch(e){}}setTimeout(function(){n.remove()},600)}setTimeout(function(){n.classList.add('on')},900);setTimeout(function(){hide(false)},8000);addEventListener('scroll',function(){if(scrollY>240)hide(false)},{passive:true});n.querySelector('.vn-x').addEventListener('click',function(){hide(true)});})();</script>
+<script src="/chat-kb.js?v=1" defer></script><script src="/chat.js?v=1" defer></script>
 </body>
 </html>

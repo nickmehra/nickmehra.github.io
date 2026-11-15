@@ -106,6 +106,8 @@ def legal_pages():
 <p>Before you can request a booking or a quote, you confirm you're human (your browser solves a small puzzle by itself; no tracking and no third-party service) and enter a 6-digit code we email you. The code is stored only in scrambled form and is deleted as soon as it's used or after 15 minutes. Once verified, your browser keeps a signed cookie for 30 days so you don't have to repeat the code. It contains only your email address and an expiry date.</p>
 <h3>Messages (homepage contact form)</h3>
 <p>The contact form opens your own email app with your message written out. Nothing is sent until you press send, and nothing is stored on the website.</p>
+<h3 id="chat">Website chat</h3>
+<p>The chat bubble is an automated assistant that answers from the information on this website; it is not a live person and it does not use an outside AI service. Your messages, and any email or phone number you choose to give, are emailed to Nick so he can read the conversation and reply to questions the assistant couldn't answer. Chat messages are not stored on the website. The conversation is kept in your browser tab only until you close it. Please don't share sensitive personal information in the chat.</p>
 <h3>Comments</h3>
 <p>If you comment, we store the name you enter, your comment, when you posted it, and (for comments on our photos) which photo and which comment you replied to, so we can show it in the right thread after we approve it. We do not store your email, IP address or device details with comments. Please don't put private information in a comment, because approved comments are public.</p>
 <h3>Likes and dislikes</h3>
