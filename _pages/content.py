@@ -202,6 +202,8 @@ def legal_pages():
 <p>Prices and quotes on this site are estimates and may change. Your final price is confirmed when we confirm your booking. See our <a class="lk" href="../terms/">terms of service</a>.</p>
 <h2>Portfolio</h2>
 <p>Portfolio images show examples of our work. Results depend on the property, the conditions and the weather on the day.</p>
+<h2 id="ai-imagery">AI-assisted imagery</h2>
+<p>Some promotional imagery and video on this site, including the brand film on the home page, was created or enhanced with AI from the owner's own photos. These pieces illustrate the brand and the services offered; they are not records of a specific client shoot. If you have a question about any image, contact us.</p>
 <h2>Outside links</h2>
 <p>Links to other websites are provided for convenience. We don't control those sites and aren't responsible for their content or their privacy practices.</p>
 <h2>Services we don't offer</h2>
