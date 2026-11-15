@@ -7,7 +7,7 @@ CSS_V = '8'
 
 FOOTER = '''<footer><div class="wrap">
   <div class="fgrid">
-  <div class="fbrand"><a class="fmark" href="/">Nick <span>Mehra</span></a><p>Owner &amp; Creative Director, BlackSheep Digital Works. Almost two decades in security and law enforcement before the lens.</p><p class="floc">Ontario, Canada</p></div>
+  <div class="fbrand"><a class="fmark" href="/">Nick <span>Mehra</span></a><p>Owner &amp; Creative Director, BlackSheep Digital Works. Almost two decades in security and public service law enforcement before the lens.</p><p class="floc">Ontario, Canada</p></div>
     <nav class="fcol" aria-label="About"><h4>About</h4><a href="/story/">Story</a><a href="/experience/">Experience</a><a href="/now/">Now</a><a href="/journal/">Journal</a></nav>
     <nav class="fcol" aria-label="Work"><h4>Work</h4><a href="/portraits/">Portraits</a><a href="/work/">Work</a><a href="https://blacksheepdigitalworks.ca" target="_blank" rel="noopener">BlackSheep ↗</a></nav>
     <nav class="fcol" aria-label="Connect"><h4>Connect</h4><a href="/contact/">Contact</a><a href="mailto:nic.mehra@gmail.com">Email</a><a href="https://www.instagram.com/blacksheepdigitalworks/" target="_blank" rel="noopener">Instagram ↗</a></nav>
@@ -16,11 +16,11 @@ FOOTER = '''<footer><div class="wrap">
 </div></footer>'''
 
 PAGES = {
-'experience': dict(title='Experience', desc='Almost two decades in security and law enforcement, now owner and creative director of BlackSheep Digital Works. A working record.', body='''
+'experience': dict(title='Experience', desc='Almost two decades in security and public service law enforcement, now owner and creative director of BlackSheep Digital Works. A working record.', body='''
 <section class="pagehead"><div class="wrap">
   <span class="eyebrow">Experience</span>
   <h2>A working <em>record</em></h2>
-  <p class="lead">Almost two decades in security and law enforcement. Now the owner and creative director of BlackSheep Digital Works, a media company in Ontario.</p>
+  <p class="lead">Almost two decades in security and public service law enforcement. Now the owner and creative director of BlackSheep Digital Works, a media company in Ontario.</p>
 </div></section>
 <section class="doc"><div class="wrap">
   <div class="cv">
@@ -35,7 +35,7 @@ PAGES = {
     </div>
     <div class="cv-row">
       <div class="cv-when">Almost two decades</div>
-      <div class="cv-what"><h3>Security &amp; law enforcement</h3><p class="cv-org">Ontario</p>
+      <div class="cv-what"><h3>Security &amp; public service law enforcement</h3><p class="cv-org">Ontario</p>
       <ul><li>Private security</li><li>Transit enforcement operations</li><li>Municipal law enforcement</li><li>Enforcement in a provincial capacity</li></ul></div>
     </div>
   </div>
