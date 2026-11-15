@@ -95,7 +95,7 @@ def footer_html(up):
     """Site footer: brand block + three grouped link columns (Studio / Services / Book), hairline, then a quiet legal bar. Shared by every page."""
     col = lambda title, links: '<div class="fcol"><h4>' + title + '</h4>' + ''.join('<a href="%s"%s>%s</a>' % (h, x, t) for h, t, x in links) + '</div>'
     ext = ' target="_blank" rel="noopener"'
-    studio = [(up + '#about', 'About', ''), (up + '#portfolio', 'Portfolio', ''), (up + 'journal/', 'Journal', ''),
+    studio = [(up + '#about', 'About', ''), (up + 'about/', 'About Nick', ''), (up + '#portfolio', 'Portfolio', ''), (up + 'journal/', 'Journal', ''),
               (up + 'partners/', 'Partners', ''), (up + 'resources/', 'Resources', ''), (up + '#contact', 'Contact', '')]
     services = [(up + 'services/' + slug + '/', name, '') for slug, name in SERVICES]
     book = [(up + '#booking', 'Book a shoot', ''), (up + 'pricing/#book', 'Get a quote', ''), (up + 'pricing/', 'Pricing', ''),
