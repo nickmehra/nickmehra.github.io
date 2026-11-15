@@ -159,6 +159,15 @@ def legal_pages():
 <li>Rescheduling, cancellation and payment terms are confirmed with you in writing when we confirm your booking.</li>
 </ul>
 
+<h2 id="referrals">Referral program</h2>
+<ul>
+<li>Referral codes are issued by BlackSheep to approved referral partners. A code only works if it is entered in the referral code field when the booking or quote request is made.</li>
+<li>A new client who enters a valid code receives 15% off their shoot total, before HST. The discount is shown on their estimate and quote. One code per booking; it can't be combined with another referral discount or applied to a past booking.</li>
+<li>The partner whose code was used earns a credit of 15% of that client's discounted shoot total, before HST. The credit is issued only after the client's shoot is complete and paid in full. Cancelled, refunded or unpaid bookings earn no credit.</li>
+<li>Credits apply only toward the partner's own future BlackSheep shoots. They have no cash value, cannot be transferred or sold, and cannot be combined into a payment to anyone else.</li>
+<li>Partners can't use their own code for their own shoots or their own business. BlackSheep may deactivate a code that is shared publicly, misused or used in breach of these terms.</li>
+<li>BlackSheep may change or end the referral program at any time; discounts already quoted and credits already earned will still be honoured.</li>
+</ul>
 <h2>3. Your responsibilities</h2>
 <ul>
 <li>Make sure we have permission to access and photograph the property, vehicles or event, including from the owner, seller, tenants or organizer, and that people who appear in the media have agreed where required.</li>
@@ -334,4 +343,56 @@ def about_body():
   <p class="cv-note">Nick's full story, portraits and personal journal live on <a class="lk" href="https://nickmehra.ca/experience/" target="_blank" rel="noopener">nickmehra.ca</a>.</p>
   <div class="acts" style="margin-top:36px"><a class="btn primary lk" href="../#booking">Book a shoot</a><a class="btn lk" href="https://nickmehra.ca/" target="_blank" rel="noopener">Visit nickmehra.ca ↗</a></div>
 </div></section>
+'''
+
+REFERRAL_PCT = 15
+
+def referrals_body():
+    pros = ['Real estate agents and brokerages', 'Home stagers and designers', 'Builders and renovators', 'Property managers', 'Event planners and venues', 'Dealership and sales managers']
+    plist = ''.join('<li>%s</li>' % x for x in pros)
+    opts = ''.join('<option>%s</option>' % x for x in ['Real estate agent / brokerage', 'Home stager / designer', 'Builder / renovator', 'Property manager', 'Event planner / venue', 'Dealership / sales manager', 'Other professional'])
+    return f'''
+<section class="pg"><div class="wrap">
+  <span class="eyebrow">For professionals</span>
+  <h1>Refer a client. <em>Get {REFERRAL_PCT}% back.</em></h1>
+  <p class="lede sub">Know a seller, dealer or organizer who needs standout media? Send them to BlackSheep and when they use your referral code, they save {REFERRAL_PCT}% and you earn a {REFERRAL_PCT}% credit toward your own next shoot.</p>
+</div></section>
+<section class="sec"><div class="wrap">
+  <span class="eyebrow">How it works</span>
+  <ol class="steps"><li><b>Get your code</b><span>Join below. Once approved, BlackSheep issues you a personal referral code.</span></li>
+  <li><b>Share it</b><span>Your client enters the code when booking or requesting a quote and sees {REFERRAL_PCT}% off their estimate right away.</span></li>
+  <li><b>You earn</b><span>Once their shoot is complete and paid, you receive a credit of {REFERRAL_PCT}% of their discounted shoot total (before HST).</span></li>
+  <li><b>Use it</b><span>Apply the credit to your own next BlackSheep shoot.</span></li></ol>
+</div></section>
+<section class="sec"><div class="wrap">
+  <span class="eyebrow">Who it's for</span>
+  <ul class="gets">{plist}</ul>
+  <p class="note">Credit details are set out in the <a class="lk" href="../terms/#referrals">terms of service</a>. Real estate professionals: check with your brokerage whether your client needs to be told about any benefit you receive for a referral.</p>
+</div></section>
+<section class="sec" id="join"><div class="wrap">
+  <span class="eyebrow">Join the program</span>
+  <h2>Let's <em>work together.</em></h2>
+  <form class="tk-form ref-form" id="refForm" novalidate>
+    <div class="fields"><div class="f"><label for="r-name">Your name</label><input id="r-name" autocomplete="name" maxlength="80"></div>
+    <div class="f"><label for="r-firm">Firm or company (optional)</label><input id="r-firm" autocomplete="organization" maxlength="120"></div>
+    <div class="f"><label for="r-email">Email</label><input id="r-email" type="email" autocomplete="email" maxlength="120"></div>
+    <div class="f"><label for="r-phone">Phone (optional)</label><input id="r-phone" type="tel" autocomplete="tel" maxlength="40"></div>
+    <div class="f"><label for="r-prof">Your profession</label><select id="r-prof"><option value="">Choose one</option>{opts}</select></div></div>
+    <div class="f"><label for="r-msg">Tell us about the clients you work with (optional)</label><textarea id="r-msg" maxlength="1500" placeholder="Please leave out client names or details that could identify anyone."></textarea></div>
+    <div class="hp" aria-hidden="true" style="position:absolute;left:-9999px"><input id="r-web" tabindex="-1" autocomplete="off"></div>
+    <button class="btn primary lk" type="submit">Send</button><p class="note" id="r-out" role="status" hidden></p>
+  </form>
+</div></section>
+<script>
+document.getElementById('refForm').addEventListener('submit', function (e) {{
+  e.preventDefault(); var o = document.getElementById('r-out'), v = function (i) {{ return document.getElementById(i).value.trim(); }};
+  o.hidden = false;
+  if (!v('r-name') || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(v('r-email')) || !v('r-prof')) {{ o.textContent = 'Please add your name, email and profession.'; return; }}
+  var b = this.querySelector('button'); b.disabled = true;
+  fetch('/referral.php', {{ method: 'POST', headers: {{ 'Content-Type': 'application/json' }}, body: JSON.stringify({{ name: v('r-name'), firm: v('r-firm'), email: v('r-email'), phone: v('r-phone'), profession: v('r-prof'), message: v('r-msg'), website: v('r-web') }}) }})
+    .then(function (r) {{ return r.json().then(function (j) {{ return {{ ok: r.ok, j: j }}; }}); }})
+    .then(function (r) {{ b.disabled = false; o.textContent = r.ok ? 'Thanks! Nick will be in touch shortly.' : (r.j.error || 'Something went wrong.'); if (r.ok) document.getElementById('refForm').reset(); }})
+    .catch(function () {{ b.disabled = false; o.textContent = 'Could not reach the server. Please email nic.mehra@gmail.com.'; }});
+}});
+</script>
 '''

@@ -487,8 +487,9 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
 </script>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>
 <script src="pricing/catalog.js?v=2"></script>
-<script src="pricing/calc.js?v=2"></script>
+<script src="pricing/calc.js?v=3"></script>
 <script src="/booking-gate.js?v=2" defer></script>
+<script src="pricing/refcode.js?v=1" defer></script>
 </head>
 <body>
 
@@ -755,6 +756,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
             <div class="field"><label for="b-phone">Phone</label><input type="tel" id="b-phone" autocomplete="tel"></div>
           </div>
           <div class="field"><label for="b-email">Email</label><input type="email" id="b-email" autocomplete="email"></div>
+          <div class="field"><label for="b-ref">Referral code (optional)</label><input id="b-ref" maxlength="40" data-refcode autocomplete="off" placeholder="From the professional who referred you"></div>
           <div class="field"><label for="b-notes">Notes (optional)</label><textarea id="b-notes" placeholder="Square footage, access details, number of vehicles, deadlines"></textarea></div>
           <div class="hp" aria-hidden="true" style="position:absolute;left:-9999px"><label for="b-web">Website</label><input id="b-web" tabindex="-1" autocomplete="off"></div>
           <p class="error" id="bookErr" role="alert" hidden></p>
@@ -841,7 +843,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   <div class="wrap">
     <div class="fgrid">
       <div class="fbrand"><a href="#home" aria-label="BlackSheep Digital Works home"><img class="logo-foot" src="img/logo.png" alt="BlackSheep Digital Works"></a><p>Real estate, dealership and event media from Pickering to Kingston, north to Peterborough.</p><p class="fcontact"><a href="tel:+16478883098">647.888.3098</a><a href="mailto:nic.mehra@gmail.com">nic.mehra@gmail.com</a></p></div>
-      <div class="fcol"><h4>Studio</h4><a href="#about">About</a><a href="about/">About Nick</a><a href="#portfolio">Portfolio</a><a href="journal/">Journal</a><a href="partners/">Partners</a><a href="resources/">Resources</a><a href="#contact">Contact</a></div><div class="fcol"><h4>Services</h4><a href="services/real-estate-photography/">Real estate photography</a><a href="services/video/">Video &amp; social reels</a><a href="services/drone/">Drone &amp; aerial</a><a href="services/floor-plans/">Floor plans &amp; 3D</a><a href="services/events/">Event coverage</a><a href="services/dealerships/">Dealership inventory</a></div><div class="fcol"><h4>Book</h4><a href="#booking">Book a shoot</a><a href="pricing/#book">Get a quote</a><a href="pricing/">Pricing</a><a href="account/">My quotes</a><a href="https://www.instagram.com/BlackSheepDigitalWorks/" target="_blank" rel="noopener">Instagram ↗</a></div>
+      <div class="fcol"><h4>Studio</h4><a href="#about">About</a><a href="about/">About Nick</a><a href="#portfolio">Portfolio</a><a href="journal/">Journal</a><a href="partners/">Partners</a><a href="resources/">Resources</a><a href="#contact">Contact</a></div><div class="fcol"><h4>Services</h4><a href="services/real-estate-photography/">Real estate photography</a><a href="services/video/">Video &amp; social reels</a><a href="services/drone/">Drone &amp; aerial</a><a href="services/floor-plans/">Floor plans &amp; 3D</a><a href="services/events/">Event coverage</a><a href="services/dealerships/">Dealership inventory</a></div><div class="fcol"><h4>Book</h4><a href="#booking">Book a shoot</a><a href="pricing/#book">Get a quote</a><a href="pricing/">Pricing</a><a href="account/">My quotes</a><a href="referrals/">Referral program</a><a href="https://www.instagram.com/BlackSheepDigitalWorks/" target="_blank" rel="noopener">Instagram ↗</a></div>
     </div>
     <div class="fbar"><span class="fsig">© 2026 BlackSheep Digital Works · From Conviction to Legacy</span><div class="flegal"><a href="privacy/">Privacy &amp; data</a><a href="terms/">Terms of service</a><a href="disclaimer/">Disclaimer</a><a href="accessibility/">Accessibility</a><a href="comments-admin.php" rel="nofollow">Admin</a></div></div>
   </div>
@@ -1356,7 +1358,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   var BTYPES = {re: ['Residential listing', 'Condo or townhouse', 'Luxury estate', 'Commercial property', 'Builder or new construction'],
     auto: ['Car & truck dealership', 'RV & trailer dealership', 'Powersports or marine', 'Auction or fleet'],
     ev: ['Community festival or fair', 'Brand activation or launch', 'Corporate event', 'Private gathering (not weddings)', 'Other']};
-  function bMoney(n){ return '$' + Number(n).toLocaleString('en-CA', {minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2}); }
+  function bMoney(n){ return (n < 0 ? '−$' : '$') + Math.abs(Number(n)).toLocaleString('en-CA', {minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2}); }
   function bFind(list, id){ for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i]; return null; }
   function bEsc(t){ return String(t).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function chip(type, name, val, title, sub, on, dis, inc){
@@ -1397,6 +1399,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
     $('b-hours').addEventListener('change', function(){ bk.ev.hours = +this.value || 0; bEst(); });
     ['cars', 'rvs'].forEach(function(u){ $('b-' + u).addEventListener('input', function(){ bk.auto[u] = Math.max(0, Math.min(500, parseInt(this.value, 10) || 0)); bEst(); }); });
     document.addEventListener('bk-verified', function(){ bDraw(); });
+    window.bsRefChanged = function(pct, name){ ['re','auto','ev'].forEach(function(k){ bk[k].refPct = pct; bk[k].refName = name; }); bEst(); };
     $('bSeg').addEventListener('change', function(e){ bk.seg = e.target.value; if (bk.seg === 'auto' && !bk.auto.pkg) bk.auto.pkg = 'au-fleet'; bDraw(); });
     $('bPkgs').addEventListener('change', function(e){ bk[bk.seg].pkg = e.target.value; bDraw(); });
     $('bAdds').addEventListener('change', function(e){ var a = bk[bk.seg].add, v = e.target.value, i = a.indexOf(v); if (e.target.checked && i < 0) a.push(v); if (!e.target.checked && i >= 0) a.splice(i, 1); bEst(); });
@@ -1431,7 +1434,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
     var btn = $('bookSubmit'); btn.disabled = true; btn.textContent = 'Sending…';
     var body = {segment: sg, package: st.pkg || '', addons: st.add, size: st.size, cars: st.cars, rvs: st.rvs, hours: st.hours || 0,
       type: $('b-type').value, address: val('b-addr'), date: val('b-date'), slot: val('b-time'), name: val('b-name'), phone: val('b-phone'),
-      notes: val('b-notes'), website: $('b-web').value};
+      notes: val('b-notes'), refcode: val('b-ref'), website: $('b-web').value};
     fetch('/booking.php', {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)})
       .then(function(r){ return r.json().then(function(j){ return {ok: r.ok, j: j}; }); })
       .then(function(res){

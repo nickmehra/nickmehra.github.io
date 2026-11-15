@@ -31,8 +31,8 @@ bs_mail($email, "Your BlackSheep booking request $ref", bs_email_shell('Booking 
   '<p>Hi ' . $e(explode(' ', $name)[0]) . ', thanks for your booking request <b>' . $ref . '</b>.</p><p>' . $e("$seg · $type") . '<br>' . $e($addr) . '<br>' . $e($when) . '</p>' . bs_lines_table($q)
   . '<p>Nick will confirm the date, time and final price with you personally. If anything changes, just reply to this email.</p>'), $ctext);
 $own = '<p><b>' . $e($name) . '</b> sent a booking request.</p><p>' . $e($email) . ($phone ? ' · ' . $e($phone) : '') . '<br>' . $e("$seg · $type") . '<br>' . $e($addr) . '<br>' . $e($when) . '</p>'
-  . bs_lines_table($q) . ($notes ? '<p><b>Notes:</b> ' . nl2br($e($notes)) . '</p>' : '')
+  . bs_lines_table($q) . (!empty($price['referral']) ? '<p><b>Referral:</b> code ' . $e($price['referral']['code']) . ' from ' . $e($price['referral']['partner']) . '. Credit owed once paid: ' . bs_money($price['referral']['credit']) . '</p>' : '') . ($notes ? '<p><b>Notes:</b> ' . nl2br($e($notes)) . '</p>' : '')
   . '<p>' . bs_btn('mailto:' . $email . '?subject=' . rawurlencode("Your BlackSheep booking $ref"), 'Reply to client') . '</p>';
 bs_mail(BS_OWNER_EMAIL, "New booking request $ref · " . bs_money($price['total']) . " · $name", bs_email_shell('New booking request ' . $ref, $own),
-  "New booking request $ref from $name <$email>\n$seg · $type\n$addr\n$when\n$lines\n$tot\n\nBSQ-RECORD:" . base64_encode(json_encode(['event' => 'booking', 'booking' => $b, 'sent' => ['subject' => "Your BlackSheep booking request $ref", 'text' => $ctext]], JSON_UNESCAPED_UNICODE)) . "\n", null, $email);
+  "New booking request $ref from $name <$email>\n" . (!empty($price['referral']) ? "Referral: " . $price['referral']['partner'] . " (credit owed once paid: " . bs_money($price['referral']['credit']) . ")\n" : '') . "$seg · $type\n$addr\n$when\n$lines\n$tot\n\nBSQ-RECORD:" . base64_encode(json_encode(['event' => 'booking', 'booking' => $b, 'sent' => ['subject' => "Your BlackSheep booking request $ref", 'text' => $ctext]], JSON_UNESCAPED_UNICODE)) . "\n", null, $email);
 bs_json(['ok' => true, 'ref' => $ref, 'total' => $price['total']]);

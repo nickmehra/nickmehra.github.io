@@ -4,7 +4,7 @@
   var HST = 0.13, seg = 're', state = {re:{pkg:'', add:[], size:'s1'}, auto:{pkg:'', add:[], cars:0, rvs:0}, ev:{pkg:'', add:[], hours:0}};
   var SLOTS = [['Morning','8–11 am'],['Midday','11 am–2 pm'],['Afternoon','2–5 pm'],['Twilight','around sunset']];
   var TYPES = {re:['Residential listing','Condo or townhouse','Luxury estate','Commercial property','Builder or new construction'], auto:['Car & truck dealership','RV & trailer dealership','Powersports or marine','Auction or fleet'], ev:['Community festival or fair','Brand activation or launch','Corporate event','Private gathering (not weddings)','Other']};
-  function money(n){ return '$' + Number(n).toLocaleString('en-CA', {minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2}); }
+  function money(n){ return (n < 0 ? '−$' : '$') + Math.abs(Number(n)).toLocaleString('en-CA', {minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2}); }
   function find(list, id){ for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i]; return null; }
   function el(tag, cls, html){ var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
   function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
@@ -144,7 +144,7 @@
     if (seg === 'ev' && !state.ev.pkg) return fail('Pick an event coverage package (1, 2 or 3 hours).');
     if (!name) return fail('Add your name.'); if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail('Add a valid email so we can send your quote.');
     var st = state[seg], btn = $('qGo'); btn.disabled = true; btn.textContent = 'Preparing your quote…';
-    var body = {segment: seg, package: st.pkg, addons: st.add, size: st.size, cars: st.cars, rvs: st.rvs, hours: st.hours || 0, name: name, email: email,
+    var body = {segment: seg, package: st.pkg, addons: st.add, size: st.size, cars: st.cars, rvs: st.rvs, hours: st.hours || 0, refcode: ($('q-ref') || {value: ''}).value.trim(), name: name, email: email,
       phone: $('q-phone').value.trim(), company: $('q-company').value.trim(), type: $('q-type').value, address: $('q-addr').value.trim(),
       date: selDate, slot: selSlot, notes: $('q-notes').value, website: $('q-web').value};
     fetch('../quote.php', {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)})
@@ -166,5 +166,6 @@
   });
 
   document.addEventListener('bk-verified', function(){ drawBuilder(); });
+  window.bsRefChanged = function(pct, name){ ['re','auto','ev'].forEach(function(k){ state[k].refPct = pct; state[k].refName = name; }); price(); };
   var h = (location.hash || '').match(/^#book-(re|auto|ev)$/); setSeg(h ? h[1] : 're'); requestAnimationFrame(movePill);
 })();

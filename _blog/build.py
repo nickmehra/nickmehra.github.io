@@ -99,7 +99,7 @@ def footer_html(up):
               (up + 'partners/', 'Partners', ''), (up + 'resources/', 'Resources', ''), (up + '#contact', 'Contact', '')]
     services = [(up + 'services/' + slug + '/', name, '') for slug, name in SERVICES]
     book = [(up + '#booking', 'Book a shoot', ''), (up + 'pricing/#book', 'Get a quote', ''), (up + 'pricing/', 'Pricing', ''),
-            (up + 'account/', 'My quotes', ''), ('https://www.instagram.com/BlackSheepDigitalWorks/', 'Instagram ↗', ext)]
+            (up + 'account/', 'My quotes', ''), (up + 'referrals/', 'Referral program', ''), ('https://www.instagram.com/BlackSheepDigitalWorks/', 'Instagram ↗', ext)]
     legal = [(up + 'privacy/', 'Privacy &amp; data', ''), (up + 'terms/', 'Terms of service', ''), (up + 'disclaimer/', 'Disclaimer', ''),
              (up + 'accessibility/', 'Accessibility', ''), (up + 'comments-admin.php', 'Admin', ' rel="nofollow"')]
     return ('<footer>\n  <div class="wrap">\n    <div class="fgrid">\n'

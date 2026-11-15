@@ -175,10 +175,33 @@ function bs_price($req) {
     if ((!$pkg || !empty($pkg['perunit'])) && ($rvs > 0 && $rvs < 5)) $flags[] = 'RV visits have a 5-unit minimum; final count confirmed with you';
   }
   $sub = array_sum(array_column($lines, 'amount'));
+  $ref = bs_referral((string)($req['refcode'] ?? ''));
+  if ($ref && $sub > 0) {
+    $off = round($sub * BS_REF_PCT / 100, 2);
+    $lines[] = ['name' => 'Referral discount (' . BS_REF_PCT . '%) · referred by ' . $ref['name'], 'qty' => 1, 'unit' => -$off, 'amount' => -$off];
+    $sub = round($sub - $off, 2);
+  }
   $hst = round($sub * BS_HST, 2);
-  return ['segment' => $seg, 'lines' => $lines, 'flags' => $flags, 'subtotal' => $sub, 'hst' => $hst, 'total' => round($sub + $hst, 2)];
+  $out = ['segment' => $seg, 'lines' => $lines, 'flags' => $flags, 'subtotal' => $sub, 'hst' => $hst, 'total' => round($sub + $hst, 2)];
+  if ($ref) $out['referral'] = ['code' => $ref['code'], 'partner' => $ref['name'], 'credit' => round($sub * BS_REF_PCT / 100, 2)];
+  return $out;
 }
-function bs_money($n) { return '$' . number_format((float)$n, 2); }
+/* ---------- referral program ----------
+   Approved partners get a code from Nick. A client who enters a valid code gets BS_REF_PCT% off (before HST),
+   and the partner earns a credit of BS_REF_PCT% of the client's discounted pre-HST total toward their own next shoot.
+   Codes are stored here only as SHA-256 hashes of the upper-case code, so the code itself isn't visible in the source.
+   To add a partner: php -r 'echo hash("sha256", "CODE123"), PHP_EOL;'  then add  'hash' => 'Partner name'. */
+const BS_REF_PCT = 15;
+const BS_REF_CODES = [
+  // 'sha256-of-code' => 'Partner name',
+];
+function bs_referral($code) {
+  $code = strtoupper(preg_replace('~[^A-Za-z0-9-]~', '', $code));
+  if ($code === '') return null;
+  $h = hash('sha256', $code);
+  return isset(BS_REF_CODES[$h]) ? ['code' => $code, 'name' => BS_REF_CODES[$h]] : null;
+}
+function bs_money($n) { return ((float)$n < 0 ? '−$' : '$') . number_format(abs((float)$n), 2); }
 
 function bs_status($q) {
   if (bs_is_approved($q['number'])) return 'approved';

@@ -49,7 +49,7 @@ $sentClient = bs_mail($email, "Your BlackSheep quote $num", bs_email_shell('Your
 
 // Nick's copy: readable details + a data line his computer uses to file the record in WEBSITE ASSETS/Bookings
 $own = '<p><b>' . $e($name) . '</b> requested a quote.</p><p>' . $e($email) . ($phone ? ' · ' . $e($phone) : '') . ($company ? '<br>' . $e($company) : '') . '<br>' . $e($q['shoot']['type']) . ' · ' . $e($q['shoot']['address']) . '<br>' . $e($when) . '</p>'
-  . bs_lines_table($q) . ($q['notes'] ? '<p><b>Notes:</b> ' . nl2br($e($q['notes'])) . '</p>' : '')
+  . bs_lines_table($q) . (!empty($q['price']['referral']) ? '<p><b>Referral:</b> code ' . $e($q['price']['referral']['code']) . ' from ' . $e($q['price']['referral']['partner']) . '. Credit owed once paid: ' . bs_money($q['price']['referral']['credit']) . '</p>' : '') . ($q['notes'] ? '<p><b>Notes:</b> ' . nl2br($e($q['notes'])) . '</p>' : '')
   . '<p>' . bs_btn('mailto:' . $email . '?subject=' . rawurlencode("Your BlackSheep quote $num"), 'Reply to client') . bs_btn($L['pdf'], 'Open PDF', false) . '</p>';
 $ownText = "New quote $num from $name <$email>\n" . strip_tags(str_replace(['<br>', '</p>', '</tr>'], "\n", bs_lines_table($q)))
   . "\n\nBSQ-RECORD:" . base64_encode(json_encode(['event' => 'quote', 'quote' => $q, 'pdf' => $L['pdf'], 'approve' => $L['approve'], 'sent' => ['subject' => "Your BlackSheep quote $num", 'text' => $text, 'delivered' => (bool)$sentClient]], JSON_UNESCAPED_UNICODE)) . "\n";

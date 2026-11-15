@@ -25,6 +25,8 @@ window.bsCalc = function (C, seg, st) {
     if ((!pk || pk.perunit) && rvs > 0 && rvs < 5) flags.push('RV visits start at 5 units');
     if (pk && !pk.perunit && !(pk.unitType === 'rv' ? rvs : cars)) flags.push('Add your unit count so we can plan the day');
   }
-  var sub = lines.reduce(function (t, l) { return t + l[2]; }, 0), hst = Math.round(sub * 0.13 * 100) / 100;
+  var sub = lines.reduce(function (t, l) { return t + l[2]; }, 0);
+  if (st.refPct && sub > 0) { var off = Math.round(sub * st.refPct) / 100; lines.push(['Referral discount (' + st.refPct + '%)' + (st.refName ? ' · referred by ' + st.refName : ''), 1, -off]); sub = Math.round((sub - off) * 100) / 100; }
+  var hst = Math.round(sub * 0.13 * 100) / 100;
   return { lines: lines, flags: flags, sub: sub, hst: hst, total: Math.round((sub + hst) * 100) / 100 };
 };

@@ -120,6 +120,7 @@ def pricing():
           <div class="f"><label for="q-type">Shoot type</label><select id="q-type"></select></div>
           <div class="f"><label for="q-addr">Address or city</label><input id="q-addr" autocomplete="street-address"></div>
         </div>
+        <div class="f"><label for="q-ref">Referral code (optional)</label><input id="q-ref" maxlength="40" data-refcode autocomplete="off" placeholder="From the professional who referred you"></div>
         <div class="f"><label for="q-notes">Notes (optional)</label><textarea id="q-notes" placeholder="Access, lockbox, deadlines, anything we should know"></textarea></div>
         <div class="hp" aria-hidden="true"><label for="q-web">Website</label><input id="q-web" tabindex="-1" autocomplete="off"></div>
       </div>
@@ -134,7 +135,7 @@ def pricing():
 </div></section>
 '''
     data = json.dumps(CAT).replace('</', '<\\/')
-    js = '<script>window.BS_CAT=' + data + ';</script>\n<script src="calc.js?v=2"></script><script src="/booking-gate.js?v=2" defer></script><script src="pricing.js?v=6"></script>'
+    js = '<script>window.BS_CAT=' + data + ';</script>\n<script src="calc.js?v=3"></script><script src="refcode.js?v=1" defer></script><script src="/booking-gate.js?v=2" defer></script><script src="pricing.js?v=8"></script>'
     page = blog.page('Pricing | BlackSheep Digital Works', 'Real estate, dealership and event photo, video and drone pricing. Build your package and get an instant numbered quote with a PDF.',
                      blog.SITE + '/pricing/', body, 1, 'img/og-image.jpg', '<style>' + CSS + '</style>')
     page = page.replace('</body>', js + '\n</body>', 1)
@@ -182,6 +183,7 @@ simple('services', 'Services', 'Real estate photography, video, drone, floor pla
        '<section class="pg"><div class="wrap"><span class="eyebrow">Services</span><h1>What we <em>shoot.</em></h1><div class="pk">' + cards + '</div></div></section>', 1)
 simple('partners', 'Preferred partners', 'Trusted local businesses BlackSheep Digital Works recommends to its clients.', C.partners_body(), 1)
 simple('about', 'About Nick Mehra', 'Nick Mehra, Owner and Creative Director of BlackSheep Digital Works: almost two decades in security and law enforcement, now behind the lens.', C.about_body(), 1)
+simple('referrals', 'Referral program', 'Refer a client to BlackSheep Digital Works and get 15% of their shoot back as a credit toward your own next shoot.', C.referrals_body(), 1)
 simple('resources', 'Resources', 'Free guides, printable rate cards and quick answers from BlackSheep Digital Works.', C.resources_body(), 1)
 for L in C.legal_pages():
     simple(L['slug'], L['title'], L['desc'], '<section class="pg"><div class="wrap"><span class="eyebrow">' + E(L['title']) + '</span><h1>' + E(L['title']) + '</h1><div class="legal">' + L['body'] + '</div></div></section>', 1)
