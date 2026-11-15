@@ -204,6 +204,8 @@ def legal_pages():
 <p>Portfolio images show examples of our work. Results depend on the property, the conditions and the weather on the day.</p>
 <h2>Outside links</h2>
 <p>Links to other websites are provided for convenience. We don't control those sites and aren't responsible for their content or their privacy practices.</p>
+<h2 id="partners">Partners and ownership</h2>
+<p>Businesses on the <a class="lk" href="../partners/">Preferred Partners</a> page are recommended by BlackSheep Digital Works. Nick Mehra, owner of BlackSheep Digital Works, is a shareholder and partner in Praetorian Security and has a financial interest in that business. Praetorian Security provides its own services under its own terms; BlackSheep Digital Works does not provide security services.</p>
 <h2>Services we don't offer</h2>
 <p>We do not offer wedding coverage.</p>
 <h2>Contact</h2>
@@ -229,10 +231,11 @@ def legal_pages():
 
 
 # Praetorian listing is held back until Nick says to make it live: set PARTNERS_LIVE = True.
-PARTNERS_LIVE = False
+PARTNERS_LIVE = True  # draft: listing + disclosure shown together
 
 PARTNERS = [
-    dict(name='Praetorian Security', url='https://praetoriansecurityinc.ca/', logo='img/partners/praetorian-logo.png', pinned=True, area='Toronto',
+    dict(name='Praetorian Security', url='https://praetoriansecurityinc.ca/', logo='img/partners/praetorian-logo.png', pinned=True,
+         disclosure='Nick Mehra, owner of BlackSheep Digital Works, is a shareholder and partner in Praetorian Security. <a class="lk" href="../disclaimer/#partners">Read more</a>', area='Toronto',
          kicker='TOP PARTNER · SECURITY ASSESSMENT & ADVISORY',
          lede='Security and safety advisory firm in Toronto for executives, private families, estates, organizations and institutions, identifying security gaps at home, at work and on the road, and closing them.',
          offers=[('Executive residential security assessment', 'A careful review of the home that pinpoints security gaps and delivers a clear plan to close them.'),
@@ -269,6 +272,7 @@ def partners_body():
   <p class="sub">{p['lede']}</p>
   <div class="pcols"><div><h3>Services</h3><ul class="offers">{offers}</ul></div>
   <div><h3>Why Praetorian</h3><ul class="gets">{why}</ul><p class="note">Based in {p['area']}.</p></div></div>
+  {('<p class="disclose"><b>Disclosure:</b> ' + p['disclosure'] + '</p>') if p.get('disclosure') else ''}
   <div class="acts"><a class="btn primary lk" href="{p['url']}" target="_blank" rel="noopener">Visit {p['name']} ↗</a></div>
 </article>'''
     return f'''
