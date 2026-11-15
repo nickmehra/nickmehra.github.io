@@ -37,7 +37,7 @@
     function start() {
       lock(true); pow = null;
       g.innerHTML = '<h3>Before you book</h3>' +
-        '<p>To keep fake bookings out, booking requests need two quick steps: confirm you\'re human, then enter the 6-digit code we email you. Your email is used for this booking and, only if you tick the box below, our Monday update. See our <a class="lk" href="/privacy/">privacy page</a>.</p>' +
+        '<p>To keep fake bookings out, booking requests need two quick steps: confirm you\'re human, then enter the 6-digit code we email you. Your email is used only for this booking. See our <a class="lk" href="/privacy/">privacy page</a>.</p>' +
         '<label class="hb" role="checkbox" aria-checked="false" tabindex="0"><i aria-hidden="true"></i><span>I\'m human</span></label>' +
         '<div class="row2" data-step="email" hidden><input type="email" autocomplete="email" placeholder="you@example.com" aria-label="Your email"><button type="button" class="btn primary lk">Email me a code</button></div>' +
         '<div class="row2" data-step="code" hidden><input inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6-digit code" aria-label="Code from your email"><button type="button" class="btn primary lk">Verify</button></div>' +

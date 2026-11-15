@@ -22,7 +22,7 @@ $seg = ['re' => 'Real estate', 'auto' => 'Dealership', 'ev' => 'Event'][$price['
 $when = date('l, F j, Y', strtotime($date)) . ', ' . $slot;
 $b = ['ref' => $ref, 'created' => time(), 'client' => ['name' => $name, 'email' => $email, 'phone' => $phone], 'shoot' => ['segment' => $price['segment'], 'type' => $type, 'address' => $addr, 'date' => $date, 'slot' => $slot],
       'request' => ['package' => (string)($in['package'] ?? ''), 'addons' => array_values((array)($in['addons'] ?? [])), 'size' => (string)($in['size'] ?? ''), 'cars' => (int)($in['cars'] ?? 0), 'rvs' => (int)($in['rvs'] ?? 0), 'hours' => (int)($in['hours'] ?? 0)],
-      'notes' => $notes, 'price' => $price, 'updates' => !empty($in['updates'])];
+      'notes' => $notes, 'price' => $price];
 $e = 'htmlspecialchars'; $q = ['price' => $price];
 $lines = implode("\n", array_map(function ($l) { return '- ' . $l['name'] . ($l['qty'] > 1 ? ' x ' . $l['qty'] : '') . ': ' . bs_money($l['amount']); }, $price['lines']));
 $tot = "Subtotal " . bs_money($price['subtotal']) . " · HST " . bs_money($price['hst']) . " · Estimated total " . bs_money($price['total']);
@@ -31,9 +31,8 @@ bs_mail($email, "Your BlackSheep booking request $ref", bs_email_shell('Booking 
   '<p>Hi ' . $e(explode(' ', $name)[0]) . ', thanks for your booking request <b>' . $ref . '</b>.</p><p>' . $e("$seg · $type") . '<br>' . $e($addr) . '<br>' . $e($when) . '</p>' . bs_lines_table($q)
   . '<p>Nick will confirm the date, time and final price with you personally. If anything changes, just reply to this email.</p>'), $ctext);
 $own = '<p><b>' . $e($name) . '</b> sent a booking request.</p><p>' . $e($email) . ($phone ? ' · ' . $e($phone) : '') . '<br>' . $e("$seg · $type") . '<br>' . $e($addr) . '<br>' . $e($when) . '</p>'
-  . bs_lines_table($q) . ($notes ? '<p><b>Notes:</b> ' . nl2br($e($notes)) . '</p>' : '') . '<p>Monday update opt-in: ' . (!empty($in['updates']) ? 'yes' : 'no') . '</p>'
+  . bs_lines_table($q) . ($notes ? '<p><b>Notes:</b> ' . nl2br($e($notes)) . '</p>' : '')
   . '<p>' . bs_btn('mailto:' . $email . '?subject=' . rawurlencode("Your BlackSheep booking $ref"), 'Reply to client') . '</p>';
 bs_mail(BS_OWNER_EMAIL, "New booking request $ref · " . bs_money($price['total']) . " · $name", bs_email_shell('New booking request ' . $ref, $own),
   "New booking request $ref from $name <$email>\n$seg · $type\n$addr\n$when\n$lines\n$tot\n\nBSQ-RECORD:" . base64_encode(json_encode(['event' => 'booking', 'booking' => $b, 'sent' => ['subject' => "Your BlackSheep booking request $ref", 'text' => $ctext]], JSON_UNESCAPED_UNICODE)) . "\n", null, $email);
-bs_list_add($email, $name, !empty($in['updates']) ? 'express' : 'inquiry');
 bs_json(['ok' => true, 'ref' => $ref, 'total' => $price['total']]);

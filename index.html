@@ -488,7 +488,7 @@ footer .fcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26p
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>
 <script src="pricing/catalog.js?v=2"></script>
 <script src="pricing/calc.js?v=2"></script>
-<script src="/booking-gate.js?v=1" defer></script>
+<script src="/booking-gate.js?v=2" defer></script>
 </head>
 <body>
 
@@ -756,7 +756,6 @@ footer .fcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26p
           </div>
           <div class="field"><label for="b-email">Email</label><input type="email" id="b-email" autocomplete="email"></div>
           <div class="field"><label for="b-notes">Notes (optional)</label><textarea id="b-notes" placeholder="Square footage, access details, number of vehicles, deadlines"></textarea></div>
-          <label class="check optin"><input type="checkbox" id="b-updates"><span>Send me the BlackSheep Monday update: listing and marketing tips, open dates and offers. Unsubscribe anytime.</span></label>
           <div class="hp" aria-hidden="true" style="position:absolute;left:-9999px"><label for="b-web">Website</label><input id="b-web" tabindex="-1" autocomplete="off"></div>
           <p class="error" id="bookErr" role="alert" hidden></p>
           <div><button class="btn primary lk" type="submit" id="bookSubmit">Send booking request</button></div>
@@ -1430,7 +1429,7 @@ footer .fcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26p
     var btn = $('bookSubmit'); btn.disabled = true; btn.textContent = 'Sending…';
     var body = {segment: sg, package: st.pkg || '', addons: st.add, size: st.size, cars: st.cars, rvs: st.rvs, hours: st.hours || 0,
       type: $('b-type').value, address: val('b-addr'), date: val('b-date'), slot: val('b-time'), name: val('b-name'), phone: val('b-phone'),
-      notes: val('b-notes'), updates: $('b-updates').checked, website: $('b-web').value};
+      notes: val('b-notes'), website: $('b-web').value};
     fetch('/booking.php', {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)})
       .then(function(r){ return r.json().then(function(j){ return {ok: r.ok, j: j}; }); })
       .then(function(res){

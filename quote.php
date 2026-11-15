@@ -55,5 +55,4 @@ $ownText = "New quote $num from $name <$email>\n" . strip_tags(str_replace(['<br
   . "\n\nBSQ-RECORD:" . base64_encode(json_encode(['event' => 'quote', 'quote' => $q, 'pdf' => $L['pdf'], 'approve' => $L['approve'], 'sent' => ['subject' => "Your BlackSheep quote $num", 'text' => $text, 'delivered' => (bool)$sentClient]], JSON_UNESCAPED_UNICODE)) . "\n";
 bs_mail(BS_OWNER_EMAIL, "New quote $num · " . bs_money($price['total']) . " · $name", bs_email_shell('New quote ' . $num, $own), $ownText, ["BlackSheep-Quote-$num.pdf", $pdf], $email);
 
-bs_list_add($email, $name, !empty($in['updates']) ? 'express' : 'inquiry');
 bs_json(['ok' => true, 'number' => $num, 'validUntil' => $valid, 'validUntilTs' => $q['valid_until'], 'price' => $price, 'pdf' => $L['pdf'], 'approve' => $L['approve'], 'emailed' => (bool)$sentClient]);

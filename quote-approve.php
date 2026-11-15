@@ -12,7 +12,7 @@ $msg = ''; $state = $allowed ? bs_status($q) : 'missing';
 if ($allowed && $_SERVER['REQUEST_METHOD'] === 'POST' && $state === 'open') {
   $first = bs_mark_approved($num); $state = 'approved';
   if ($first) {
-    $q['approved_at'] = time(); bs_list_add($q['client']['email'], $q['client']['name'], 'client'); $L = bs_links($q); $pdf = bs_pdf($q); $c = $q['client']; $s = $q['shoot'];
+    $q['approved_at'] = time(); $L = bs_links($q); $pdf = bs_pdf($q); $c = $q['client']; $s = $q['shoot'];
     $when = $s['date'] ? date('l, F j, Y', strtotime($s['date'])) . ($s['slot'] ? ', ' . $s['slot'] : '') : 'date to be confirmed';
     $ctext = "You approved quote {$q['number']} for $when. Nick will confirm the final details shortly.\nPDF: {$L['pdf']}\n";
     bs_mail($c['email'], "Booking confirmed · quote {$q['number']}", bs_email_shell('You are booked in',

@@ -144,7 +144,7 @@
     if (seg === 'ev' && !state.ev.pkg) return fail('Pick an event coverage package (1, 2 or 3 hours).');
     if (!name) return fail('Add your name.'); if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail('Add a valid email so we can send your quote.');
     var st = state[seg], btn = $('qGo'); btn.disabled = true; btn.textContent = 'Preparing your quote…';
-    var body = {segment: seg, package: st.pkg, addons: st.add, size: st.size, cars: st.cars, rvs: st.rvs, hours: st.hours || 0, updates: $('q-updates').checked, name: name, email: email,
+    var body = {segment: seg, package: st.pkg, addons: st.add, size: st.size, cars: st.cars, rvs: st.rvs, hours: st.hours || 0, name: name, email: email,
       phone: $('q-phone').value.trim(), company: $('q-company').value.trim(), type: $('q-type').value, address: $('q-addr').value.trim(),
       date: selDate, slot: selSlot, notes: $('q-notes').value, website: $('q-web').value};
     fetch('../quote.php', {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)})
