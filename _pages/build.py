@@ -181,7 +181,7 @@ cards = ''.join('<a class="pc in" href="%s/" style="text-decoration:none"><span 
 simple('services', 'Services', 'Real estate photography, video, drone, floor plans, event coverage and dealership inventory media.',
        '<section class="pg"><div class="wrap"><span class="eyebrow">Services</span><h1>What we <em>shoot.</em></h1><div class="pk">' + cards + '</div></div></section>', 1)
 simple('partners', 'Preferred partners', 'Trusted local businesses BlackSheep Digital Works recommends to its clients.', C.partners_body(), 1)
-simple('about', 'About Nick Mehra', 'Nick Mehra, Owner and Creative Director of BlackSheep Digital Works: almost two decades in law enforcement, now behind the lens.', C.about_body(), 1)
+simple('about', 'About Nick Mehra', 'Nick Mehra, Owner and Creative Director of BlackSheep Digital Works: almost two decades in security and law enforcement, now behind the lens.', C.about_body(), 1)
 simple('resources', 'Resources', 'Free guides, printable rate cards and quick answers from BlackSheep Digital Works.', C.resources_body(), 1)
 for L in C.legal_pages():
     simple(L['slug'], L['title'], L['desc'], '<section class="pg"><div class="wrap"><span class="eyebrow">' + E(L['title']) + '</span><h1>' + E(L['title']) + '</h1><div class="legal">' + L['body'] + '</div></div></section>', 1)
