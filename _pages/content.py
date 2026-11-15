@@ -226,6 +226,9 @@ def legal_pages():
     return P
 
 
+# Praetorian listing is held back until Nick says to make it live: set PARTNERS_LIVE = True.
+PARTNERS_LIVE = False
+
 PARTNERS = [
     dict(name='Praetorian Security', url='https://praetoriansecurityinc.ca/', logo='img/partners/praetorian-logo.png', pinned=True, area='Toronto',
          kicker='TOP PARTNER · SECURITY ASSESSMENT & ADVISORY',
@@ -247,7 +250,13 @@ PARTNERS = [
 
 def partners_body():
     cards = ''
-    for p in PARTNERS:
+    if not PARTNERS_LIVE:
+        cards = '''<article class="partner pinned">
+  <span class="eyebrow">Coming soon</span>
+  <h2>A new partner is on the way.</h2>
+  <p class="sub">A trusted local partner will be announced here shortly. Check back soon.</p>
+</article>'''
+    for p in (PARTNERS if PARTNERS_LIVE else []):
         offers = ''.join('<li><b>%s</b><span>%s</span></li>' % (a, b) for a, b in p['offers'])
         why = ''.join('<li>%s</li>' % w for w in p['why'])
         cards += f'''<article class="partner{' pinned' if p.get('pinned') else ''}">
