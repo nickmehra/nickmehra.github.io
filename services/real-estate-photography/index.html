@@ -177,7 +177,7 @@ header{--bg:#0A0B0D;--panel:rgba(12,14,18,.74);--fg:#EFEBE3;--muted:#A9ADB3;--li
 .view-note b{color:#F2EEE7;font-weight:600}
 .vn-x{position:absolute;top:3px;right:4px;width:32px;height:32px;background:none;border:0;color:#D6D7DB;font-size:20px;line-height:1;cursor:pointer}
 .vn-x:focus-visible{outline:2px solid #D11F26}
-footer .fcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px 34px;width:100%;max-width:900px;text-align:center}footer .fcol{display:flex;flex-direction:column;align-items:center;gap:9px}footer .fcol h4{margin:0 0 4px;font-family:var(--display);font-size:.68rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#C9CCD2}footer .fcol a{font-size:.98rem;letter-spacing:.01em}@media (max-width:700px){footer .fcols{grid-template-columns:1fr 1fr}footer .fcol:last-child{grid-column:1/-1}}</style>
+footer .fcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px 34px;width:100%;max-width:900px;text-align:center}footer .fcol{display:flex;flex-direction:column;align-items:center;gap:9px}footer .fcol h4{margin:0 0 4px;font-family:var(--display);font-size:.68rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#C9CCD2}footer .fcol a{font-size:.98rem;letter-spacing:.01em}@media (max-width:700px){footer .fcols{grid-template-columns:1fr;gap:22px;max-width:420px}footer .fcol{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:8px 18px;padding-top:18px;border-top:1px solid rgba(239,235,227,.12)}footer .fcol:first-child{border-top:0;padding-top:0}footer .fcol h4{flex-basis:100%;margin:0 0 2px}footer .fcol a{font-size:1rem}}</style>
 <link rel="alternate" type="application/rss+xml" title="The BlackSheep Journal" href="https://blacksheepdigitalworks.ca/journal/feed.xml">
 <meta name="twitter:card" content="summary_large_image">
 <style>/* Pricing + account pages: shared pieces on top of the site's base styles */
@@ -417,7 +417,7 @@ main{position:relative;z-index:2}
 })();
 </script>
 <script src="/react.js?v=7" defer></script>
-<script src="/comments.js?v=4" defer></script>
+<script src="/comments.js?v=5" defer></script>
 <script src="/type-fx.js?v=12" defer></script>
 <div class="view-note" role="note" hidden>Best viewed in light mode on Chrome, Safari, Firefox or Edge. Using Opera? Turn off its <b>Dark web pages</b> setting, or switch this site to Dark.<button type="button" class="vn-x" aria-label="Close this note">&times;</button></div>
 <script>(function(){var n=document.querySelector('.view-note');if(!n)return;try{if(localStorage.getItem('vn-off')||sessionStorage.getItem('vn-seen')){n.remove();return}}catch(e){}if(!window.matchMedia||!matchMedia('(max-width:760px)').matches){n.remove();return}document.body.appendChild(n);n.hidden=false;try{sessionStorage.setItem('vn-seen','1')}catch(e){}var gone=false;function hide(keep){if(gone)return;gone=true;n.classList.remove('on');if(keep){try{localStorage.setItem('vn-off','1')}catch(e){}}setTimeout(function(){n.remove()},600)}setTimeout(function(){n.classList.add('on')},900);setTimeout(function(){hide(false)},8000);addEventListener('scroll',function(){if(scrollY>240)hide(false)},{passive:true});n.querySelector('.vn-x').addEventListener('click',function(){hide(true)});})();</script>

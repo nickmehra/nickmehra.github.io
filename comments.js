@@ -77,6 +77,7 @@
 
   // small Admin link at the very bottom of journal pages, for the site owner's approval page
   var foot = document.querySelector('footer') || document.body;
+  if (foot.querySelector('a[href*="comments-admin.php"]')) return;
   var adm = document.createElement('a');
   adm.href = '/comments-admin.php'; adm.textContent = 'Admin'; adm.rel = 'nofollow';
   adm.style.cssText = 'display:block;width:max-content;margin:18px auto 0;font:600 10px/1 Manrope,system-ui,sans-serif;letter-spacing:.24em;text-transform:uppercase;opacity:.45;color:inherit;text-decoration:none;padding:6px 10px;border:1px solid rgba(127,127,127,.35);border-radius:999px;transition:opacity .2s';
