@@ -89,8 +89,8 @@ def legal_pages():
 
 <h2>The short version</h2>
 <ul>
-<li>This website does not store your contact details, quotes or booking details.</li>
-<li>The only things stored on our web host are the <b>name and comment</b> you choose to post, totals of likes and dislikes, and the numbers of quotes that have been approved.</li>
+<li>This website does not store your quotes or booking details.</li>
+<li>What our web host does store: the <b>name and comment</b> you choose to post, totals of likes and dislikes, the numbers of quotes that have been approved, and, if you book or request a quote, your <b>name, email address</b> and the basis for emailing you our Monday update (see below).</li>
 <li>No advertising, no tracking pixels, no analytics, no cookies for tracking. Fonts and other files are served from our own site, so your browser doesn't contact Google or other third parties when you visit.</li>
 <li>You can ask us to see, correct or delete your information at any time: <a class="lk" href="mailto:{EMAIL}">{EMAIL}</a>.</li>
 </ul>
@@ -98,8 +98,14 @@ def legal_pages():
 <h2>What we collect, and where it goes</h2>
 <h3>Quote requests (pricing page)</h3>
 <p>When you build a quote, the details you type (name, email, phone, company, address, date, notes and the services you pick) are used once to calculate your price and create your PDF. They are emailed to you and to us, and <b>are not saved on the website</b>. Your quote links (PDF and approve button) carry the quote inside the link itself, sealed with a digital signature so it cannot be altered. When you approve a quote, the website records only the quote number and the time, so it cannot be approved twice.</p>
-<h3>Booking requests and messages (homepage forms)</h3>
-<p>These forms open your own email app with your request written out. Nothing is sent until you press send, and nothing is stored on the website.</p>
+<h3>Booking requests (homepage)</h3>
+<p>Your booking request is emailed to you and to us, and the details are not saved on the website.</p>
+<h3>Email verification and the "I'm human" check</h3>
+<p>Before you can request a booking or a quote, you confirm you're human (your browser solves a small puzzle by itself; no tracking and no third-party service) and enter a 6-digit code we email you. The code is stored only in scrambled form and is deleted as soon as it's used or after 15 minutes. Once verified, your browser keeps a signed cookie for 30 days so you don't have to repeat the code. It contains only your email address and an expiry date.</p>
+<h3>Our Monday update</h3>
+<p>If you tick the box on a booking or quote form, we'll email you our Monday update until you unsubscribe. If you don't tick it, Canada's anti-spam law (CASL) still lets us email you for a limited time: 6 months after a booking or quote request, or 2 years after you approve a quote. Every email has a one-click unsubscribe link, and once you unsubscribe we stop. For this we keep your name, email address and those dates on our web host, and nothing else.</p>
+<h3>Messages (homepage contact form)</h3>
+<p>The contact form opens your own email app with your message written out. Nothing is sent until you press send, and nothing is stored on the website.</p>
 <h3>Comments</h3>
 <p>If you comment, we store the name you enter, your comment and when you posted it, so we can show it after we approve it. We do not store your email, IP address or device details with comments. Please don't put private information in a comment, because approved comments are public.</p>
 <h3>Likes and dislikes</h3>
@@ -119,7 +125,7 @@ def legal_pages():
 <p>Comments stay until you ask us to remove them or we take them down. Client records are kept as long as needed to serve you, and business and tax records for as long as Canadian tax law requires (generally six years). After that they are deleted.</p>
 
 <h2>Security</h2>
-<p>The site runs only over encrypted HTTPS with strict browser security rules, stores no passwords or payment details from visitors, keeps its own files and signing keys outside the public web folder, and keeps personal information off the server entirely. No system can be guaranteed 100% secure. Because almost nothing personal is stored on the website, a break-in at our web host would expose, at most, published-style names and comments and anonymous like totals. If a breach of our safeguards ever creates a real risk of significant harm to you, we will notify you and report it to the Office of the Privacy Commissioner of Canada as the law requires.</p>
+<p>The site runs only over encrypted HTTPS with strict browser security rules, stores no passwords or payment details from visitors, keeps its own files and signing keys outside the public web folder, and keeps personal information off the server entirely. No system can be guaranteed 100% secure. Because so little personal information is stored on the website, a break-in at our web host would expose, at most, names and comments, anonymous like totals, and the names and email addresses on our Monday update list. No phone numbers, addresses, booking details or payment information are stored there. If a breach of our safeguards ever creates a real risk of significant harm to you, we will notify you and report it to the Office of the Privacy Commissioner of Canada as the law requires.</p>
 
 <h2>Your choices: see, correct or delete your information</h2>
 <p>Email <a class="lk" href="mailto:{EMAIL}">{EMAIL}</a> or call or text {PHONE} and tell us what you'd like. We will respond within 30 days. When you ask us to delete your information, we remove your comments, quotes, emails and our local and backup copies, except anything we must keep by law (for example, invoices for tax purposes), which we will tell you about.</p>

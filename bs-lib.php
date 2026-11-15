@@ -187,6 +187,7 @@ function bs_status($q) {
 
 /* ---------- email ---------- */
 function bs_mail($to, $subject, $html, $text, $attach = null, $replyTo = BS_OWNER_EMAIL) {
+  if (getenv("BS_MAIL_TEST")) { file_put_contents(getenv("BS_MAIL_TEST"), "TO: $to\nSUBJECT: $subject\n$text\n----\n", FILE_APPEND); return true; } // local testing only
   $host = bs_host(); $b = 'bs' . bin2hex(random_bytes(8)); $alt = 'alt' . bin2hex(random_bytes(8));
   $h = "From: BlackSheep Digital Works <quotes@$host>\r\nReply-To: $replyTo\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"$b\"";
   $body = "--$b\r\nContent-Type: multipart/alternative; boundary=\"$alt\"\r\n\r\n"
