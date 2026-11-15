@@ -58,11 +58,25 @@ main{flex:1 0 auto}
 .btn.ghost:hover{background:var(--ink);color:var(--bg)}
 .row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px}
 
-/* footer */
-footer{border-top:1px solid #26272c;padding:38px 0 42px;color:#9d9fa7;background:#060607;font-size:12px;letter-spacing:.22em;text-transform:uppercase}
-footer .fl{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 22px;margin-bottom:16px;color:#f4f2ee;font-weight:600}
-footer a:hover{color:#e9a42c}
-footer a{text-decoration:none}
+/* footer: grouped, scannable columns (brand + About / Work / Connect), hairline, then a quiet legal bar */
+footer{--f-bg:#060607;--f-ink:#f4f2ee;--f-mute:#8f9199;--f-line:rgba(244,242,238,.1);border-top:1px solid #26272c;background:var(--f-bg);color:var(--f-mute);padding:64px 0 28px;text-align:left;font-size:15px;letter-spacing:0;text-transform:none}
+footer a{text-decoration:none;color:inherit}
+footer .fgrid{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(3,minmax(0,1fr));gap:40px 48px}
+footer .fmark{font-family:var(--display);font-size:30px;line-height:1;color:var(--f-ink);letter-spacing:.01em}
+footer .fmark span{font-style:italic;background:var(--lens);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.06em}
+footer .fbrand p{margin:16px 0 0;max-width:34ch;font-size:14px;line-height:1.65}
+footer .fbrand .floc{margin-top:10px;font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--f-mute)}
+footer .fcol{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+footer .fcol h4{margin:0 0 12px;font-family:var(--body);font-size:11px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--f-mute)}
+footer .fcol h4::after{content:"";display:block;width:18px;height:2px;margin-top:10px;background:var(--lens);border-radius:2px}
+footer .fcol a{display:inline-flex;align-items:center;min-height:36px;color:var(--f-ink);font-size:15px;font-weight:500;background:linear-gradient(currentColor,currentColor) 0 calc(100% - 7px)/0 1px no-repeat;transition:background-size .3s ease,color .2s ease}
+footer .fcol a:hover,footer .fcol a:focus-visible{background-size:100% 1px;color:#e9a42c}
+footer .fbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;margin-top:52px;padding-top:22px;border-top:1px solid var(--f-line);font-size:12.5px}
+footer .flegal{display:flex;flex-wrap:wrap;gap:6px 22px}
+footer .flegal a{color:var(--f-mute);transition:color .2s ease}
+footer .flegal a:hover,footer .flegal a:focus-visible{color:var(--f-ink)}
+@media (max-width:900px){footer .fgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:36px 28px}footer .fbrand{grid-column:1/-1}}
+@media (max-width:600px){footer{padding:48px 0 calc(24px + env(safe-area-inset-bottom))}footer .fgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 20px}footer .fcol a{min-height:44px;font-size:16px}footer .fcol:last-child{grid-column:1/-1}footer .fbar{flex-direction:column-reverse;align-items:flex-start;margin-top:36px}footer .flegal a{display:inline-flex;align-items:center;min-height:40px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
 
 /* ---------- Light mode legibility: deeper gradient, firmer greys, slightly heavier body text ---------- */

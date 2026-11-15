@@ -54,9 +54,8 @@
 :root[data-theme="light"] .svc li{border-color:#b9b2a4;color:#2a2b30;background:rgba(255,255,255,.6)}
 
 /* footer */
-:root[data-theme="light"] footer{background:var(--bg2);border-top-color:var(--line);color:#46474e}
-:root[data-theme="light"] footer .fl{color:var(--ink)}
-:root[data-theme="light"] footer a:hover{color:var(--red)}
+:root[data-theme="light"] footer{--f-bg:var(--bg2);--f-ink:#111113;--f-mute:#55565d;--f-line:rgba(17,17,19,.12);border-top-color:var(--line)}
+:root[data-theme="light"] footer .fcol a:hover,:root[data-theme="light"] footer .fcol a:focus-visible{color:var(--red)}
 
 /* floating reactions bar */
 :root[data-theme="light"] .rx{background:rgba(255,255,255,.92)!important;color:#111113!important;box-shadow:0 10px 30px rgba(0,0,0,.16)!important;border:1px solid var(--line)}
