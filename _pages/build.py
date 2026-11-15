@@ -188,6 +188,8 @@ for L in C.legal_pages():
 # homepage footer + footer styles come from the same template as every other page
 hp = os.path.join(ROOT, 'index.html'); h = open(hp, encoding='utf-8').read()
 h = re.sub(r'<footer>.*?</footer>', lambda m: blog.footer_html(''), h, count=1, flags=re.S)
-if 'footer .fcols' not in h: h = h.replace('</style>', blog.FOOTER_CSS + '</style>', 1)
+h = re.sub(r'/\*fcss\*/.*?/\*/fcss\*/', '', h, flags=re.S)
+h = re.sub(r'footer \.fcols\{display:grid;grid-template-columns:repeat\(3.*?footer \.fcol a\{font-size:1rem\}\}', '', h, flags=re.S)  # footer styles from before the redesign
+h = h.replace('</style>', '/*fcss*/' + blog.FOOTER_CSS + '/*/fcss*/</style>', 1)
 open(hp, 'w', encoding='utf-8').write(h)
 print('Built services, legal pages and homepage footer')

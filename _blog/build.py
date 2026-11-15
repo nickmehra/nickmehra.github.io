@@ -92,23 +92,44 @@ SERVICES = [('real-estate-photography', 'Real estate photography'), ('video', 'V
             ('floor-plans', 'Floor plans &amp; 3D'), ('events', 'Event coverage'), ('dealerships', 'Dealership inventory')]
 
 def footer_html(up):
-    """Site footer with three link columns (Studio / Services / Inquiries), shared by every page."""
-    col = lambda title, links: '<div class="fcol"><h4>' + title + '</h4>' + ''.join('<a class="lk" href="%s"%s>%s</a>' % (h, x, t) for h, t, x in links) + '</div>'
-    studio = [(up + '#about', 'About', ''), (up + '#portfolio', 'Portfolio', ''), (up + 'journal/', 'Journal', ''), (up + 'pricing/', 'Pricing', ''),
-              (up + 'partners/', 'Partners', ''), (up + 'resources/', 'Resources', ''), (up + '#contact', 'Contact', ''), ('https://www.instagram.com/BlackSheepDigitalWorks/', 'Instagram', ' target="_blank" rel="noopener"')]
+    """Site footer: brand block + three grouped link columns (Studio / Services / Book), hairline, then a quiet legal bar. Shared by every page."""
+    col = lambda title, links: '<div class="fcol"><h4>' + title + '</h4>' + ''.join('<a href="%s"%s>%s</a>' % (h, x, t) for h, t, x in links) + '</div>'
+    ext = ' target="_blank" rel="noopener"'
+    studio = [(up + '#about', 'About', ''), (up + '#portfolio', 'Portfolio', ''), (up + 'journal/', 'Journal', ''),
+              (up + 'partners/', 'Partners', ''), (up + 'resources/', 'Resources', ''), (up + '#contact', 'Contact', '')]
     services = [(up + 'services/' + slug + '/', name, '') for slug, name in SERVICES]
-    inquiries = [(up + '#booking', 'Book a shoot', ''), (up + 'pricing/#book', 'Get a quote', ''), (up + 'account/', 'My quotes', ''),
-                 (up + 'privacy/', 'Privacy &amp; data', ''), (up + 'terms/', 'Terms of service', ''), (up + 'disclaimer/', 'Disclaimer', ''),
-                 (up + 'accessibility/', 'Accessibility', ''), (up + 'comments-admin.php', 'Admin', ' rel="nofollow"')]
-    return ('<footer>\n  <div class="wrap">\n    <a class="lk" href="' + up + '#home" aria-label="BlackSheep Digital Works home"><img class="logo-foot" src="' + up + 'img/logo.png" alt="BlackSheep Digital Works"></a>\n'
-            '    <div class="fcols">' + col('Studio', studio) + col('Services', services) + col('Inquiries', inquiries) + '</div>\n'
-            '    <span>© ' + str(datetime.date.today().year) + ' BlackSheep Digital Works · From Conviction to Legacy</span>\n  </div>\n</footer>')
+    book = [(up + '#booking', 'Book a shoot', ''), (up + 'pricing/#book', 'Get a quote', ''), (up + 'pricing/', 'Pricing', ''),
+            (up + 'account/', 'My quotes', ''), ('https://www.instagram.com/BlackSheepDigitalWorks/', 'Instagram ↗', ext)]
+    legal = [(up + 'privacy/', 'Privacy &amp; data', ''), (up + 'terms/', 'Terms of service', ''), (up + 'disclaimer/', 'Disclaimer', ''),
+             (up + 'accessibility/', 'Accessibility', ''), (up + 'comments-admin.php', 'Admin', ' rel="nofollow"')]
+    return ('<footer>\n  <div class="wrap">\n    <div class="fgrid">\n'
+            '      <div class="fbrand"><a href="' + up + '#home" aria-label="BlackSheep Digital Works home"><img class="logo-foot" src="' + up + 'img/logo.png" alt="BlackSheep Digital Works"></a>'
+            '<p>Real estate, dealership and event media from Pickering to Kingston, north to Peterborough.</p>'
+            '<p class="fcontact"><a href="tel:+16478883098">647.888.3098</a><a href="mailto:nic.mehra@gmail.com">nic.mehra@gmail.com</a></p></div>\n'
+            '      ' + col('Studio', studio) + col('Services', services) + col('Book', book) + '\n    </div>\n'
+            '    <div class="fbar"><span class="fsig">© ' + str(datetime.date.today().year) + ' BlackSheep Digital Works · From Conviction to Legacy</span>'
+            '<div class="flegal">' + ''.join('<a href="%s"%s>%s</a>' % (h, x, t) for h, t, x in legal) + '</div></div>\n  </div>\n</footer>')
 
-FOOTER_CSS = ('footer .fcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px 34px;width:100%;max-width:900px;text-align:center}'
-              'footer .fcol{display:flex;flex-direction:column;align-items:center;gap:9px}'
-              'footer .fcol h4{margin:0 0 4px;font-family:var(--display);font-size:.68rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#C9CCD2}'
-              'footer .fcol a{font-size:.98rem;letter-spacing:.01em}'
-              '@media (max-width:700px){footer .fcols{grid-template-columns:1fr;gap:22px;max-width:420px}footer .fcol{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:8px 18px;padding-top:18px;border-top:1px solid rgba(239,235,227,.12)}footer .fcol:first-child{border-top:0;padding-top:0}footer .fcol h4{flex-basis:100%;margin:0 0 2px}footer .fcol a{font-size:1rem}}')
+FOOTER_CSS = ('footer{padding-block:64px 26px!important;text-align:left}'
+              'footer .wrap{align-items:stretch!important;gap:0!important}'
+              'footer .fgrid{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));gap:40px 44px;width:100%}'
+              'footer .fbrand .logo-foot{width:150px;height:auto;display:block}'
+              'footer .fbrand p{margin:16px 0 0;max-width:32ch;color:#A9ADB3;font-size:1rem;line-height:1.6}'
+              'footer .fcontact{display:flex;flex-direction:column;gap:2px}'
+              'footer .fcontact a{color:#EFEBE3;text-decoration:none;font-size:1rem}footer .fcontact a:hover{color:#FF3B42}'
+              'footer .fcol{display:flex;flex-direction:column;align-items:flex-start;gap:2px}'
+              'footer .fcol h4{margin:0 0 12px;font-family:var(--display);font-size:.7rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#8E9299;text-shadow:none}'
+              'footer .fcol h4::after{content:"";display:block;width:18px;height:2px;margin-top:10px;background:#D11F26;border-radius:2px}'
+              'footer .fcol a{display:inline-flex;align-items:center;min-height:36px;color:#EFEBE3;text-decoration:none;font-size:1.06rem;letter-spacing:.01em;'
+              'background:linear-gradient(currentColor,currentColor) 0 calc(100% - 7px)/0 1px no-repeat;transition:background-size .3s ease,color .2s ease}'
+              'footer .fcol a:hover,footer .fcol a:focus-visible{background-size:100% 1px;color:#FF3B42}'
+              'footer .fbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;margin-top:52px;padding-top:22px;border-top:1px solid rgba(239,235,227,.12);font-size:.88rem;color:#8E9299}'
+              'footer .flegal{display:flex;flex-wrap:wrap;gap:6px 22px}'
+              'footer .flegal a{color:#A9ADB3;text-decoration:none;transition:color .2s ease}footer .flegal a:hover,footer .flegal a:focus-visible{color:#EFEBE3}'
+              '@media (max-width:900px){footer .fgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:36px 28px}footer .fbrand{grid-column:1/-1}}'
+              '@media (max-width:600px){footer{padding-block:48px calc(24px + env(safe-area-inset-bottom))!important}footer .fgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 20px}'
+              'footer .fcol a{min-height:44px}footer .fcol:last-child{grid-column:1/-1}footer .fbar{flex-direction:column-reverse;align-items:flex-start;margin-top:36px}'
+              'footer .flegal a{display:inline-flex;align-items:center;min-height:40px}}')
 
 def page(title, desc, canonical, body, depth, og_image, extra_head=''):
     up = '../' * depth
