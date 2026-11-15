@@ -64,7 +64,7 @@
     return box ? box.querySelector('img,video') : null;
   }
   function show(img) {
-    clearTimeout(hideT); cur = img; paint(); bar.classList.add('on'); place(); load(keyOf(img));
+    clearTimeout(hideT); cur = img; window.rxCurrent = img; paint(); bar.classList.add("on"); place(); load(keyOf(img));
   }
   function hideSoon(ms) { clearTimeout(hideT); hideT = setTimeout(function () { bar.classList.remove('on'); cur = null; }, ms || 350); }
 

@@ -47,7 +47,7 @@ $d = cm_read();
   <?php if ($msg) echo '<p class="note">' . h($msg) . '</p>'; ?>
   <h2>Waiting for approval (<?php echo count($d['pending']); ?>)</h2>
   <?php if (!$d['pending']) echo '<p class="meta">Nothing waiting.</p>'; foreach (array_reverse($d['pending']) as $c): ?>
-    <div class="c"><div class="meta"><b><?php echo h($c['name']); ?></b> on <?php echo h($c['post']); ?> · <?php echo date('M j, Y g:i a', $c['time']); ?></div><div class="m"><?php echo h($c['message']); ?></div>
+    <div class="c"><div class="meta"><b><?php echo h($c['name']); ?></b> on <?php echo h($c['post']); ?><?php echo !empty($c['parent']) ? ' · reply' : ''; ?> · <?php echo date('M j, Y g:i a', $c['time']); ?></div><?php if (!empty($c['photo'])): ?><img src="<?php echo h($c['photo']); ?>" alt="" style="width:120px;height:80px;object-fit:cover;display:block;margin:6px 0"><?php endif; ?><div class="m"><?php echo h($c['message']); ?></div>
     <form class="inline" method="post"><input type="hidden" name="csrf" value="<?php echo h($_SESSION['csrf']); ?>"><input type="hidden" name="id" value="<?php echo h($c['id']); ?>"><button class="ok" name="act" value="approve">Approve</button><button name="act" value="reject">Delete</button></form></div>
   <?php endforeach; ?>
   <h2>Published (<?php echo count($d['approved']); ?>)</h2>
