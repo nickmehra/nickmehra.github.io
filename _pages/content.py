@@ -1,6 +1,8 @@
 """Service pages and legal pages for blacksheepdigitalworks.ca (built by _pages/build.py).
 Facts only: nothing here claims licences, insurance, awards or results that have not been confirmed."""
 
+import os
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 UPDATED = 'November 14, 2026'
 EMAIL = 'nic.mehra@gmail.com'
 PHONE = '647.888.3098'
@@ -225,7 +227,7 @@ def legal_pages():
 
 
 PARTNERS = [
-    dict(name='Praetorian Security', url='https://praetoriansecurityinc.ca/', pinned=True, area='Toronto',
+    dict(name='Praetorian Security', url='https://praetoriansecurityinc.ca/', logo='img/partners/praetorian-logo.png', pinned=True, area='Toronto',
          kicker='TOP PARTNER · SECURITY ASSESSMENT & ADVISORY',
          lede='Toronto security assessment and advisory firm for executives, families and organizations: they find the gaps at home, at work and on the road, then help close them.',
          offers=[('Executive residential security assessments', 'A close look at the home: entry points, lighting, cameras, routines and how a property presents to the outside world.'),
@@ -247,7 +249,8 @@ def partners_body():
         cards += f'''<article class="partner{' pinned' if p.get('pinned') else ''}">
   {'<span class="pin">Pinned · Top partner</span>' if p.get('pinned') else ''}
   <span class="eyebrow">{p['kicker']}</span>
-  <h2>{p['name']}</h2>
+  {('<a class="plogo" href="' + p['url'] + '" target="_blank" rel="noopener" aria-label="' + p['name'] + ' website"><img src="../' + p['logo'] + '" alt="' + p['name'] + ' logo"></a>') if p.get('logo') and os.path.exists(os.path.join(ROOT_DIR, p['logo'])) else ''}
+  <h2><a class="lk" href="{p['url']}" target="_blank" rel="noopener">{p['name']}</a></h2>
   <p class="sub">{p['lede']}</p>
   <div class="pcols"><div><h3>What they offer</h3><ul class="offers">{offers}</ul></div>
   <div><h3>Why we recommend them</h3><ul class="gets">{why}</ul><p class="note">Based in {p['area']}.</p></div></div>
