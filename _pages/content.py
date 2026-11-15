@@ -229,16 +229,16 @@ def legal_pages():
 PARTNERS = [
     dict(name='Praetorian Security', url='https://praetoriansecurityinc.ca/', logo='img/partners/praetorian-logo.png', pinned=True, area='Toronto',
          kicker='TOP PARTNER · SECURITY ASSESSMENT & ADVISORY',
-         lede='Toronto security assessment and advisory firm for executives, families and organizations: they find the gaps at home, at work and on the road, then help close them.',
+         lede='Toronto security assessment and advisory firm for executives, families and organizations, identifying security gaps at home, at work and on the road, and closing them.',
          offers=[('Executive residential security assessments', 'A close look at the home: entry points, lighting, cameras, routines and how a property presents to the outside world.'),
                  ('Executive and family security advisory', 'Ongoing advice for principals and their families, not a one-time report.'),
                  ('Estate and family protection planning', 'Security planning that covers the whole household and estate.'),
                  ('Workplace violence prevention', 'Programs to prevent and respond to violence in the workplace.'),
                  ('Emergency preparedness and crisis planning', 'Plans in place before something happens, so people know what to do when it does.'),
                  ('Travel security planning', 'Preparation for executives and families travelling.')],
-         why=['One advisory firm for the home, the family, the workplace and travel.',
+         why=['One advisory firm covering the home, the family, the workplace and travel.',
               'Built around assessment and planning: clear findings and a plan to act on.',
-              'A natural fit for BlackSheep clients: a listing shoot shows a home to the world, and Praetorian helps owners think about what that exposure means for their security.']),
+              'A natural fit for BlackSheep clients: a listing shoot shows a home to the world, and Praetorian helps owners understand what that exposure means for their security.']),
 ]
 
 def partners_body():
@@ -252,21 +252,21 @@ def partners_body():
   {('<a class="plogo" href="' + p['url'] + '" target="_blank" rel="noopener" aria-label="' + p['name'] + ' website"><img src="../' + p['logo'] + '" alt="' + p['name'] + ' logo"></a>') if p.get('logo') and os.path.exists(os.path.join(ROOT_DIR, p['logo'])) else ''}
   <h2><a class="lk" href="{p['url']}" target="_blank" rel="noopener">{p['name']}</a></h2>
   <p class="sub">{p['lede']}</p>
-  <div class="pcols"><div><h3>What they offer</h3><ul class="offers">{offers}</ul></div>
-  <div><h3>Why we recommend them</h3><ul class="gets">{why}</ul><p class="note">Based in {p['area']}.</p></div></div>
+  <div class="pcols"><div><h3>Services</h3><ul class="offers">{offers}</ul></div>
+  <div><h3>Why Praetorian</h3><ul class="gets">{why}</ul><p class="note">Based in {p['area']}.</p></div></div>
   <div class="acts"><a class="btn primary lk" href="{p['url']}" target="_blank" rel="noopener">Visit {p['name']} ↗</a></div>
 </article>'''
     return f'''
 <section class="pg"><div class="wrap">
   <span class="eyebrow">Preferred partners</span>
-  <h1>People we <em>trust.</em></h1>
-  <p class="lede sub">Businesses we're glad to recommend to our clients. BlackSheep doesn't provide their services; reach out to them directly.</p>
+  <h1>Trusted <em>partners.</em></h1>
+  <p class="lede sub">Trusted businesses recommended to BlackSheep clients. Each partner provides its own services directly.</p>
 </div></section>
 <section class="sec"><div class="wrap">{cards}</div></section>
 <section class="sec"><div class="wrap">
   <span class="eyebrow">Become a partner</span>
-  <h2>Work with <em>BlackSheep.</em></h2>
-  <p class="sub">Brokerages, dealerships, stagers, event organizers and other trusted local businesses: if our clients would be glad to know you, let's talk.</p>
+  <h2>Partner with <em>BlackSheep.</em></h2>
+  <p class="sub">Brokerages, dealerships, stagers, event organizers and other trusted local businesses that BlackSheep clients would be glad to know.</p>
   <div class="acts"><a class="btn lk" href="../#contact">Get in touch</a></div>
 </div></section>
 '''
