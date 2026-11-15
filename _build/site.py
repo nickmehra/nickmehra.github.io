@@ -71,6 +71,8 @@ PAGES = {
   <p>If you comment on the journal, the site keeps the name you enter, your comment, and when you posted it. Comments are held until I approve them. A copy of each new comment may be emailed to me so I can review it. No IP address or device details are stored with comments.</p>
   <h3>Reactions</h3>
   <p>Reactions are stored only as totals. The reaction you chose is remembered in your own browser so you can change it; it is not stored on the server.</p>
+  <h3>Chat</h3>
+  <p>The chat bubble is an automated assistant that answers from the information on this website; it is not a live person and does not use an outside AI service. Your messages, and any email or phone number you choose to give, are emailed to me so I can read the conversation and reply personally. Chat messages are not stored on the website, and the conversation stays in your browser tab only until you close it. Please don't share sensitive personal information in the chat.</p>
   <h3>Your browser</h3>
   <p>Your light or dark choice, and whether you closed the viewing tip, are saved in your own browser. There are no advertising or analytics tools and no tracking cookies. Fonts and scripts are served from this site, not from outside services.</p>
   <h3>Hosting</h3>
@@ -135,6 +137,7 @@ for f in glob.glob(os.path.join(R, '**/*.html'), recursive=True):
     s = open(f).read()
     if '<footer' not in s: continue
     s = re.sub(r'<footer>.*?</footer>', FOOTER, s, flags=re.S)
+    if '/chat.js' not in s: s = s.replace('</body>', '<script src="/chat-kb.js?v=1" defer></script><script src="/chat.js?v=1" defer></script>\n</body>', 1)
     s = re.sub(r'/css/site\.css\?v=\d+', '/css/site.css?v=' + CSS_V, s)
     s = re.sub(r'/css/pages\.css\?v=\d+', '/css/pages.css?v=16', s)
     s = re.sub(r'/css/light\.css\?v=\d+', '/css/light.css?v=4', s)
