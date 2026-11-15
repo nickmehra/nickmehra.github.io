@@ -320,13 +320,13 @@ def about_body():
 <section class="pg"><div class="wrap">
   <span class="eyebrow">Behind the lens</span>
   <h1>Nick Mehra, <em>Owner &amp; Creative Director.</em></h1>
-  <p class="lede sub">Almost two decades in security and law enforcement. Now every frame at BlackSheep Digital Works is shot by Nick.</p>
+  <p class="lede sub">Almost two decades in security and public service law enforcement. Now every frame at BlackSheep Digital Works is shot by Nick.</p>
 </div></section>
 <section class="sec" style="padding-top:20px"><div class="wrap">
   <div class="cv">
     <div class="cv-row"><div class="cv-when">2026 – present</div><div class="cv-what"><h3>Owner &amp; Creative Director</h3><p class="cv-org">BlackSheep Digital Works · Ontario</p>
       <ul><li>Real estate photography, video, drone, floor plans and tours.</li><li>Dealership inventory photography for cars, trucks and RVs.</li><li>Event coverage of up to three hours.</li><li>Every file edited in-house, usually delivered in 24 to 48 hours.</li><li>Pickering to Kingston, north to Peterborough.</li></ul></div></div>
-    <div class="cv-row"><div class="cv-when">Almost two decades</div><div class="cv-what"><h3>Security &amp; law enforcement</h3><p class="cv-org">Private security first, then sworn peace officer roles with several public service agencies, among them the Government of Ontario</p>
+    <div class="cv-row"><div class="cv-when">Almost two decades</div><div class="cv-what"><h3>Security &amp; public service law enforcement</h3><p class="cv-org">Private security first, then sworn peace officer roles with several public service agencies, among them the Government of Ontario</p>
       <ul><li>Private security</li><li>Transit enforcement operations</li><li>Municipal law enforcement</li><li>Enforcement in a provincial capacity</li></ul></div></div>
   </div>
   <div class="cv-carry"><span class="eyebrow">The standard</span>
