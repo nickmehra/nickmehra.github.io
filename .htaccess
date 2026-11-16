@@ -1,6 +1,9 @@
 # Canonical host: send www to the bare domain with a permanent redirect so Google indexes one version only
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  # Send plain http:// visitors to the secure https:// address
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
   RewriteCond %{HTTP_HOST} ^www\.nickmehra\.ca$ [NC]
   RewriteRule ^(.*)$ https://nickmehra.ca/$1 [R=301,L]
 </IfModule>
