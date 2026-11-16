@@ -490,13 +490,6 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
 <script src="pricing/calc.js?v=2"></script>
 <script src="/booking-gate.js?v=2" defer></script>
 <style>@media (max-width:760px){section:not(.hero){padding-top:48px!important;padding-bottom:48px!important}}</style>
-<style id="bgfx-css">
-html{background:var(--bg)}
-body{background:transparent!important}
-#bgfx{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;display:block}
-main,section,footer{background-color:transparent}
-.hero{background-color:transparent!important}
-</style>
 </head>
 <body>
 
@@ -536,7 +529,7 @@ main,section,footer{background-color:transparent}
         <a class="btn lk" href="#portfolio">View portfolio</a>
       </div>
     </div>
-    <p class="hint" aria-hidden="true">Scroll to move through the work · Click any card</p>
+    <p class="hint" aria-hidden="true">Scroll to move through the work</p>
   </section>
 
   <section id="brandfilm" style="padding:72px 0;background:#0A0B0D"><div style="max-width:1100px;margin:0 auto;padding:0 20px"><p style="font:600 12px/1 Cinzel,serif;letter-spacing:.3em;color:#9A1219;margin:0 0 14px;text-transform:uppercase">Concept sample</p><h2 style="margin:0 0 22px;color:#EFEBE3">A typical real estate video tour</h2><video controls playsinline preload="metadata" poster="/video/blacksheep-reel-poster.jpg" style="width:100%;border-radius:4px;background:#000;display:block"><source src="/video/blacksheep-reel.mp4" type="video/mp4"></video><p style="margin:12px 0 0;font-size:13px;color:#A9ADB3">This is a concept sample of the kind of video tour we would produce for a listing. It is a mock-up, not a real property. The brand intro opens the film.</p></div></section>
@@ -2045,103 +2038,5 @@ main,section,footer{background-color:transparent}
 <script>(function(){var n=document.querySelector('.view-note');if(!n)return;try{if(localStorage.getItem('vn-off')||sessionStorage.getItem('vn-seen')){n.remove();return}}catch(e){}if(!window.matchMedia||!matchMedia('(max-width:760px)').matches){n.remove();return}document.body.appendChild(n);n.hidden=false;try{sessionStorage.setItem('vn-seen','1')}catch(e){}var gone=false;function hide(keep){if(gone)return;gone=true;n.classList.remove('on');if(keep){try{localStorage.setItem('vn-off','1')}catch(e){}}setTimeout(function(){n.remove()},600)}setTimeout(function(){n.classList.add('on')},900);setTimeout(function(){hide(false)},8000);addEventListener('scroll',function(){if(scrollY>240)hide(false)},{passive:true});n.querySelector('.vn-x').addEventListener('click',function(){hide(true)});})();</script>
 <script src="/chat-kb.js?v=1" defer></script><script src="/chat.js?v=1" defer></script>
 <script src="js/navmore.js" defer></script>
-<canvas id="bgfx" aria-hidden="true"></canvas>
-<script>
-(function(){
-  var c=document.getElementById('bgfx'); if(!c||!c.getContext) return;
-  var ctx=c.getContext('2d'), W=0, H=0, dpr=Math.min(window.devicePixelRatio||1,2);
-  var pts=[], rips=[], trail=[], px=-9999, py=-9999, down=false, LINK=150, HOVER=130;
-  function size(){
-    W=window.innerWidth; H=window.innerHeight;
-    c.width=W*dpr; c.height=H*dpr; c.style.width=W+'px'; c.style.height=H+'px';
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-    var n=Math.round(Math.min(90, Math.max(30, W*H/18000)));
-    pts=[];
-    for(var i=0;i<n;i++){
-      var vx=(Math.random()-.5)*.2, vy=(Math.random()-.5)*.2;
-      pts.push({x:Math.random()*W,y:Math.random()*H,vx:vx,vy:vy,bvx:vx,bvy:vy,r:Math.random()*1.5+.7,glow:0});
-    }
-  }
-  function nearestNode(x,y,max){
-    var best=null,bd=max;
-    for(var i=0;i<pts.length;i++){ var d=Math.hypot(pts[i].x-x,pts[i].y-y); if(d<bd){bd=d;best=pts[i];} }
-    return best;
-  }
-  function frame(){
-    ctx.clearRect(0,0,W,H);
-    var i,a,b,p,q;
-    for(i=0;i<pts.length;i++){
-      p=pts[i];
-      p.vx+=(p.bvx-p.vx)*.02; p.vy+=(p.bvy-p.vy)*.02;
-      if(px>-999){
-        var dx=p.x-px, dy=p.y-py, d=Math.hypot(dx,dy);
-        if(d<HOVER && d>1){ var f=(HOVER-d)/HOVER; p.vx-=dx/d*f*.06; p.vy-=dy/d*f*.06; }
-      }
-      p.x+=p.vx; p.y+=p.vy;
-      if(p.x<0){p.x=0;p.vx=Math.abs(p.vx);} if(p.x>W){p.x=W;p.vx=-Math.abs(p.vx);}
-      if(p.y<0){p.y=0;p.vy=Math.abs(p.vy);} if(p.y>H){p.y=H;p.vy=-Math.abs(p.vy);}
-      p.glow*=.96;
-    }
-    for(i=rips.length-1;i>=0;i--){
-      var rp=rips[i]; rp.r+=5; rp.l-=.016;
-      if(rp.l<=0){rips.splice(i,1);continue;}
-      for(var k=0;k<pts.length;k++){
-        p=pts[k]; var ex=p.x-rp.x, ey=p.y-rp.y, ed=Math.hypot(ex,ey);
-        if(ed>0 && Math.abs(ed-rp.r)<28){ var push=.35*rp.l; p.vx+=ex/ed*push; p.vy+=ey/ed*push; p.glow=Math.max(p.glow,.5*rp.l); }
-      }
-      ctx.beginPath(); ctx.arc(rp.x,rp.y,rp.r,0,6.283);
-      ctx.strokeStyle='rgba(196,158,78,'+(rp.l*.55).toFixed(3)+')'; ctx.lineWidth=1.2; ctx.stroke();
-    }
-    for(i=trail.length-1;i>=0;i--){
-      trail[i].l-=.03; if(trail[i].l<=0) trail.splice(i,1);
-    }
-    for(i=1;i<trail.length;i++){
-      a=trail[i-1]; b=trail[i];
-      if(Math.hypot(a.x-b.x,a.y-b.y)>80) continue;
-      ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
-      ctx.strokeStyle='rgba(209,59,66,'+(b.l*.7).toFixed(3)+')'; ctx.lineWidth=2; ctx.stroke();
-    }
-    ctx.lineWidth=1;
-    for(i=0;i<pts.length;i++){
-      a=pts[i];
-      for(var j=i+1;j<pts.length;j++){
-        b=pts[j]; var lx=a.x-b.x, ly=a.y-b.y, dist=Math.hypot(lx,ly);
-        if(dist<LINK){
-          var o=(1-dist/LINK)*.4;
-          if(px>-999){ var near=Math.min(Math.hypot(a.x-px,a.y-py),Math.hypot(b.x-px,b.y-py)); if(near<HOVER) o+=(1-near/HOVER)*.4; }
-          ctx.strokeStyle='rgba(196,158,78,'+Math.min(o,.9).toFixed(3)+')';
-          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
-        }
-      }
-    }
-    for(i=0;i<pts.length;i++){
-      q=pts[i];
-      if(q.glow>.02){
-        ctx.beginPath(); ctx.arc(q.x,q.y,q.r+6*q.glow,0,6.283);
-        ctx.fillStyle='rgba(209,59,66,'+(q.glow*.35).toFixed(3)+')'; ctx.fill();
-      }
-      ctx.beginPath(); ctx.arc(q.x,q.y,q.r+(q.glow*1.5),0,6.283);
-      ctx.fillStyle=q.glow>.2?'rgba(209,59,66,.95)':'rgba(196,158,78,.8)'; ctx.fill();
-    }
-    requestAnimationFrame(frame);
-  }
-  window.addEventListener('pointermove',function(e){
-    px=e.clientX; py=e.clientY;
-    if(down){ trail.push({x:px,y:py,l:1}); }
-  },{passive:true});
-  window.addEventListener('pointerdown',function(e){
-    down=true; px=e.clientX; py=e.clientY;
-    rips.push({x:px,y:py,r:0,l:1});
-    var hit=nearestNode(px,py,18); if(hit){ hit.glow=1; hit.vx+=(Math.random()-.5)*2; hit.vy+=(Math.random()-.5)*2; }
-    trail.push({x:px,y:py,l:1});
-  },{passive:true});
-  function up(){ down=false; }
-  window.addEventListener('pointerup',up,{passive:true});
-  window.addEventListener('pointercancel',up,{passive:true});
-  document.addEventListener('pointerleave',function(){ px=-9999; py=-9999; });
-  var rt; window.addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(size,150); });
-  size(); frame();
-})();
-</script>
 </body>
 </html>
