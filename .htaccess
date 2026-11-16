@@ -1,3 +1,10 @@
+# Canonical host: send www to the bare domain with a permanent redirect so Google indexes one version only
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^www\.blacksheepdigitalworks\.ca$ [NC]
+  RewriteRule ^(.*)$ https://blacksheepdigitalworks.ca/$1 [R=301,L]
+</IfModule>
+
 <IfModule mod_headers.c>
   # Pages always revalidate, so design changes show up straight away instead of an old cached copy
   <FilesMatch "\.(html|htm)$">
