@@ -2055,48 +2055,97 @@ main,section,footer{background-color:transparent}
 <script>
 (function(){
   var c=document.getElementById('bgfx'); if(!c||!c.getContext) return;
-  var ctx=c.getContext('2d'), W=0,H=0, dpr=Math.min(window.devicePixelRatio||1,2);
-  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var mx=-9999,my=-9999, pts=[], N=0;
+  var ctx=c.getContext('2d'), W=0, H=0, dpr=Math.min(window.devicePixelRatio||1,2);
+  var pts=[], rips=[], trail=[], px=-9999, py=-9999, down=false, LINK=150, HOVER=130;
   function size(){
-    W=c.clientWidth=innerWidth; H=c.clientHeight=innerHeight;
-    c.width=W*dpr; c.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
-    N=Math.round(Math.min(70, Math.max(26, W*H/26000)));
-    pts=[]; for(var i=0;i<N;i++){ pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.18,vy:(Math.random()-.5)*.18,r:Math.random()*1.4+.6}); }
+    W=window.innerWidth; H=window.innerHeight;
+    c.width=W*dpr; c.height=H*dpr; c.style.width=W+'px'; c.style.height=H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    var n=Math.round(Math.min(90, Math.max(30, W*H/18000)));
+    pts=[];
+    for(var i=0;i<n;i++){
+      var vx=(Math.random()-.5)*.2, vy=(Math.random()-.5)*.2;
+      pts.push({x:Math.random()*W,y:Math.random()*H,vx:vx,vy:vy,bvx:vx,bvy:vy,r:Math.random()*1.5+.7,glow:0});
+    }
+  }
+  function nearestNode(x,y,max){
+    var best=null,bd=max;
+    for(var i=0;i<pts.length;i++){ var d=Math.hypot(pts[i].x-x,pts[i].y-y); if(d<bd){bd=d;best=pts[i];} }
+    return best;
   }
   function frame(){
     ctx.clearRect(0,0,W,H);
-    var R=150, LINK=150;
-    for(var i=0;i<N;i++){
-      var p=pts[i];
+    var i,a,b,p,q;
+    for(i=0;i<pts.length;i++){
+      p=pts[i];
+      p.vx+=(p.bvx-p.vx)*.02; p.vy+=(p.bvy-p.vy)*.02;
+      if(px>-999){
+        var dx=p.x-px, dy=p.y-py, d=Math.hypot(dx,dy);
+        if(d<HOVER && d>1){ var f=(HOVER-d)/HOVER; p.vx-=dx/d*f*.06; p.vy-=dy/d*f*.06; }
+      }
       p.x+=p.vx; p.y+=p.vy;
-      if(p.x<0||p.x>W) p.vx*=-1; if(p.y<0||p.y>H) p.vy*=-1;
-      var dx=p.x-mx, dy=p.y-my, d=Math.sqrt(dx*dx+dy*dy);
-      if(d<R && d>0){ var f=(R-d)/R*.6; p.x+=dx/d*f; p.y+=dy/d*f; }
+      if(p.x<0){p.x=0;p.vx=Math.abs(p.vx);} if(p.x>W){p.x=W;p.vx=-Math.abs(p.vx);}
+      if(p.y<0){p.y=0;p.vy=Math.abs(p.vy);} if(p.y>H){p.y=H;p.vy=-Math.abs(p.vy);}
+      p.glow*=.96;
+    }
+    for(i=rips.length-1;i>=0;i--){
+      var rp=rips[i]; rp.r+=5; rp.l-=.016;
+      if(rp.l<=0){rips.splice(i,1);continue;}
+      for(var k=0;k<pts.length;k++){
+        p=pts[k]; var ex=p.x-rp.x, ey=p.y-rp.y, ed=Math.hypot(ex,ey);
+        if(ed>0 && Math.abs(ed-rp.r)<28){ var push=.35*rp.l; p.vx+=ex/ed*push; p.vy+=ey/ed*push; p.glow=Math.max(p.glow,.5*rp.l); }
+      }
+      ctx.beginPath(); ctx.arc(rp.x,rp.y,rp.r,0,6.283);
+      ctx.strokeStyle='rgba(196,158,78,'+(rp.l*.55).toFixed(3)+')'; ctx.lineWidth=1.2; ctx.stroke();
+    }
+    for(i=trail.length-1;i>=0;i--){
+      trail[i].l-=.03; if(trail[i].l<=0) trail.splice(i,1);
+    }
+    for(i=1;i<trail.length;i++){
+      a=trail[i-1]; b=trail[i];
+      if(Math.hypot(a.x-b.x,a.y-b.y)>80) continue;
+      ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+      ctx.strokeStyle='rgba(209,59,66,'+(b.l*.7).toFixed(3)+')'; ctx.lineWidth=2; ctx.stroke();
     }
     ctx.lineWidth=1;
-    for(var a=0;a<N;a++){
-      for(var b=a+1;b<N;b++){
-        var A=pts[a], B=pts[b], ex=A.x-B.x, ey=A.y-B.y, dist=Math.sqrt(ex*ex+ey*ey);
+    for(i=0;i<pts.length;i++){
+      a=pts[i];
+      for(var j=i+1;j<pts.length;j++){
+        b=pts[j]; var lx=a.x-b.x, ly=a.y-b.y, dist=Math.hypot(lx,ly);
         if(dist<LINK){
-          var o=(1-dist/LINK)*.42;
-          var mxd=Math.min(Math.hypot(A.x-mx,A.y-my),Math.hypot(B.x-mx,B.y-my));
-          if(mxd<R) o+= (1-mxd/R)*.5;
-          ctx.strokeStyle='rgba(196,158,78,'+o.toFixed(3)+')';
-          ctx.beginPath(); ctx.moveTo(A.x,A.y); ctx.lineTo(B.x,B.y); ctx.stroke();
+          var o=(1-dist/LINK)*.4;
+          if(px>-999){ var near=Math.min(Math.hypot(a.x-px,a.y-py),Math.hypot(b.x-px,b.y-py)); if(near<HOVER) o+=(1-near/HOVER)*.4; }
+          ctx.strokeStyle='rgba(196,158,78,'+Math.min(o,.9).toFixed(3)+')';
+          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
         }
       }
     }
-    for(var k=0;k<N;k++){
-      var q=pts[k], near=Math.hypot(q.x-mx,q.y-my)<R;
-      ctx.fillStyle=near?'rgba(209,59,66,.85)':'rgba(196,158,78,.8)';
-      ctx.beginPath(); ctx.arc(q.x,q.y,q.r+(near?1:0),0,6.283); ctx.fill();
+    for(i=0;i<pts.length;i++){
+      q=pts[i];
+      if(q.glow>.02){
+        ctx.beginPath(); ctx.arc(q.x,q.y,q.r+6*q.glow,0,6.283);
+        ctx.fillStyle='rgba(209,59,66,'+(q.glow*.35).toFixed(3)+')'; ctx.fill();
+      }
+      ctx.beginPath(); ctx.arc(q.x,q.y,q.r+(q.glow*1.5),0,6.283);
+      ctx.fillStyle=q.glow>.2?'rgba(209,59,66,.95)':'rgba(196,158,78,.8)'; ctx.fill();
     }
-    if(!reduce) requestAnimationFrame(frame);
+    requestAnimationFrame(frame);
   }
-  addEventListener('pointermove',function(e){ mx=e.clientX; my=e.clientY; },{passive:true});
-  addEventListener('pointerleave',function(){ mx=-9999; my=-9999; });
-  var rt; addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(function(){ size(); if(reduce) frame(); },150); });
+  window.addEventListener('pointermove',function(e){
+    px=e.clientX; py=e.clientY;
+    if(down){ trail.push({x:px,y:py,l:1}); }
+  },{passive:true});
+  window.addEventListener('pointerdown',function(e){
+    down=true; px=e.clientX; py=e.clientY;
+    rips.push({x:px,y:py,r:0,l:1});
+    var hit=nearestNode(px,py,18); if(hit){ hit.glow=1; hit.vx+=(Math.random()-.5)*2; hit.vy+=(Math.random()-.5)*2; }
+    trail.push({x:px,y:py,l:1});
+  },{passive:true});
+  function up(){ down=false; }
+  window.addEventListener('pointerup',up,{passive:true});
+  window.addEventListener('pointercancel',up,{passive:true});
+  document.addEventListener('pointerleave',function(){ px=-9999; py=-9999; });
+  var rt; window.addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(size,150); });
   size(); frame();
 })();
 </script>
