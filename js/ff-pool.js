@@ -39,7 +39,7 @@ function cardArt(id){
   return cardArt.cache[id] = c.toDataURL('image/jpeg', .92);
 }
 
-window.FF_POOL=[['hero','BlackSheep Digital Works, from conviction to legacy','The brand'],['real-estate-photography','Real estate photography','Service'],['video','Video and social reels','Service'],['drone','Drone and aerial','Service'],['floor-plans','Floor plans and 3D','Service'],['events','Event coverage','Service'],['dealerships','Dealership inventory','Service']].filter(function(q){return q[0]!=='hero'});
+window.FF_POOL=[['hero','BlackSheep Digital Works, from conviction to legacy','The brand'],['real-estate-photography','Real estate photography','Service'],['video','Video and social reels','Service'],['drone','Drone and aerial','Service'],['floor-plans','2D/3D Floorplans','Service'],['events','Event coverage','Service'],['dealerships','Dealership inventory','Service']].filter(function(q){return q[0]!=='hero'});
 (function(){var p=window.FF_POOL;for(var i=p.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=p[i];p[i]=p[j];p[j]=t;}
  var g=document.querySelectorAll('[data-ff-grid]');[].forEach.call(g,function(el){var n=+el.getAttribute('data-ff-grid')||12,h='';for(var k=0;k<n&&k<p.length;k++){var q=p[k];h+='<button class="tilt wide" type="button" data-full="'+cardArt(q[0])+'"><img src="'+cardArt(q[0])+'" alt="'+q[1]+'" loading="lazy"></button>';}el.innerHTML=h;});
  var d=document.querySelectorAll('[data-ff-door]');[].forEach.call(d,function(img,k){var q=p[(p.length-1-k)];img.src=cardArt(q[0]);});
