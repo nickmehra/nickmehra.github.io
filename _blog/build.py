@@ -91,6 +91,8 @@ def nice(d):
 SERVICES = [('real-estate-photography', 'Real estate photography'), ('video', 'Video &amp; social reels'), ('drone', 'Drone &amp; aerial'),
             ('floor-plans', 'Floor plans &amp; 3D'), ('events', 'Event coverage'), ('dealerships', 'Dealership inventory')]
 
+RAM_CSS = '.ram-link{display:inline-block;line-height:0;border-radius:8px;transition:transform .5s cubic-bezier(.2,.8,.2,1);will-change:transform;-webkit-tap-highlight-color:transparent}.ram-link:hover{transform:translateY(-3px)}.ram-link:active{transform:translateY(-8px) scale(1.03);transition-duration:.14s}.ram-link:focus-visible{outline:1px solid rgba(239,235,227,.55);outline-offset:8px}header a.brand img{transition:transform .5s cubic-bezier(.2,.8,.2,1),filter .5s ease;will-change:transform}header a.brand:hover img{transform:translateY(-3px);filter:drop-shadow(0 10px 16px rgba(0,0,0,.42))}header a.brand:active img{transform:translateY(-8px) scale(1.04);filter:drop-shadow(0 18px 24px rgba(0,0,0,.55));transition-duration:.14s}header a.brand:focus-visible{outline:1px solid rgba(239,235,227,.55);outline-offset:8px}@media (prefers-reduced-motion:reduce){.ram-link,.ram-link:hover,.ram-link:active,header a.brand img,header a.brand:hover img,header a.brand:active img{transition:none!important;transform:none!important}}'
+
 def footer_html(up):
     """Site footer: brand block + three grouped link columns (Studio / Services / Book), hairline, then a quiet legal bar. Shared by every page."""
     col = lambda title, links: '<div class="fcol"><h4>' + title + '</h4>' + ''.join('<a href="%s"%s>%s</a>' % (h, x, t) for h, t, x in links) + '</div>'
@@ -103,7 +105,7 @@ def footer_html(up):
     legal = [(up + 'privacy/', 'Privacy &amp; data', ''), (up + 'terms/', 'Terms of service', ''), (up + 'disclaimer/', 'Disclaimer', ''),
              (up + 'accessibility/', 'Accessibility', ''), (up + 'comments-admin.php', 'Admin', ' rel="nofollow"')]
     return ('<footer>\n  <div class="wrap">\n    <div class="fgrid">\n'
-            '      <div class="fbrand"><a href="' + up + '#home" aria-label="BlackSheep Digital Works home"><img class="logo-foot" src="' + up + 'img/logo.png" alt="BlackSheep Digital Works"></a>'
+            '      <div class="fbrand"><a class="ram-link" href="' + up + '#home" aria-label="BlackSheep Digital Works home"><img class="logo-foot" src="' + up + 'img/logo.png" alt="BlackSheep Digital Works"></a>'
             '<p>Real estate, dealership and event media from Pickering to Kingston, north to Peterborough.</p>'
             '<p class="fcontact"><a href="tel:+16478883098">647.888.3098</a><a href="mailto:nic.mehra@gmail.com">nic.mehra@gmail.com</a></p></div>\n'
             '      ' + col('Studio', studio) + col('Services', services) + col('Book', book) + '\n    </div>\n'
@@ -133,6 +135,7 @@ FOOTER_CSS = HEADER_CSS + ('footer{padding-block:64px 26px!important;text-align:
               '@media (max-width:600px){footer{padding-block:48px calc(24px + env(safe-area-inset-bottom))!important}footer .fgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 20px}'
               'footer .fcol a{min-height:44px}footer .fcol:last-child{grid-column:1/-1}footer .fbar{flex-direction:column-reverse;align-items:flex-start;margin-top:36px}'
               'footer .flegal a{display:inline-flex;align-items:center;min-height:40px}}')
+FOOTER_CSS += RAM_CSS
 
 def page(title, desc, canonical, body, depth, og_image, extra_head=''):
     up = '../' * depth
