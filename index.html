@@ -1654,7 +1654,7 @@ main,section,footer{background-color:transparent}
   var canvas = $('scene'), renderer = null;
   try {
     if (!window.THREE) throw new Error('no three');
-    renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true, powerPreference:'high-performance'});
+    renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true, alpha:true, powerPreference:'high-performance'});
   } catch(e){ renderer = null; }
   if (!renderer){
     document.body.classList.add('no3d');
@@ -1668,7 +1668,7 @@ main,section,footer{background-color:transparent}
 
   var scene = new THREE.Scene();
   var bgColor = new THREE.Color(0x0a0b0d);
-  scene.background = bgColor;
+  scene.background = null;
   scene.fog = new THREE.Fog(bgColor, 30, 100);
   var camera = new THREE.PerspectiveCamera(45, 1, 0.1, 400);
 
