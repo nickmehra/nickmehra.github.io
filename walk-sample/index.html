@@ -4,475 +4,230 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
 <title>Walk-through | BlackSheep Digital Works</title>
 <link rel="stylesheet" href="../fonts/fonts.css">
 <style>
-:root{--bg:#F5F5F2;--fg:#08090A;--muted:#25292E;--red:#9A1219;--display:"Cinzel","Trajan Pro",Georgia,serif;--body:"EB Garamond",Garamond,Georgia,serif}
-:root[data-theme="dark"]{--bg:#0A0B0D;--fg:#EFEBE3;--muted:#A9ADB3;--red:#D11F26}
-html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--fg);font-family:var(--body)}
-#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:default}
-#c.over{cursor:pointer}
-.vig{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse 70% 62% at 50% 46%,rgba(0,0,0,0) 55%,rgba(0,0,0,.45) 100%)}
-:root[data-theme="light"] .vig{background:radial-gradient(ellipse 70% 62% at 50% 46%,rgba(0,0,0,0) 60%,rgba(60,50,30,.18) 100%)}
-.hint{position:fixed;top:64px;left:0;right:0;margin:0;text-align:center;font-family:var(--display);font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);pointer-events:none}
-.bar{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;background:linear-gradient(var(--bg),rgba(0,0,0,0))}
-.bar a.logo{font-family:var(--display);font-size:14px;letter-spacing:.2em;color:var(--fg);text-decoration:none;text-transform:uppercase}
-.bar a.logo span{color:var(--red)}
-.bar .classic{font-family:var(--display);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
-.ui{position:fixed;left:0;right:0;bottom:0;padding:12px 10px calc(12px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;gap:8px;justify-content:center;background:linear-gradient(rgba(0,0,0,0),var(--bg))}
-.ui button{font-family:var(--display);font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:0 12px;min-height:44px;background:transparent;color:var(--fg);border:1px solid var(--red);cursor:pointer}
-.ui button:hover,.ui button:focus-visible{background:var(--red);color:#F5F5F2;outline:none}
-.ui button[hidden]{display:none}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-#fade{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .8s ease}
-#fade.on{opacity:1}
+:root{--fg:#EFEBE3;--muted:#A9ADB3;--red:#D11F26;--panel:rgba(10,11,13,.88);--display:"Cinzel","Trajan Pro",Georgia,serif;--body:"EB Garamond",Garamond,Georgia,serif}
+:root[data-theme="light"]{--fg:#08090A;--muted:#25292E;--red:#9A1219;--panel:rgba(245,245,242,.94)}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:var(--body)}
+#view{position:fixed;inset:0;overflow:hidden;background:#000}
+.stage{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);transition:transform 1s cubic-bezier(.6,0,.3,1),opacity .9s ease,filter .9s ease}
+.stage .drift{position:absolute;inset:0;animation:drift 26s ease-in-out infinite alternate}
+.stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;user-select:none;-webkit-user-drag:none;transition:opacity 1.2s ease,filter 1.2s ease}
+.stage img.night{opacity:0}
+:root[data-theme="dark"] .stage img.night{opacity:1}
+:root[data-theme="dark"] .stage.dim img.day{filter:brightness(.52) saturate(.85) sepia(.1)}
+@keyframes drift{from{transform:scale(1)}to{transform:scale(1.035) translate(-.6%,-.4%)}}
+.stage.out{opacity:0;filter:blur(6px)}
+.hs{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:8px;background:none;border:0;padding:0;cursor:pointer;color:#F5F5F2;font-family:var(--display);font-size:11px;letter-spacing:.2em;text-transform:uppercase;z-index:2;min-width:44px;min-height:44px;text-decoration:none}
+.hs .dot{width:22px;height:22px;border-radius:50%;border:2px solid #F5F5F2;background:rgba(209,31,38,.55);animation:pulse 2.4s ease-out infinite}
+.hs.info .dot{background:rgba(245,245,242,.22);width:16px;height:16px}
+.hs .lbl{background:rgba(8,9,10,.74);padding:6px 10px;white-space:nowrap;border-left:2px solid #D11F26;transition:opacity .3s}
+.hs.info .lbl{opacity:0}
+.hs:hover .lbl,.hs:focus-visible .lbl{opacity:1}
+.hs:focus-visible{outline:2px solid #F5F5F2;outline-offset:4px}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(245,245,242,.55)}80%,100%{box-shadow:0 0 0 18px rgba(245,245,242,0)}}
+@media (prefers-reduced-motion:reduce){.stage .drift,.hs .dot{animation:none}.stage{transition:opacity .4s}}
+.top{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:linear-gradient(rgba(0,0,0,.65),rgba(0,0,0,0));z-index:5}
+.top a,.top button{font-family:var(--display);letter-spacing:.2em;text-transform:uppercase;text-decoration:none;color:#EFEBE3;background:none;border:0;cursor:pointer;min-height:44px;display:inline-flex;align-items:center}
+.top .brand{font-size:13px}.top .brand span{color:#D11F26}
+.top .r{display:flex;gap:16px}.top .r a,.top .r button{font-size:11px}
+.room{position:fixed;left:18px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:5;color:#EFEBE3;text-shadow:0 1px 8px rgba(0,0,0,.7);pointer-events:none}
+.room small{display:block;font-family:var(--display);font-size:10px;letter-spacing:.3em;color:#D11F26;text-transform:uppercase}
+.room b{font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:.08em}
+nav.ui{position:fixed;left:0;right:0;bottom:0;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:10px 8px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.72));z-index:5}
+nav.ui button,nav.ui a{font-family:var(--display);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;padding:0 11px;min-height:40px;display:inline-flex;align-items:center;color:#EFEBE3;background:rgba(10,11,13,.5);border:1px solid rgba(209,31,38,.85);text-decoration:none;cursor:pointer}
+nav.ui .on{background:#D11F26}
+#cap{position:fixed;left:50%;bottom:calc(140px + env(safe-area-inset-bottom));transform:translate(-50%,8px);max-width:min(560px,90vw);margin:0;padding:12px 18px;background:var(--panel);color:var(--fg);border-left:3px solid var(--red);font-size:17px;line-height:1.4;opacity:0;pointer-events:none;transition:.35s;z-index:6}
+#cap.on{opacity:1;transform:translate(-50%,0)}
+#garage{position:fixed;inset:0;z-index:9;pointer-events:none;display:none;flex-direction:column}
+#garage.show{display:flex}
+#garage .slat{flex:1;background:linear-gradient(#2c2e33,#1a1b1f 45%,#26282d);border-bottom:2px solid #0d0e10;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+#garage .edge{height:4px;background:#D11F26;box-shadow:0 0 30px 8px rgba(209,31,38,.45)}
+#garage.up{transform:translateY(-103%);transition:transform 2.2s cubic-bezier(.55,0,.25,1)}
+#car{position:fixed;inset:0;z-index:10;background:rgba(5,6,7,.95);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px}
+#car.on{display:flex}
+#car h2{margin:0;font-family:var(--display);font-weight:600;letter-spacing:.12em;color:#EFEBE3;font-size:20px;text-align:center}
+#car p{margin:0;color:#A9ADB3;text-align:center;max-width:620px}
+#car .frame{position:relative;width:min(1100px,94vw);aspect-ratio:16/9;background:#000;overflow:hidden;cursor:grab;touch-action:none}
+#car video,#car .still{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#car .hint{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);font-family:var(--display);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#EFEBE3;background:rgba(0,0,0,.55);padding:6px 10px;transition:opacity .4s}
+#car .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+#car button,#car a{font-family:var(--display);font-size:11px;letter-spacing:.16em;text-transform:uppercase;min-height:44px;padding:0 16px;color:#EFEBE3;background:transparent;border:1px solid #D11F26;cursor:pointer;display:inline-flex;align-items:center;text-decoration:none}
+#car button:hover,#car button:focus-visible,#car a:hover{background:#D11F26;outline:none}
+.room{bottom:calc(96px + env(safe-area-inset-bottom))}
+@media (max-width:700px){.room{top:64px;bottom:auto}.room b{font-size:18px}.top .brand{font-size:11px}.top .r{gap:10px}.top .r a,.top .r button{font-size:9.5px}nav.ui button,nav.ui a{font-size:9.5px;padding:0 8px;min-height:38px}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 </style>
 </head>
 <body>
-<canvas id="c" aria-label="Walk-through of BlackSheep Digital Works. Press a door or panel to enter that section."></canvas>
-<div class="vig" aria-hidden="true"></div>
-<div class="bar">
-  <a class="logo" href="../">BlackSheep <span>Digital Works</span></a>
-  <a class="classic" href="../">Classic view</a>
+<div id="view" aria-label="Walk-through of BlackSheep Digital Works. Use the room buttons or the glowing points to move around."></div>
+<div class="top">
+  <a class="brand" href="../">BlackSheep <span>Digital Works</span></a>
+  <div class="r"><button type="button" id="theme">Light / Dark</button><a href="../">Classic site</a></div>
 </div>
-<p class="hint">Drag to look · Arrow keys to walk · Press a door to enter</p>
-<nav class="ui" aria-label="Walk-through doors">
-  <button type="button" data-go="Services">Services</button>
-  <button type="button" data-go="Portfolio">Portfolio</button>
-  <button type="button" data-go="Pricing">Pricing</button>
-  <button type="button" data-go="About">About</button>
-  <button type="button" data-go="Journal">Journal</button>
-  <button type="button" data-go="Book a shoot">Book a shoot</button>
-  <button type="button" data-go="Dealership">Dealership</button>
-  <button type="button" data-go="Back to the property" id="back" hidden>Back to the property</button>
-  <button type="button" id="theme">Light / Dark</button>
-</nav>
-<nav class="sr" aria-label="All pages">
-  <a href="../services/">Services</a> <a href="../#portfolio">Portfolio</a> <a href="../pricing/">Pricing</a>
-  <a href="../about/">About</a> <a href="../journal/">Journal</a> <a href="../booking.php">Book a shoot</a>
-</nav>
-<div id="fade"></div>
-<script src="../vendor/three-r128.min.js"></script>
+<div class="room" aria-live="polite"><small id="floor"></small><b id="rname"></b></div>
+<nav class="ui" aria-label="Rooms and pages"></nav>
+<p id="cap" role="status"></p>
+<div id="garage" aria-hidden="true"></div>
+<div id="car" role="dialog" aria-modal="true" aria-labelledby="carT"><h2 id="carT"></h2><div class="frame" id="frame"></div><p id="carS"></p><div class="row" id="carB"></div></div>
+<nav class="sr" aria-label="All pages"><a href="../booking.php">Book a shoot</a> <a href="../#portfolio">Portfolio</a> <a href="../pricing/">Pricing</a> <a href="../about/">About</a> <a href="../journal/">Journal</a> <a href="../services/">Services</a> <a href="../partners/">Partners</a> <a href="../resources/">Resources</a></nav>
 <script>
 (function(){
-  var root = document.documentElement;
-  var stored = localStorage.getItem('walk-theme'); if (stored) root.dataset.theme = stored;
-  var dark = root.dataset.theme !== 'light';
-  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+var root=document.documentElement,saved=null;
+try{saved=localStorage.getItem('walk-theme')}catch(e){}
+root.dataset.theme=saved||'dark';
+function scheme(){root.style.colorScheme=root.dataset.theme==='light'?'only light':'dark'}scheme();
+var M='media/',sfx=Math.min(screen.width,screen.height)<700?'-m.webp':'.webp';
+function img(n){return M+n+sfx}
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  var P = dark ? {
-    wall:0x1c1d22, ceil:0x131418, floorA:'#4a3424', floorB:'#3b2a1d', fabric:0x2e2f35, wood:0x3a2a1c, rug:0x2a2220, lamp:0xffc98a, ambient:0.45, sun:0.0,
-    fog:0x0b0c0f, bg:'#0A0B0D', showFloor:0x17181c, showWall:0x0d0e11, spot:2.4, ink:'#EFEBE3', muted:'#A9ADB3', panel:'#111215', red:'#D11F26', exposure:1.05, roomLamp:1.6
-  } : {
-    wall:0xEEE9DF, ceil:0xF8F6F2, floorA:'#C9A783', floorB:'#B8946F', fabric:0x8F8068, wood:0x7A5A40, rug:0xBBAF9A, lamp:0xfff1d6, ambient:0.85, sun:1.05,
-    fog:0xF2EFE9, bg:'#F5F5F2', showFloor:0xC9C9C6, showWall:0xE9E8E4, spot:1.2, ink:'#08090A', muted:'#25292E', panel:'#FFFFFF', red:'#9A1219', exposure:1.0, roomLamp:0.35
-  };
+var ROOMS={
+ foyer:{name:'Foyer',floor:'Main floor',day:'foyer-day',night:null,spots:[
+  {x:21,y:46,t:'Front door · Book a shoot',href:'../booking.php'},
+  {x:66,y:52,t:'Great room',go:'great'},
+  {x:86,y:40,t:'Upstairs · About',href:'../about/'},
+  {x:76,y:24,t:'Landing · Journal',href:'../journal/'},
+  {x:90,y:78,t:'Lower level · Garage',go:'garage'},
+  {x:40,y:44,i:'Every listing starts at the front door. Entries are shot straight-on with true verticals so the first photo feels like walking in.'},
+  {x:50,y:12,i:'Statement lighting gets its own frame, balanced against daylight so it glows without blowing out.'}]},
+ great:{name:'Great room',floor:'Main floor',day:'great-day',night:'great-night',spots:[
+  {x:45,y:42,t:'Portfolio',href:'../#portfolio'},
+  {x:74,y:60,t:'Kitchen & dining',go:'kitchen'},
+  {x:7,y:78,t:'Back to foyer',go:'foyer'},
+  {x:13,y:63,i:'Fireplaces are lit for every shoot. Warm practicals make a home feel lived in.'},
+  {x:56,y:64,i:'Soft furnishings are lit low and wide so the texture reads in the listing photo.'},
+  {x:93,y:40,i:'Built-ins are styled and shot square-on so storage looks generous.'}]},
+ kitchen:{name:'Kitchen & dining',floor:'Main floor',day:'kitchen-day',night:null,spots:[
+  {x:66,y:62,t:'Pricing & instant quote',href:'../pricing/'},
+  {x:44,y:80,t:'Back to great room',go:'great'},
+  {x:20,y:68,i:'Stone islands are shot bracketed so the veining and reflections stay clean.'},
+  {x:88,y:52,i:'Window walls are balanced with the interior so the view and the room both hold detail.'}]},
+ show:{name:'Dealership showroom',floor:'Lower level',day:'show-day',night:null,spots:[
+  {x:18,y:66,t:'Gloss-black coupe',car:0},
+  {x:79,y:66,t:'Crimson supercar',car:1},
+  {x:33,y:52,t:'Pearl-white SUV',car:2},
+  {x:59,y:43,t:'Midnight convertible',car:3},
+  {x:90,y:57,t:'Dealership services',href:'../services/'},
+  {x:50,y:27,i:'Delivery bay: handover photos and walkaround reels for every unit.'},
+  {x:8,y:80,t:'Back to the house',go:'foyer'}]}
+};
+var CARS=[
+ {name:'Gloss-black grand-touring coupe',spin:M+'car1-spin.mp4',doors:M+'car1-doors.mp4',s:'Drag left or right to walk around the car. Open the doors to see the cabin.'},
+ {name:'Crimson mid-engine supercar',crop:'84% 76%',s:'Full walkaround coming soon.'},
+ {name:'Pearl-white luxury SUV',crop:'33% 50%',s:'Full walkaround coming soon.'},
+ {name:'Midnight-blue convertible',crop:'60% 40%',s:'Full walkaround coming soon.'}
+];
 
-  var canvas = document.getElementById('c');
-  var renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  renderer.outputEncoding = THREE.sRGBEncoding;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = P.exposure;
-  var scene = new THREE.Scene();
-  scene.background = new THREE.Color(P.bg);
-  var camera = new THREE.PerspectiveCamera(58, 1, 0.1, 220);
-  camera.rotation.order = 'YXZ';
-
-  var groups = {};
-  function addGroup(name){ var g = new THREE.Group(); g.visible = false; scene.add(g); groups[name] = g; return g; }
-  var estate = addGroup('estate');
-  var showroom = addGroup('showroom');
-  estate.visible = true;
-
-  function mat(color, rough, metal){
-    return new THREE.MeshStandardMaterial({color: color, roughness: rough === undefined ? .85 : rough, metalness: metal || 0});
-  }
-  function box(g, w, h, d, color, pos, rough){
-    var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat(color, rough));
-    m.position.set(pos[0], pos[1], pos[2]); g.add(m); return m;
-  }
-  function plane(g, w, h, material, pos, rot){
-    var m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), material);
-    m.position.set(pos[0], pos[1], pos[2]); if (rot) m.rotation.set(rot[0], rot[1], rot[2]);
-    g.add(m); return m;
-  }
-
-  function woodTexture(a, b){
-    var c = document.createElement('canvas'); c.width = 1024; c.height = 1024;
-    var x = c.getContext('2d');
-    var planks = 8, pw = 1024 / planks, seed = 7;
-    function r(){ seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
-    for (var i = 0; i < planks; i++){
-      x.fillStyle = r() < .5 ? a : b;
-      x.fillRect(i * pw, 0, pw, 1024);
-      for (var g = 0; g < 14; g++){
-        x.strokeStyle = 'rgba(0,0,0,' + (r() * .08).toFixed(3) + ')';
-        x.lineWidth = 1 + r() * 2;
-        var gx = i * pw + r() * pw; x.beginPath(); x.moveTo(gx, 0);
-        x.bezierCurveTo(gx + 6, 300, gx - 6, 700, gx + 2, 1024); x.stroke();
-      }
-      x.strokeStyle = 'rgba(0,0,0,.35)'; x.lineWidth = 2;
-      x.beginPath(); x.moveTo(i * pw, 0); x.lineTo(i * pw, 1024); x.stroke();
-      var seam = r() * 1024; x.beginPath(); x.moveTo(i * pw, seam); x.lineTo((i + 1) * pw, seam); x.stroke();
-    }
-    var t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3, 3);
-    t.encoding = THREE.sRGBEncoding; return t;
-  }
-
-  /* ---------- Shared room shell (width EW, length from RZ0 to RZ1) ---------- */
-  var EW = 11, EZ0 = 5, EZ1 = -16;
-  var RZ1 = -10;
-  function shell(g, zNear, zFar, floorA, floorB){
-    var L = zNear - zFar, C = (zNear + zFar) / 2;
-    plane(g, EW, L, new THREE.MeshStandardMaterial({map: woodTexture(floorA, floorB), roughness: .55}), [0, 0, C], [-Math.PI / 2, 0, 0]);
-    plane(g, EW, L, mat(P.ceil, .95), [0, 3.6, C], [Math.PI / 2, 0, 0]);
-    plane(g, L, 3.6, mat(P.wall), [-EW / 2, 1.8, C], [0, Math.PI / 2, 0]);
-    plane(g, L, 3.6, mat(P.wall), [EW / 2, 1.8, C], [0, -Math.PI / 2, 0]);
-    plane(g, EW, 3.6, mat(P.wall), [0, 1.8, zFar], [0, 0, 0]);
-  }
-
-  /* ---------- Estate: real-estate living room, window onto the estate photograph ---------- */
-  shell(estate, EZ0, EZ1, P.floorA, P.floorB);
-  var windowTex = null;
-  new THREE.TextureLoader().load('../img/estate.jpg', function(t){
-    t.encoding = THREE.sRGBEncoding; windowTex = t;
-    plane(estate, 8.4, 3.0, new THREE.MeshBasicMaterial({map: t}), [0, 1.9, EZ1 + .03], [0, 0, 0]);
+var view=document.getElementById('view'),stage=null,cur=null,busy=false,panX=0;
+function size(el){
+ var vw=innerWidth,vh=innerHeight,w=Math.max(vw,vh*16/9),h=w*9/16,max=Math.max(0,(w-vw)/2);
+ panX=Math.max(-max,Math.min(max,panX));
+ el.style.width=w+'px';el.style.height=h+'px';el.style.marginLeft=panX+'px';
+}
+function build(key){
+ var r=ROOMS[key],s=document.createElement('div');s.className='stage'+(r.night?'':' dim');
+ var d=document.createElement('div');d.className='drift';s.appendChild(d);
+ var a=new Image();a.className='day';a.alt='';a.src=img(r.day);d.appendChild(a);
+ if(r.night){var b=new Image();b.className='night';b.alt='';b.src=img(r.night);d.appendChild(b)}
+ r.spots.forEach(function(p){
+  var h=document.createElement(p.href?'a':'button');h.className='hs'+(p.i?' info':'');
+  h.style.left=p.x+'%';h.style.top=p.y+'%';if(p.href)h.href=p.href;else h.type='button';
+  h.innerHTML='<span class="dot"></span><span class="lbl">'+(p.t||'Detail')+'</span>';
+  h.setAttribute('aria-label',p.t||p.i);
+  h.addEventListener('click',function(e){
+   if(p.i){e.preventDefault();caption(p.i);return}
+   if(p.href){e.preventDefault();walkTo(p,function(){location.href=p.href});return}
+   if(p.go==='garage'){walkTo(p,garage);return}
+   if(p.go){walkTo(p,function(){show(p.go)});return}
+   if(p.car!==undefined)openCar(p.car);
   });
-  box(estate, 8.8, .12, .12, 0x111111, [0, 3.5, EZ1 + .06]);
-  box(estate, 8.8, .12, .12, 0x111111, [0, .33, EZ1 + .06]);
-  box(estate, .12, 3.2, .12, 0x111111, [-4.4, 1.9, EZ1 + .06]);
-  box(estate, .12, 3.2, .12, 0x111111, [4.4, 1.9, EZ1 + .06]);
-  var sofa = new THREE.Group(); estate.add(sofa); sofa.position.set(-2.4, 0, -8);
-  box(sofa, 3.2, .45, 1.0, P.fabric, [0, .3, 0]);
-  box(sofa, 3.2, .7, .26, P.fabric, [0, .72, -.37]);
-  box(sofa, .26, .6, 1.0, P.fabric, [-1.5, .55, 0]);
-  box(sofa, .26, .6, 1.0, P.fabric, [1.5, .55, 0]);
-  plane(estate, 4.6, 3.2, mat(P.rug, 1), [0, .01, -8.2], [-Math.PI / 2, 0, 0]);
-  var table = new THREE.Group(); estate.add(table); table.position.set(0, 0, -8.3);
-  box(table, 1.7, .08, .95, P.wood, [0, .42, 0], .4);
-  box(table, .08, .4, .08, P.wood, [-.7, .2, -.36]); box(table, .08, .4, .08, P.wood, [.7, .2, -.36]);
-  box(table, .08, .4, .08, P.wood, [-.7, .2, .36]); box(table, .08, .4, .08, P.wood, [.7, .2, .36]);
-  var dining = new THREE.Group(); estate.add(dining); dining.position.set(3.8, 0, -13);
-  box(dining, 2.2, .08, 1.0, P.wood, [0, .76, 0], .4);
-  box(dining, .1, .75, .1, P.wood, [-.95, .37, -.4]); box(dining, .1, .75, .1, P.wood, [.95, .37, -.4]);
-  box(dining, .1, .75, .1, P.wood, [-.95, .37, .4]); box(dining, .1, .75, .1, P.wood, [.95, .37, .4]);
-  box(estate, .06, 1.9, .06, 0x111111, [4.5, .95, -4]);
-  var shade = new THREE.Mesh(new THREE.CylinderGeometry(.28, .36, .42, 24, 1, true), new THREE.MeshBasicMaterial({color: P.lamp, side: THREE.DoubleSide}));
-  shade.position.set(4.5, 2.0, -4); estate.add(shade);
-  [[0, -4], [0, -11]].forEach(function(p){
-    var bulb = new THREE.Mesh(new THREE.SphereGeometry(.12, 16, 16), new THREE.MeshBasicMaterial({color: P.lamp}));
-    bulb.position.set(p[0], 3.05, p[1]); estate.add(bulb);
-    var pl = new THREE.PointLight(P.lamp, dark ? 2.2 : .4, 14, 1.6);
-    pl.position.set(p[0], 2.9, p[1]); estate.add(pl);
-  });
-  estate.add(new THREE.AmbientLight(0xffffff, P.ambient));
-  var sunL = new THREE.DirectionalLight(0xfff4e0, P.sun);
-  sunL.position.set(0, 3, -18); sunL.target.position.set(0, 0, -4); estate.add(sunL); estate.add(sunL.target);
+  d.appendChild(h);
+ });
+ return s;
+}
+function show(key){
+ var r=ROOMS[key],s=build(key);size(s);
+ s.style.opacity='0';s.style.transform='translate(-50%,-50%) scale(1.06)';view.appendChild(s);
+ if(stage)stage.remove();stage=s;cur=key;
+ requestAnimationFrame(function(){requestAnimationFrame(function(){s.style.opacity='1';s.style.transform='translate(-50%,-50%) scale(1)';busy=false})});
+ document.getElementById('rname').textContent=r.name;document.getElementById('floor').textContent=r.floor;
+ try{history.replaceState(null,'','#'+key)}catch(e){}
+ navUpdate();
+}
+function walkTo(p,done){
+ if(busy)return;busy=true;
+ if(reduce){done();return}
+ stage.style.transformOrigin=p.x+'% '+p.y+'%';stage.style.transform='translate(-50%,-50%) scale(1.9)';stage.classList.add('out');
+ setTimeout(done,950);
+}
+function garage(){
+ var g=document.getElementById('garage');g.innerHTML='';
+ for(var i=0;i<9;i++){var sl=document.createElement('div');sl.className='slat';g.appendChild(sl)}
+ var e=document.createElement('div');e.className='edge';g.appendChild(e);
+ g.className='show';show('show');
+ setTimeout(function(){g.classList.add('up')},reduce?0:700);
+ setTimeout(function(){g.className='';g.innerHTML=''},reduce?300:3100);
+}
+var capT;function caption(t){var c=document.getElementById('cap');c.textContent=t;c.classList.add('on');clearTimeout(capT);capT=setTimeout(function(){c.classList.remove('on')},4200)}
 
-  /* ---------- Content rooms: page text on the walls, with a door out to the full page ---------- */
-  var ROOMS = {
-    services: {title:'Services', href:'../services/', full:'Full services page', panels:[
-      {t:'Real estate photography', s:'Bracketed HDR interiors with true-to-life colour and straight verticals, and exteriors that show the home at its best.'},
-      {t:'Video & social reels', s:'Cinematic walkthroughs and short vertical cuts built for Instagram and Reels, for listings, dealerships and events.'},
-      {t:'Drone & aerial', s:'Lot lines, neighbourhood context and the approach to the front door, captured from above.'},
-      {t:'Floor plans & 3D', s:'Measured floor plans so buyers understand the layout and flow of a home before they book a visit.'},
-      {t:'Event coverage', s:'Community festivals, brand activations, corporate and private events, covered from the wide scene to the candid moment.'},
-      {t:'Dealership inventory', s:'Consistent lot and inventory photography that keeps every listing uniform, with walkaround video for every unit.', enter:'showroom'}
-    ]},
-    pricing: {title:'Pricing', href:'../pricing/', full:'Full pricing page', panels:[
-      {t:'Clear prices. No surprises.', s:'Prices in CAD, plus 13% HST. Travel within the GTA included; beyond the GTA quoted per km. Delivery in 24–72 hours, most within 24–48.'},
-      {t:'Homes', s:'Packages cover homes up to 2,999 sq ft. 3,000–3,999 sq ft adds $100, 4,000–4,999 sq ft adds $200, 5,000+ is quoted.'},
-      {t:'Dealerships', s:'Per-unit visits start at 10 cars or trucks, or 5 RVs. Monthly lot programs and RV shows are quoted.', enter:'showroom'},
-      {t:'Events', s:'Coverage runs up to 3 hours per event, with unlimited edited photos. Weddings are not offered.'},
-      {t:'Get a quote', s:'Pick a package, add what you need, and get a numbered quote by email in seconds, with a PDF you can approve.'}
-    ]},
-    about: {title:'About', href:'../about/', full:'Full about page', panels:[
-      {t:'Nick Mehra', s:'Owner & Creative Director. Almost two decades in security and public service law enforcement. Now every frame at BlackSheep Digital Works is shot by Nick.'},
-      {t:'Background', s:'Private security first, then sworn peace officer roles with several public service agencies, among them the Government of Ontario.'},
-      {t:'Based in Ontario', s:'BlackSheep Digital Works · Ontario. Nick’s full story, portraits and personal journal live on nickmehra.ca.'}
-    ]},
-    journal: {title:'Journal', href:'../journal/', full:'Full journal', panels:[
-      {t:'Notes from behind the lens.', s:'Listing media, market moves and the craft of making a property stand apart in Durham and across Ontario.'}
-    ]}
-  };
-  var ROOM_W = EW, ROOM_Z0 = 5, ROOM_Z1 = -10;
-  var roomPanels = {};   // name -> [{mesh, def, idx}]
-  Object.keys(ROOMS).forEach(function(name){
-    var g = addGroup(name);
-    shell(g, ROOM_Z0, ROOM_Z1, P.floorA, P.floorB);
-    g.add(new THREE.AmbientLight(0xffffff, dark ? .3 : .9));
-    var lamp = new THREE.PointLight(P.lamp, P.roomLamp * 6, 16, 1.4); lamp.position.set(0, 3.1, -3); g.add(lamp);
-    var lamp2 = new THREE.PointLight(P.lamp, P.roomLamp * 6, 16, 1.4); lamp2.position.set(0, 3.1, -8); g.add(lamp2);
-    roomPanels[name] = [];
-    ROOMS[name].panels.forEach(function(p, i){
-      var side = i % 2 ? 1 : -1;
-      var z = -1.6 - Math.floor(i / 2) * 2.8;
-      var m = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 1.8), new THREE.MeshBasicMaterial({color: 0xffffff}));
-      m.position.set(side * (ROOM_W / 2 - .04), 1.6, z);
-      m.rotation.y = -side * Math.PI / 2;
-      g.add(m);
-      roomPanels[name].push({mesh: m, def: p, idx: i});
-    });
-  });
+var NAV=[['Foyer','foyer'],['Great room','great'],['Kitchen','kitchen'],['Dealership','garage'],['Book a shoot','../booking.php'],['Pricing','../pricing/'],['Services','../services/'],['About','../about/'],['Journal','../journal/']];
+var nav=document.querySelector('nav.ui');
+NAV.forEach(function(n){
+ var el;
+ if(/[\/.]/.test(n[1])){el=document.createElement('a');el.href=n[1]}
+ else{el=document.createElement('button');el.type='button';el.dataset.k=n[1];
+  el.addEventListener('click',function(){
+   if(busy)return;var k=n[1];
+   if(k==='garage'){if(cur!=='show')garage();return}
+   if(k===cur)return;busy=true;stage.classList.add('out');setTimeout(function(){show(k)},reduce?0:700);
+  })}
+ el.textContent=n[0];nav.appendChild(el);
+});
+function navUpdate(){[].forEach.call(nav.querySelectorAll('button'),function(b){b.classList.toggle('on',b.dataset.k===cur||(b.dataset.k==='garage'&&cur==='show'))})}
 
-  var SW = 12, SZ0 = 5, SZ1 = -12, sLen = SZ0 - SZ1, sCenter = (SZ0 + SZ1) / 2;
-  plane(showroom, SW, sLen, mat(P.showFloor, .22, .15), [0, 0, sCenter], [-Math.PI / 2, 0, 0]);
-  plane(showroom, SW, sLen, mat(P.showWall, .9), [0, 4.2, sCenter], [Math.PI / 2, 0, 0]);
-  plane(showroom, sLen, 4.2, mat(P.showWall, .9), [-SW / 2, 2.1, sCenter], [0, Math.PI / 2, 0]);
-  plane(showroom, sLen, 4.2, mat(P.showWall, .9), [SW / 2, 2.1, sCenter], [0, -Math.PI / 2, 0]);
-  plane(showroom, SW, 4.2, mat(P.showWall, .9), [0, 2.1, SZ1], [0, 0, 0]);
-  new THREE.TextureLoader().load('../img/nick-car.webp', function(t){
-    t.encoding = THREE.sRGBEncoding;
-    plane(showroom, 6.4, 3.6, new THREE.MeshBasicMaterial({map: t}), [0, 2.0, SZ1 + .03], [0, 0, 0]);
-  });
-  [-2.6, 2.6].forEach(function(x){
-    var ped = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.25, .3, 48), mat(P.showWall, .4, .1));
-    ped.position.set(x, .15, -5); showroom.add(ped);
-    var spot = new THREE.SpotLight(0xffffff, P.spot * 10, 16, .5, .65, 1.2);
-    spot.position.set(x, 4.1, -2.5); spot.target.position.set(x, .3, -5);
-    showroom.add(spot); showroom.add(spot.target);
-  });
-  showroom.add(new THREE.AmbientLight(0xffffff, dark ? .35 : .9));
+var px=null,startPan=0;
+view.addEventListener('pointerdown',function(e){if(e.target.closest('.hs'))return;px=e.clientX;startPan=panX});
+addEventListener('pointermove',function(e){if(px===null||!stage)return;panX=startPan+(e.clientX-px);size(stage)});
+addEventListener('pointerup',function(){px=null});
+addEventListener('resize',function(){if(stage)size(stage)});
 
-  /* ---------- Doors and plaques ---------- */
-  var ESTATE_DOORS = [
-    {label:'Services', sub:'Photography, video, drone, floor plans', enter:'services', side:-1, z:-2},
-    {label:'Portfolio', sub:'Selected work', href:'../#portfolio', side:1, z:-4.5},
-    {label:'Pricing', sub:'Packages for listings and events', enter:'pricing', side:-1, z:-7},
-    {label:'About', sub:'Who we are', enter:'about', side:1, z:-9.5},
-    {label:'Journal', sub:'Articles and updates', enter:'journal', side:-1, z:-12},
-    {label:'Book a shoot', sub:'Request a date', href:'../booking.php', side:1, z:-14},
-    {label:'Dealership', sub:'Showroom and inventory', enter:'showroom', side:-1, z:-14.5}
-  ];
-  var SHOW_DOORS = [
-    {label:'Book a shoot', sub:'Request a date', href:'../booking.php', side:-1, z:-2},
-    {label:'Services', sub:'Photography, video, drone, floor plans', enter:'services', side:1, z:-2},
-    {label:'Back to the property', sub:'Return to the estate', enter:'estate', side:-1, z:-7}
-  ];
-  function roomDoors(name){
-    var r = ROOMS[name];
-    return [
-      {label:'Back to the property', sub:'Return to the estate', enter:'estate', pos:[-2.6, 1.6, ROOM_Z1 + .04]},
-      {label:r.full, sub:'Open the full page', href:r.href, pos:[2.6, 1.6, ROOM_Z1 + .04]}
-    ];
-  }
-  var doorMeshes = [];
-  var doorDefs = {estate: ESTATE_DOORS, showroom: SHOW_DOORS};
-  Object.keys(ROOMS).forEach(function(n){ doorDefs[n] = roomDoors(n); });
-
-  function drawPlaque(d){
-    var c = document.createElement('canvas'); c.width = 768; c.height = 480;
-    var x = c.getContext('2d');
-    x.fillStyle = P.panel; x.fillRect(0, 0, 768, 480);
-    x.strokeStyle = P.red; x.lineWidth = 5; x.strokeRect(18, 18, 732, 444);
-    x.fillStyle = P.ink; x.font = '600 56px "Cinzel", Georgia, serif'; x.textAlign = 'center';
-    x.fillText(d.label, 384, 215);
-    x.fillStyle = P.red; x.fillRect(324, 245, 120, 3);
-    x.fillStyle = P.muted; x.font = '400 28px "EB Garamond", Georgia, serif'; x.fillText(d.sub || '', 384, 298);
-    x.fillStyle = P.red; x.font = '600 24px "Cinzel", Georgia, serif'; x.fillText('ENTER  →', 384, 390);
-    var t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t;
-  }
-  function wrap(x, text, maxW){
-    var words = text.split(' '), lines = [], line = '';
-    words.forEach(function(w){
-      var test = line ? line + ' ' + w : w;
-      if (x.measureText(test).width > maxW && line){ lines.push(line); line = w; } else line = test;
-    });
-    if (line) lines.push(line);
-    return lines;
-  }
-  function drawPanel(p){
-    var c = document.createElement('canvas'); c.width = 780; c.height = 540;
-    var x = c.getContext('2d');
-    x.fillStyle = P.panel; x.fillRect(0, 0, 780, 540);
-    x.strokeStyle = P.red; x.lineWidth = 4; x.strokeRect(14, 14, 752, 512);
-    x.fillStyle = P.ink; x.font = '600 46px "Cinzel", Georgia, serif'; x.textAlign = 'left';
-    x.fillText(p.t, 56, 110);
-    x.fillStyle = P.red; x.fillRect(56, 136, 90, 3);
-    x.fillStyle = P.muted; x.font = '400 28px "EB Garamond", Georgia, serif';
-    var lines = wrap(x, p.s, 668);
-    lines.slice(0, 8).forEach(function(l, i){ x.fillText(l, 56, 196 + i * 40); });
-    if (p.enter === 'showroom'){
-      x.fillStyle = P.red; x.font = '600 22px "Cinzel", Georgia, serif';
-      x.fillText('TAP TO VISIT THE DEALERSHIP SHOWROOM  →', 56, 490);
-    }
-    var t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t;
-  }
-  function placeDefs(env, group, wallX, defs){
-    defs.forEach(function(d){
-      var m = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.5), new THREE.MeshBasicMaterial({map: drawPlaque(d)}));
-      if (d.pos){ m.position.set(d.pos[0], d.pos[1], d.pos[2]); }
-      else { m.position.set(d.side * (wallX - .04), 1.6, d.z); m.rotation.y = -d.side * Math.PI / 2; }
-      m.userData.door = d; m.userData.env = env;
-      group.add(m); doorMeshes.push(m);
-    });
-  }
-  function fontsReady(){ return (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve(); }
-  fontsReady().then(function(){
-    placeDefs('estate', estate, EW / 2, ESTATE_DOORS);
-    placeDefs('showroom', showroom, SW / 2, SHOW_DOORS);
-    Object.keys(ROOMS).forEach(function(n){
-      placeDefs(n, groups[n], ROOM_W / 2, doorDefs[n]);
-      roomPanels[n].forEach(function(rp){
-        var tex = drawPanel(rp.def);
-        rp.mesh.material = new THREE.MeshBasicMaterial({map: tex});
-        if (rp.def.enter){
-          rp.mesh.userData.door = {label: 'Dealership', sub: 'Showroom and inventory', enter: rp.def.enter, side: Math.sign(rp.mesh.position.x), z: rp.mesh.position.z};
-          rp.mesh.userData.env = n;
-          doorMeshes.push(rp.mesh);
-        }
-      });
-    });
-  });
-
-  /* ---------- Camera, input, walking ---------- */
-  var env = 'estate';
-  var cam = {x: 0, z: 4, yaw: 0, pitch: 0};
-  var walk = null, leaving = false;
-  var keys = {}, dragging = false, lastX = 0, lastY = 0;
-  var ray = new THREE.Raycaster(), mouse = new THREE.Vector2();
-  var bounds = {};
-  Object.keys(groups).forEach(function(n){ bounds[n] = {x: 4.9, zMin: -9.2, zMax: 4}; });
-  bounds.estate = {x: 4.9, zMin: EZ1 + 1.2, zMax: 4};
-  bounds.showroom = {x: 5, zMin: SZ1 + 1.2, zMax: 4};
-
-  function resize(){
-    var w = window.innerWidth, h = window.innerHeight;
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h; camera.updateProjectionMatrix();
-  }
-  window.addEventListener('resize', resize); resize();
-
-  function setEnv(name){
-    env = name;
-    Object.keys(groups).forEach(function(n){ groups[n].visible = (n === name); });
-    var inRoom = name !== 'estate';
-    scene.fog = (name === 'showroom') ? new THREE.Fog(P.fog, 12, 32) : new THREE.Fog(P.fog, 14, 40);
-    document.getElementById('back').hidden = !inRoom;
-    document.querySelectorAll('[data-go]').forEach(function(b){
-      if (b.id === 'back') return;
-      b.hidden = inRoom;
-    });
-  }
-  setEnv('estate');
-
-  function fadeThen(fn){
-    var f = document.getElementById('fade');
-    f.classList.add('on');
-    setTimeout(function(){ fn(); setTimeout(function(){ f.classList.remove('on'); }, 60); }, 850);
-  }
-  function enter(name){
-    walk = null;
-    fadeThen(function(){
-      setEnv(name);
-      cam.x = 0; cam.yaw = 0; cam.pitch = 0;
-      cam.z = (name === 'showroom') ? 3.5 : 2.5;
-    });
-  }
-  function findDoor(label){
-    var list = doorDefs[env] || [];
-    for (var i = 0; i < list.length; i++){ if (list[i].label === label) return list[i]; }
-    return null;
-  }
-  function goLabel(label){
-    if (walk || leaving) return;
-    var d = findDoor(label);
-    if (!d) return;
-    startWalk(d);
-  }
-  function startWalk(d){
-    if (walk || leaving) return;
-    if (d.pos){
-      var px = d.pos[0], pz = d.pos[2];
-      var stopZ = pz + 3.2;
-      if (reduce){ act(d); return; }
-      walk = {from:{x:cam.x, z:cam.z, yaw:cam.yaw}, to:{x:0, z:stopZ, yaw:0}, t:0, dur:5.5, door:d};
-      return;
-    }
-    if (reduce){ act(d); return; }
-    var stopX = d.side * 3.1;
-    walk = {from:{x:cam.x, z:cam.z, yaw:cam.yaw}, to:{x:stopX, z:d.z, yaw:-d.side * Math.PI / 2}, t:0, dur:5.5, door:d};
-  }
-  function act(d){
-    if (d.enter){ enter(d.enter); return; }
-    leaving = true;
-    document.getElementById('fade').classList.add('on');
-    setTimeout(function(){ window.location.href = d.href; }, 900);
-  }
-  Array.prototype.forEach.call(document.querySelectorAll('[data-go]'), function(b){
-    b.addEventListener('click', function(){ goLabel(b.dataset.go); });
-  });
-  document.getElementById('theme').addEventListener('click', function(){
-    localStorage.setItem('walk-theme', root.dataset.theme === 'light' ? 'dark' : 'light');
-    location.reload();
-  });
-
-  function setKey(e, on){
-    var c = e.code;
-    if (c === 'ArrowUp' || c === 'KeyW') keys.f = on;
-    if (c === 'ArrowDown' || c === 'KeyS') keys.b = on;
-    if (c === 'ArrowLeft' || c === 'KeyA') keys.l = on;
-    if (c === 'ArrowRight' || c === 'KeyD') keys.r = on;
-  }
-  window.addEventListener('keydown', function(e){ setKey(e, true); });
-  window.addEventListener('keyup', function(e){ setKey(e, false); });
-
-  function pick(e){
-    var rect = canvas.getBoundingClientRect();
-    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-    ray.setFromCamera(mouse, camera);
-    var visible = doorMeshes.filter(function(m){ return m.userData.env === env && groups[env].visible; });
-    var hit = ray.intersectObjects(visible, false);
-    return hit.length ? hit[0].object : null;
-  }
-  canvas.addEventListener('pointerdown', function(e){
-    var m = pick(e);
-    if (m){ startWalk(m.userData.door); return; }
-    dragging = true; lastX = e.clientX; lastY = e.clientY;
-  });
-  canvas.addEventListener('pointermove', function(e){
-    var m = pick(e);
-    canvas.classList.toggle('over', !!m);
-    doorMeshes.forEach(function(d){ d.material.color.setScalar(m === d ? 1.15 : 1); });
-    if (!dragging) return;
-    cam.yaw -= (e.clientX - lastX) * 0.0026;
-    cam.pitch -= (e.clientY - lastY) * 0.002;
-    cam.pitch = Math.max(-0.5, Math.min(0.5, cam.pitch));
-    lastX = e.clientX; lastY = e.clientY;
-  });
-  window.addEventListener('pointerup', function(){ dragging = false; });
-
-  var last = performance.now();
-  function ease(t){ return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
-  function angleLerp(a, b, k){ var d = Math.atan2(Math.sin(b - a), Math.cos(b - a)); return a + d * k; }
-  function frame(now){
-    var dt = Math.min(0.05, (now - last) / 1000); last = now;
-    var b = bounds[env];
-    if (walk){
-      walk.t += dt / walk.dur;
-      var p = Math.min(1, walk.t), k = ease(p), w = walk;
-      cam.x = w.from.x + (w.to.x - w.from.x) * k;
-      cam.z = w.from.z + (w.to.z - w.from.z) * k;
-      cam.yaw = angleLerp(w.from.yaw, w.to.yaw, k);
-      if (p >= 1){ var d = w.door; walk = null; act(d); }
-    } else if (!leaving){
-      var f = (keys.f ? 1 : 0) - (keys.b ? 1 : 0);
-      var s = (keys.r ? 1 : 0) - (keys.l ? 1 : 0);
-      var sp = 2.2 * dt;
-      cam.x += Math.cos(cam.yaw) * s * sp;
-      cam.z += -Math.cos(cam.yaw) * f * sp;
-    }
-    cam.x = Math.max(-b.x, Math.min(b.x, cam.x));
-    cam.z = Math.max(b.zMin, Math.min(b.zMax, cam.z));
-    camera.position.set(cam.x, 1.6, cam.z);
-    camera.rotation.y = cam.yaw;
-    camera.rotation.x = cam.pitch;
-    renderer.render(scene, camera);
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
+var carEl=document.getElementById('car'),frame=document.getElementById('frame'),btns=document.getElementById('carB'),raf=null;
+function openCar(i){
+ var c=CARS[i];document.getElementById('carT').textContent=c.name;document.getElementById('carS').textContent=c.s;
+ frame.innerHTML='';btns.innerHTML='';
+ if(c.spin){
+  var v=document.createElement('video');v.src=c.spin;v.muted=true;v.playsInline=true;v.preload='auto';frame.appendChild(v);
+  var d=document.createElement('video');d.src=c.doors;d.muted=true;d.playsInline=true;d.preload='auto';d.style.opacity='0';d.style.transition='opacity .4s';frame.appendChild(d);
+  var hint=document.createElement('div');hint.className='hint';hint.textContent='Drag to walk around';frame.appendChild(hint);
+  var dx=null,t0=0,open=false;
+  frame.onpointerdown=function(e){if(open)return;dx=e.clientX;t0=v.currentTime;try{frame.setPointerCapture(e.pointerId)}catch(_){}};
+  frame.onpointermove=function(e){if(dx===null||!v.duration)return;var t=t0-(e.clientX-dx)/frame.clientWidth*v.duration*1.2;v.currentTime=((t%v.duration)+v.duration)%v.duration;hint.style.opacity='0'};
+  frame.onpointerup=frame.onpointercancel=function(){dx=null};
+  var b=document.createElement('button');b.type='button';b.textContent='Open doors';
+  b.onclick=function(){
+   open=!open;b.textContent=open?'Close doors':'Open doors';cancelAnimationFrame(raf);
+   if(open){d.style.opacity='1';d.currentTime=0;d.play()}
+   else{d.pause();var last=performance.now();(function step(now){var dt=(now-last)/1000;last=now;d.currentTime=Math.max(0,d.currentTime-dt);if(d.currentTime>0.03)raf=requestAnimationFrame(step);else d.style.opacity='0'})(last)}
+  };btns.appendChild(b);
+ }else{
+  var st=document.createElement('div');st.className='still';st.style.backgroundImage='url('+img(ROOMS.show.day)+')';
+  st.style.backgroundSize='320% auto';st.style.backgroundPosition=c.crop;frame.appendChild(st);
+ }
+ var bk=document.createElement('a');bk.href='../booking.php';bk.textContent='Book a dealership shoot';btns.appendChild(bk);
+ var x=document.createElement('button');x.type='button';x.textContent='Back to showroom';x.onclick=closeCar;btns.appendChild(x);
+ carEl.classList.add('on');x.focus();
+}
+function closeCar(){cancelAnimationFrame(raf);carEl.classList.remove('on');frame.innerHTML=''}
+addEventListener('keydown',function(e){if(e.key==='Escape'&&carEl.classList.contains('on'))closeCar()});
+document.getElementById('theme').addEventListener('click',function(){
+ root.dataset.theme=root.dataset.theme==='light'?'dark':'light';scheme();
+ try{localStorage.setItem('walk-theme',root.dataset.theme)}catch(e){}
+});
+var start=(location.hash||'').slice(1);if(start==='dealership')start='show';
+show(ROOMS[start]?start:'foyer');
 })();
 </script>
 </body>
