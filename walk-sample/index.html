@@ -65,15 +65,15 @@ nav.ui .on{background:#D11F26}
 <body>
 <div id="view" aria-label="Walk-through of BlackSheep Digital Works. Use the room buttons or the glowing points to move around."></div>
 <div class="top">
-  <a class="brand" href="../">BlackSheep <span>Digital Works</span></a>
-  <div class="r"><button type="button" id="theme">Light / Dark</button><a href="../">Classic site</a></div>
+  <a class="brand" href="/?classic=1">BlackSheep <span>Digital Works</span></a>
+  <div class="r"><button type="button" id="theme">Light / Dark</button><a href="/?classic=1">Classic site</a></div>
 </div>
 <div class="room" aria-live="polite"><small id="floor"></small><b id="rname"></b></div>
 <nav class="ui" aria-label="Rooms and pages"></nav>
 <p id="cap" role="status"></p>
 <div id="garage" aria-hidden="true"></div>
 <div id="car" role="dialog" aria-modal="true" aria-labelledby="carT"><h2 id="carT"></h2><div class="frame" id="frame"></div><p id="carS"></p><div class="row" id="carB"></div></div>
-<nav class="sr" aria-label="All pages"><a href="../booking.php">Book a shoot</a> <a href="../#portfolio">Portfolio</a> <a href="../pricing/">Pricing</a> <a href="../about/">About</a> <a href="../journal/">Journal</a> <a href="../services/">Services</a> <a href="../partners/">Partners</a> <a href="../resources/">Resources</a></nav>
+<nav class="sr" aria-label="All pages"><a href="../booking.php">Book a shoot</a> <a href="/?classic=1#portfolio">Portfolio</a> <a href="../pricing/">Pricing</a> <a href="../about/">About</a> <a href="../journal/">Journal</a> <a href="../services/">Services</a> <a href="../partners/">Partners</a> <a href="../resources/">Resources</a></nav>
 <script>
 (function(){
 var root=document.documentElement,saved=null;
@@ -94,7 +94,7 @@ var ROOMS={
   {x:40,y:44,i:'Every listing starts at the front door. Entries are shot straight-on with true verticals so the first photo feels like walking in.'},
   {x:50,y:12,i:'Statement lighting gets its own frame, balanced against daylight so it glows without blowing out.'}]},
  great:{name:'Great room',floor:'Main floor',day:'great-day',night:'great-night',spots:[
-  {x:45,y:42,t:'Portfolio',href:'../#portfolio'},
+  {x:45,y:42,t:'Portfolio',href:'/?classic=1#portfolio'},
   {x:74,y:60,t:'Kitchen & dining',go:'kitchen'},
   {x:7,y:78,t:'Back to foyer',go:'foyer'},
   {x:13,y:63,i:'Fireplaces are lit for every shoot. Warm practicals make a home feel lived in.'},
