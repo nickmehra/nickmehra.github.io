@@ -12,7 +12,7 @@ FOOTER = '''<footer><div class="wrap">
     <nav class="fcol" aria-label="Work"><h4>Work</h4><a href="/portraits/">Portraits</a><a href="/work/">Work</a><a href="https://blacksheepdigitalworks.ca" target="_blank" rel="noopener">BlackSheep ↗</a></nav>
     <nav class="fcol" aria-label="Connect"><h4>Connect</h4><a href="/contact/">Contact</a><a href="mailto:nic.mehra@gmail.com">Email</a><a href="https://www.instagram.com/blacksheepdigitalworks/" target="_blank" rel="noopener">Instagram ↗</a></nav>
   </div>
-  <div class="fbar"><span class="fsig">© 2026 Nick Mehra</span><nav class="flegal" aria-label="Legal"><a href="/privacy/">Privacy</a><a href="/terms/">Terms of use</a><a href="/accessibility/">Accessibility</a><a href="/comments-admin.php" rel="nofollow">Admin</a></nav></div>
+  <div class="fbar"><span class="fsig">© 2026 Nick Mehra</span><nav class="flegal" aria-label="Legal"><a href="/privacy/">Privacy</a><a href="/terms/">Terms of use</a><a href="/accessibility/">Accessibility</a><a href="/comments-admin.php" rel="nofollow">Admin</a></nav><span class="fvisits" id="fvisits"></span><script>(function(){var el=document.getElementById("fvisits");fetch("/counter.php",{method:"POST",cache:"no-store",credentials:"omit"}).then(function(r){return r.json()}).then(function(d){if(el&&d&&d.total!=null)el.textContent=d.total.toLocaleString("en-CA")+" visits"}).catch(function(){})})();</script></div>
 </div></footer>'''
 
 PAGES = {
@@ -74,7 +74,9 @@ PAGES = {
   <h3>Chat</h3>
   <p>The chat bubble is an automated assistant that answers from the information on this website; it is not a live person and does not use an outside AI service. Your messages, and any email or phone number you choose to give, are emailed to me so I can read the conversation and reply personally. Chat messages are not stored on the website, and the conversation stays in your browser tab only until you close it. Please don't share sensitive personal information in the chat.</p>
   <h3>Your browser</h3>
-  <p>Your light or dark choice, and whether you closed the viewing tip, are saved in your own browser. There are no advertising or analytics tools and no tracking cookies. Fonts and scripts are served from this site, not from outside services.</p>
+  <p>Your light or dark choice, and whether you closed the viewing tip, are saved in your own browser. There are no advertising tools and no tracking cookies. The only usage figure is one anonymous running total of site visits, shown in the footer. Fonts and scripts are served from this site, not from outside services.</p>
+  <h3>Site visit counter</h3>
+  <p>The footer shows one running total of visits to the whole site. Each page load adds 1 to that single number. The site does not store IP addresses, cookies, device details, or which pages anyone looked at, so the total cannot be linked to a person. Automated traffic (bots) may be included.</p>
   <h3>Hosting</h3>
   <p>The site is hosted by Hostinger, which may keep standard technical logs for security and operations under its own privacy policy.</p>
   <h3>Removing your information</h3>
