@@ -967,7 +967,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
     var p = PHOTOS[lbIndex];
     lbImg.src = cardArt(p[0]); lbImg.alt = p[1];
     lb.style.setProperty('--lbsrc', 'url(img/' + p[0] + '.jpg)');
-    $('lbCap').textContent = 'BlackSheep · ' + p[2] + ' · ' + (lbIndex + 1) + ' of ' + PHOTOS.length;
+    $('lbCap').textContent = 'BlackSheep · ' + p[1] + ' · ' + (lbIndex + 1) + ' of ' + PHOTOS.length;
     var d = lbImg.decode ? lbImg.decode() : Promise.resolve();
     return d.catch(function(){});
   }
@@ -1429,7 +1429,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
     });
     function label(){
       var p = PHOTOS[photoIndex(ids[cur])];
-      cap.textContent = 'Our services' + (p ? ' · ' + p[2] : '');
+      cap.textContent = p ? p[1] : 'Our services';
       dotBtns.forEach(function(d, i){ d.setAttribute('aria-current', i === cur ? 'true' : 'false'); });
       frame.style.setProperty('--src', 'url(img/' + ids[cur] + '.jpg)');
     }
