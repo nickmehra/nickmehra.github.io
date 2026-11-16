@@ -7,11 +7,13 @@
 <title>Walk-through | BlackSheep Digital Works</title>
 <link rel="stylesheet" href="../fonts/fonts.css">
 <style>
-:root{--bg:#F5F5F2;--fg:#08090A;--muted:#25292E;--line:rgba(8,9,10,.24);--red:#9A1219;--display:"Cinzel","Trajan Pro",Georgia,serif;--body:"EB Garamond",Garamond,Georgia,serif}
-:root[data-theme="dark"]{--bg:#0A0B0D;--fg:#EFEBE3;--muted:#A9ADB3;--line:rgba(239,235,227,.16);--red:#D11F26}
+:root{--bg:#F5F5F2;--fg:#08090A;--muted:#25292E;--red:#9A1219;--display:"Cinzel","Trajan Pro",Georgia,serif;--body:"EB Garamond",Garamond,Georgia,serif}
+:root[data-theme="dark"]{--bg:#0A0B0D;--fg:#EFEBE3;--muted:#A9ADB3;--red:#D11F26}
 html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--fg);font-family:var(--body)}
 #c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:default}
 #c.over{cursor:pointer}
+.vig{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse 70% 62% at 50% 46%,rgba(0,0,0,0) 55%,rgba(0,0,0,.45) 100%)}
+:root[data-theme="light"] .vig{background:radial-gradient(ellipse 70% 62% at 50% 46%,rgba(0,0,0,0) 60%,rgba(60,50,30,.18) 100%)}
 .hint{position:fixed;top:64px;left:0;right:0;margin:0;text-align:center;font-family:var(--display);font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);pointer-events:none}
 .bar{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;background:linear-gradient(var(--bg),rgba(0,0,0,0))}
 .bar a.logo{font-family:var(--display);font-size:14px;letter-spacing:.2em;color:var(--fg);text-decoration:none;text-transform:uppercase}
@@ -20,25 +22,29 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
 .ui{position:fixed;left:0;right:0;bottom:0;padding:12px 10px calc(12px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;gap:8px;justify-content:center;background:linear-gradient(rgba(0,0,0,0),var(--bg))}
 .ui button{font-family:var(--display);font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:0 12px;min-height:44px;background:transparent;color:var(--fg);border:1px solid var(--red);cursor:pointer}
 .ui button:hover,.ui button:focus-visible{background:var(--red);color:#F5F5F2;outline:none}
+.ui button[hidden]{display:none}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-#fade{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .9s ease}
+#fade{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .8s ease}
 #fade.on{opacity:1}
 </style>
 </head>
 <body>
 <canvas id="c" aria-label="Walk-through of BlackSheep Digital Works. Press a door to enter that section."></canvas>
+<div class="vig" aria-hidden="true"></div>
 <div class="bar">
   <a class="logo" href="../">BlackSheep <span>Digital Works</span></a>
   <a class="classic" href="../">Classic view</a>
 </div>
-<p class="hint">Drag to look · Arrow keys to walk · Press a door to enter</p>
+<p class="hint" id="hint">Drag to look · Arrow keys to walk · Press a door to enter</p>
 <nav class="ui" aria-label="Walk-through doors">
-  <button type="button" data-go="0">Services</button>
-  <button type="button" data-go="1">Portfolio</button>
-  <button type="button" data-go="2">Pricing</button>
-  <button type="button" data-go="3">About</button>
-  <button type="button" data-go="4">Journal</button>
-  <button type="button" data-go="5">Book a shoot</button>
+  <button type="button" data-go="Services">Services</button>
+  <button type="button" data-go="Portfolio">Portfolio</button>
+  <button type="button" data-go="Pricing">Pricing</button>
+  <button type="button" data-go="About">About</button>
+  <button type="button" data-go="Journal">Journal</button>
+  <button type="button" data-go="Book a shoot">Book a shoot</button>
+  <button type="button" data-go="Dealership">Dealership</button>
+  <button type="button" data-go="Back to the property" id="back" hidden>Back to the property</button>
   <button type="button" id="theme">Light / Dark</button>
 </nav>
 <nav class="sr" aria-label="All pages">
@@ -54,113 +60,193 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
   var dark = root.dataset.theme !== 'light';
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  var T = dark
-    ? {bg:0x0A0B0D, wall:0x101216, floor:0x0c0d10, ceil:0x0d0e12, panel:'#111215', ink:'#EFEBE3', muted:'#A9ADB3', red:'#D11F26', line:'rgba(239,235,227,.28)', light:0xEFEBE3, lightA:.14}
-    : {bg:0xF5F5F2, wall:0xEBE9E4, floor:0xDAD7D0, ceil:0xF1F0EC, panel:'#FFFFFF', ink:'#08090A', muted:'#25292E', red:'#9A1219', line:'rgba(8,9,10,.3)', light:0xFFFFFF, lightA:.8};
-
-  var DOORS = [
-    {label:'Services', sub:'Photography, video, drone, floor plans', href:'../services/'},
-    {label:'Portfolio', sub:'Selected work', href:'../#portfolio'},
-    {label:'Pricing', sub:'Packages for listings and events', href:'../pricing/'},
-    {label:'About', sub:'Who we are', href:'../about/'},
-    {label:'Journal', sub:'Articles and updates', href:'../journal/'},
-    {label:'Book a shoot', sub:'Request a date', href:'../booking.php'}
-  ];
+  // Palettes: evening interior and showroom in dark, daylight interior and showroom in light
+  var P = dark ? {
+    wall:0x1c1d22, ceil:0x131418, floorA:'#4a3424', floorB:'#3b2a1d', fabric:0x2e2f35, wood:0x3a2a1c, rug:0x2a2220, lamp:0xffc98a, ambient:0.45, sun:0.0,
+    fog:0x0b0c0f, bg:'#0A0B0D', showFloor:0x17181c, showWall:0x0d0e11, spot:2.4, ink:'#EFEBE3', muted:'#A9ADB3', panel:'#111215', red:'#D11F26', exposure:1.05
+  } : {
+    wall:0xEEE9DF, ceil:0xF8F6F2, floorA:'#C9A783', floorB:'#B8946F', fabric:0x8F8068, wood:0x7A5A40, rug:0xBBAF9A, lamp:0xfff1d6, ambient:0.85, sun:1.05,
+    fog:0xF2EFE9, bg:'#F5F5F2', showFloor:0xC9C9C6, showWall:0xE9E8E4, spot:1.2, ink:'#08090A', muted:'#25292E', panel:'#FFFFFF', red:'#9A1219', exposure:1.0
+  };
 
   var canvas = document.getElementById('c');
   var renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = P.exposure;
   var scene = new THREE.Scene();
-  scene.background = new THREE.Color(T.bg);
-  scene.fog = new THREE.Fog(T.bg, 16, 84);
+  scene.background = new THREE.Color(P.bg);
   var camera = new THREE.PerspectiveCamera(58, 1, 0.1, 220);
   camera.rotation.order = 'YXZ';
 
-  var HALF = 4, GAP = 14, N = DOORS.length, LEN = GAP * N + 14;
-  function plane(w, h, color, pos, rot){
-    var m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({color: color}));
+  var estate = new THREE.Group(), showroom = new THREE.Group();
+  scene.add(estate); scene.add(showroom);
+  showroom.visible = false;
+
+  function mat(color, rough, metal){
+    return new THREE.MeshStandardMaterial({color: color, roughness: rough === undefined ? .85 : rough, metalness: metal || 0});
+  }
+  function box(g, w, h, d, color, pos, rough){
+    var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat(color, rough));
+    m.position.set(pos[0], pos[1], pos[2]); g.add(m); return m;
+  }
+  function plane(g, w, h, material, pos, rot){
+    var m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), material);
     m.position.set(pos[0], pos[1], pos[2]); if (rot) m.rotation.set(rot[0], rot[1], rot[2]);
-    scene.add(m); return m;
-  }
-  var zMid = -LEN / 2 + 8;
-  plane(HALF * 2, LEN, T.floor, [0, 0, zMid], [-Math.PI / 2, 0, 0]);
-  plane(HALF * 2, LEN, T.ceil, [0, 3.3, zMid], [Math.PI / 2, 0, 0]);
-  plane(LEN, 3.3, T.wall, [-HALF, 1.65, zMid], [0, Math.PI / 2, 0]);
-  plane(LEN, 3.3, T.wall, [HALF, 1.65, zMid], [0, -Math.PI / 2, 0]);
-  plane(HALF * 2, 3.3, T.wall, [0, 1.65, -LEN + 8], [0, 0, 0]);
-
-  // Ceiling light strips, so the corridor reads as a gallery and not an empty box
-  for (var lz = 4; lz > -LEN + 8; lz -= 7){
-    var lm = plane(0.5, 5.5, T.light, [0, 3.28, lz], [Math.PI / 2, 0, 0]).material; lm.transparent = true; lm.opacity = T.lightA;
+    g.add(m); return m;
   }
 
-  // Sample views: architectural line drawings, placeholder until the real portfolio goes here
-  function drawPlan(seed, label){
-    var c = document.createElement('canvas'); c.width = 1024; c.height = 640;
+  // Procedural wood floor: planks in the palette colours, so it reads as real flooring
+  function woodTexture(a, b){
+    var c = document.createElement('canvas'); c.width = 1024; c.height = 1024;
     var x = c.getContext('2d');
-    x.fillStyle = T.panel; x.fillRect(0, 0, 1024, 640);
-    var s = seed * 9301 + 49297; function r(){ s = (s * 9301 + 49297) % 233280; return s / 233280; }
-    x.strokeStyle = T.line; x.lineWidth = 4;
-    var ox = 90, oy = 70, w = 844, h = 420;
-    x.strokeRect(ox, oy, w, h);
-    var cols = 3 + Math.floor(r() * 2);
-    for (var i = 1; i < cols; i++){ var px = ox + (w / cols) * i + (r() - .5) * 40; x.beginPath(); x.moveTo(px, oy); x.lineTo(px, oy + h * (r() < .5 ? .55 : 1)); x.stroke(); }
-    var py = oy + h * (.45 + r() * .1); x.beginPath(); x.moveTo(ox, py); x.lineTo(ox + w * .6, py); x.stroke();
-    x.strokeStyle = T.red; x.lineWidth = 3;
-    for (var d = 0; d < 3; d++){
-      var dx = ox + r() * w * .8, dy = oy + h * .45;
-      x.beginPath(); x.arc(dx, dy, 38, 0, Math.PI / 2); x.stroke();
+    var planks = 8, pw = 1024 / planks, seed = 7;
+    function r(){ seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+    for (var i = 0; i < planks; i++){
+      x.fillStyle = r() < .5 ? a : b;
+      x.fillRect(i * pw, 0, pw, 1024);
+      for (var g = 0; g < 14; g++){
+        x.strokeStyle = 'rgba(0,0,0,' + (r() * .08).toFixed(3) + ')';
+        x.lineWidth = 1 + r() * 2;
+        var gx = i * pw + r() * pw; x.beginPath(); x.moveTo(gx, 0);
+        x.bezierCurveTo(gx + 6, 300, gx - 6, 700, gx + 2, 1024); x.stroke();
+      }
+      x.strokeStyle = 'rgba(0,0,0,.35)'; x.lineWidth = 2;
+      x.beginPath(); x.moveTo(i * pw, 0); x.lineTo(i * pw, 1024); x.stroke();
+      var seam = r() * 1024; x.beginPath(); x.moveTo(i * pw, seam); x.lineTo((i + 1) * pw, seam); x.stroke();
     }
-    x.fillStyle = T.muted; x.font = '400 26px "EB Garamond", Georgia, serif';
-    x.fillText(label, 90, 560);
-    var tex = new THREE.CanvasTexture(c); tex.needsUpdate = true; return tex;
-  }
-  // Each door plaque: the section name and a short line, with a red rule
-  function drawDoor(d){
-    var c = document.createElement('canvas'); c.width = 1024; c.height = 640;
-    var x = c.getContext('2d');
-    x.fillStyle = T.panel; x.fillRect(0, 0, 1024, 640);
-    x.strokeStyle = T.red; x.lineWidth = 6; x.strokeRect(24, 24, 976, 592);
-    x.fillStyle = T.ink; x.font = '600 96px "Cinzel", Georgia, serif'; x.textAlign = 'center';
-    x.fillText(d.label, 512, 300);
-    x.fillStyle = T.red; x.fillRect(452, 340, 120, 3);
-    x.fillStyle = T.muted; x.font = '400 40px "EB Garamond", Georgia, serif'; x.fillText(d.sub, 512, 410);
-    x.fillStyle = T.red; x.font = '600 30px "Cinzel", Georgia, serif'; x.fillText('ENTER  →', 512, 530);
-    var tex = new THREE.CanvasTexture(c); tex.needsUpdate = true; return tex;
+    var t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3, 3);
+    t.encoding = THREE.sRGBEncoding; return t;
   }
 
-  // Build after the fonts load, so the canvas text uses Cinzel and EB Garamond
-  var doorMeshes = [], doorZ = [];
-  function build(){
-    DOORS.forEach(function(d, i){
-      var z = -GAP * (i + 1) - 2;
-      doorZ.push(z);
-      plane(HALF * 2, 3.3, T.wall, [0, 1.65, z], [0, 0, 0]);
-      var m = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 2.1), new THREE.MeshBasicMaterial({map: drawDoor(d)}));
-      m.position.set(0, 1.55, z + .03); m.userData.door = i;
-      scene.add(m); doorMeshes.push(m);
-      var spot = new THREE.Mesh(new THREE.PlaneGeometry(5, 1), new THREE.MeshBasicMaterial({color: T.red, transparent: true, opacity: .25}));
-      spot.position.set(0, .02, z + 2.8); spot.rotation.x = -Math.PI / 2; scene.add(spot);
+  /* ---------- Estate: a real-estate living room, window onto the estate photograph ---------- */
+  var EW = 11, EZ0 = 5, EZ1 = -16;
+  var eLen = EZ0 - EZ1;
+  var eCenter = (EZ0 + EZ1) / 2;
+  var floorM = new THREE.MeshStandardMaterial({map: woodTexture(P.floorA, P.floorB), roughness: .55});
+  plane(estate, EW, eLen, floorM, [0, 0, eCenter], [-Math.PI / 2, 0, 0]);
+  plane(estate, EW, eLen, mat(P.ceil, .95), [0, 3.6, eCenter], [Math.PI / 2, 0, 0]);
+  plane(estate, eLen, 3.6, mat(P.wall), [-EW / 2, 1.8, eCenter], [0, Math.PI / 2, 0]);
+  plane(estate, eLen, 3.6, mat(P.wall), [EW / 2, 1.8, eCenter], [0, -Math.PI / 2, 0]);
+  plane(estate, EW, 3.6, mat(P.wall), [0, 1.8, EZ1], [0, 0, 0]);
+
+  // Window wall: the estate photograph is the view outside
+  var windowTex = null;
+  new THREE.TextureLoader().load('../img/estate.jpg', function(t){
+    t.encoding = THREE.sRGBEncoding; windowTex = t;
+    plane(estate, 8.4, 3.0, new THREE.MeshBasicMaterial({map: t}), [0, 1.9, EZ1 + .03], [0, 0, 0]);
+  });
+  box(estate, 8.8, .12, .12, 0x111111, [0, 3.5, EZ1 + .06]);
+  box(estate, 8.8, .12, .12, 0x111111, [0, .33, EZ1 + .06]);
+  box(estate, .12, 3.2, .12, 0x111111, [-4.4, 1.9, EZ1 + .06]);
+  box(estate, .12, 3.2, .12, 0x111111, [4.4, 1.9, EZ1 + .06]);
+
+  // Furniture
+  var sofa = new THREE.Group(); estate.add(sofa); sofa.position.set(-2.4, 0, -8);
+  box(sofa, 3.2, .45, 1.0, P.fabric, [0, .3, 0]);
+  box(sofa, 3.2, .7, .26, P.fabric, [0, .72, -.37]);
+  box(sofa, .26, .6, 1.0, P.fabric, [-1.5, .55, 0]);
+  box(sofa, .26, .6, 1.0, P.fabric, [1.5, .55, 0]);
+  var rug = plane(estate, 4.6, 3.2, mat(P.rug, 1), [0, .01, -8.2], [-Math.PI / 2, 0, 0]);
+  var table = new THREE.Group(); estate.add(table); table.position.set(0, 0, -8.3);
+  box(table, 1.7, .08, .95, P.wood, [0, .42, 0], .4);
+  box(table, .08, .4, .08, P.wood, [-.7, .2, -.36]); box(table, .08, .4, .08, P.wood, [.7, .2, -.36]);
+  box(table, .08, .4, .08, P.wood, [-.7, .2, .36]); box(table, .08, .4, .08, P.wood, [.7, .2, .36]);
+  var dining = new THREE.Group(); estate.add(dining); dining.position.set(3.8, 0, -13);
+  box(dining, 2.2, .08, 1.0, P.wood, [0, .76, 0], .4);
+  box(dining, .1, .75, .1, P.wood, [-.95, .37, -.4]); box(dining, .1, .75, .1, P.wood, [.95, .37, -.4]);
+  box(dining, .1, .75, .1, P.wood, [-.95, .37, .4]); box(dining, .1, .75, .1, P.wood, [.95, .37, .4]);
+  // Floor lamp
+  box(estate, .06, 1.9, .06, 0x111111, [4.5, .95, -4]);
+  var shade = new THREE.Mesh(new THREE.CylinderGeometry(.28, .36, .42, 24, 1, true), new THREE.MeshBasicMaterial({color: P.lamp, side: THREE.DoubleSide}));
+  shade.position.set(4.5, 2.0, -4); estate.add(shade);
+
+  // Pendant lights
+  [[0, -4], [0, -11]].forEach(function(p){
+    var bulb = new THREE.Mesh(new THREE.SphereGeometry(.12, 16, 16), new THREE.MeshBasicMaterial({color: P.lamp}));
+    bulb.position.set(p[0], 3.05, p[1]); estate.add(bulb);
+    var pl = new THREE.PointLight(P.lamp, dark ? 2.2 : .4, 14, 1.6);
+    pl.position.set(p[0], 2.9, p[1]); estate.add(pl);
+  });
+  estate.add(new THREE.AmbientLight(0xffffff, P.ambient));
+  var sunL = new THREE.DirectionalLight(0xfff4e0, P.sun);
+  sunL.position.set(0, 3, -18); sunL.target.position.set(0, 0, -4); estate.add(sunL); estate.add(sunL.target);
+
+  /* ---------- Showroom: dealership floor, car on a pedestal, spotlights ---------- */
+  var SW = 12, SZ0 = 5, SZ1 = -12, sLen = SZ0 - SZ1, sCenter = (SZ0 + SZ1) / 2;
+  plane(showroom, SW, sLen, mat(P.showFloor, .22, .15), [0, 0, sCenter], [-Math.PI / 2, 0, 0]);
+  plane(showroom, SW, sLen, mat(P.showWall, .9), [0, 4.2, sCenter], [Math.PI / 2, 0, 0]);
+  plane(showroom, sLen, 4.2, mat(P.showWall, .9), [-SW / 2, 2.1, sCenter], [0, Math.PI / 2, 0]);
+  plane(showroom, sLen, 4.2, mat(P.showWall, .9), [SW / 2, 2.1, sCenter], [0, -Math.PI / 2, 0]);
+  plane(showroom, SW, 4.2, mat(P.showWall, .9), [0, 2.1, SZ1], [0, 0, 0]);
+  // Backdrop: the BlackSheep car photograph
+  new THREE.TextureLoader().load('../img/nick-car.webp', function(t){
+    t.encoding = THREE.sRGBEncoding;
+    plane(showroom, 6.4, 3.6, new THREE.MeshBasicMaterial({map: t}), [0, 2.0, SZ1 + .03], [0, 0, 0]);
+  });
+  [-2.6, 2.6].forEach(function(x){
+    var ped = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.25, .3, 48), mat(P.showWall, .4, .1));
+    ped.position.set(x, .15, -5); showroom.add(ped);
+    var spot = new THREE.SpotLight(0xffffff, P.spot * 10, 16, .5, .65, 1.2);
+    spot.position.set(x, 4.1, -2.5); spot.target.position.set(x, .3, -5);
+    showroom.add(spot); showroom.add(spot.target);
+  });
+  showroom.add(new THREE.AmbientLight(0xffffff, dark ? .35 : .9));
+
+  /* ---------- Plaques (doors) ---------- */
+  var ESTATE_DOORS = [
+    {label:'Services', sub:'Photography, video, drone, floor plans', href:'../services/', side:-1, z:-2},
+    {label:'Portfolio', sub:'Selected work', href:'../#portfolio', side:1, z:-4.5},
+    {label:'Pricing', sub:'Packages for listings and events', href:'../pricing/', side:-1, z:-7},
+    {label:'About', sub:'Who we are', href:'../about/', side:1, z:-9.5},
+    {label:'Journal', sub:'Articles and updates', href:'../journal/', side:-1, z:-12},
+    {label:'Book a shoot', sub:'Request a date', href:'../booking.php', side:1, z:-14},
+    {label:'Dealership', sub:'Showroom and inventory', enter:'showroom', side:-1, z:-14.5}
+  ];
+  var SHOW_DOORS = [
+    {label:'Book a shoot', sub:'Request a date', href:'../booking.php', side:-1, z:-2},
+    {label:'Services', sub:'Photography, video, drone, floor plans', href:'../services/', side:1, z:-2},
+    {label:'Back to the property', sub:'Return to the estate', enter:'estate', side:-1, z:-7}
+  ];
+  var doorMeshes = [];   // each mesh holds userData.door
+  var doorDefs = {estate: ESTATE_DOORS, showroom: SHOW_DOORS};
+
+  function drawPlaque(d){
+    var c = document.createElement('canvas'); c.width = 768; c.height = 480;
+    var x = c.getContext('2d');
+    x.fillStyle = P.panel; x.fillRect(0, 0, 768, 480);
+    x.strokeStyle = P.red; x.lineWidth = 5; x.strokeRect(18, 18, 732, 444);
+    x.fillStyle = P.ink; x.font = '600 66px "Cinzel", Georgia, serif'; x.textAlign = 'center';
+    x.fillText(d.label, 384, 215);
+    x.fillStyle = P.red; x.fillRect(324, 245, 120, 3);
+    x.fillStyle = P.muted; x.font = '400 30px "EB Garamond", Georgia, serif'; x.fillText(d.sub, 384, 298);
+    x.fillStyle = P.red; x.font = '600 24px "Cinzel", Georgia, serif'; x.fillText('ENTER  →', 384, 390);
+    var t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t;
+  }
+  function placeDoors(){
+    Object.keys(doorDefs).forEach(function(env){
+      var group = env === 'estate' ? estate : showroom;
+      var wallX = env === 'estate' ? EW / 2 : SW / 2;
+      doorDefs[env].forEach(function(d){
+        var m = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.5), new THREE.MeshBasicMaterial({map: drawPlaque(d)}));
+        m.position.set(d.side * (wallX - .04), 1.6, d.z);
+        m.rotation.y = -d.side * Math.PI / 2;
+        m.userData.door = d; m.userData.env = env;
+        group.add(m); doorMeshes.push(m);
+      });
     });
-    var k = 0;
-    for (var z = 3; z > -LEN + 10; z -= 4.6){
-      var near = doorZ.some(function(dz){ return Math.abs(z - dz) < 3.2; });
-      if (near) continue;
-      var side = (k % 2) ? 1 : -1;
-      var tex = drawPlan(k + 3, 'Sample view ' + String(k + 1).padStart(2, '0'));
-      var v = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 1.6), new THREE.MeshBasicMaterial({map: tex}));
-      v.position.set(side * (HALF - .03), 1.6, z);
-      v.rotation.y = -side * Math.PI / 2;
-      scene.add(v); k++;
-    }
   }
-  var fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
-  fontsReady.then(build);
+  fontsReady().then(placeDoors);
+  function fontsReady(){ return (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve(); }
 
-  var cam = {x: 0, z: 6, yaw: 0, pitch: 0};
+  /* ---------- Camera, input, walking ---------- */
+  var env = 'estate';
+  var cam = {x: 0, z: 4, yaw: 0, pitch: 0};
   var walk = null, leaving = false;
   var keys = {}, dragging = false, lastX = 0, lastY = 0;
   var ray = new THREE.Raycaster(), mouse = new THREE.Vector2();
+  var bounds = {estate:{x:4.9, zMin:EZ1 + 1.2, zMax:4}, showroom:{x:5, zMin:SZ1 + 1.2, zMax:4}};
 
   function resize(){
     var w = window.innerWidth, h = window.innerHeight;
@@ -169,13 +255,52 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
   }
   window.addEventListener('resize', resize); resize();
 
-  function go(i){
+  function setEnv(name){
+    env = name;
+    estate.visible = name === 'estate';
+    showroom.visible = name === 'showroom';
+    scene.fog = name === 'estate' ? new THREE.Fog(P.fog, 14, 40) : new THREE.Fog(P.fog, 12, 32);
+    document.getElementById('back').hidden = name !== 'showroom';
+    document.querySelectorAll('[data-go]').forEach(function(b){
+      b.hidden = (name === 'showroom' && b.id !== 'back') || (name === 'estate' && b.id === 'back');
+    });
+  }
+  setEnv('estate');
+
+  function fadeThen(fn){
+    var f = document.getElementById('fade');
+    f.classList.add('on');
+    setTimeout(function(){ fn(); setTimeout(function(){ f.classList.remove('on'); }, 60); }, 850);
+  }
+  function enter(name){
+    walk = null;
+    fadeThen(function(){
+      setEnv(name);
+      if (name === 'showroom'){ cam.x = 0; cam.z = 3.5; cam.yaw = 0; cam.pitch = 0; }
+      else { cam.x = 0; cam.z = 2.5; cam.yaw = 0; cam.pitch = 0; }
+    });
+  }
+  function findDoor(label){
+    var list = doorDefs[env] || [];
+    for (var i = 0; i < list.length; i++){ if (list[i].label === label) return list[i]; }
+    return null;
+  }
+  function goLabel(label){
     if (walk || leaving) return;
-    if (reduce){ window.location.href = DOORS[i].href; return; }
-    walk = {fromZ: cam.z, toZ: doorZ[i] + 3.2, t: 0, dur: 5.2, door: i};
+    var d = findDoor(label);
+    if (!d) return;
+    if (reduce){ act(d); return; }
+    var stopX = d.side * 3.1;
+    walk = {from:{x:cam.x, z:cam.z, yaw:cam.yaw}, to:{x:stopX, z:d.z, yaw:-d.side * Math.PI / 2}, t:0, dur:5.5, door:d};
+  }
+  function act(d){
+    if (d.enter){ enter(d.enter); return; }
+    leaving = true;
+    document.getElementById('fade').classList.add('on');
+    setTimeout(function(){ window.location.href = d.href; }, 900);
   }
   Array.prototype.forEach.call(document.querySelectorAll('[data-go]'), function(b){
-    b.addEventListener('click', function(){ go(+b.dataset.go); });
+    b.addEventListener('click', function(){ goLabel(b.dataset.go); });
   });
   document.getElementById('theme').addEventListener('click', function(){
     localStorage.setItem('walk-theme', root.dataset.theme === 'light' ? 'dark' : 'light');
@@ -197,20 +322,21 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
     mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
     ray.setFromCamera(mouse, camera);
-    var hit = ray.intersectObjects(doorMeshes, false);
-    return hit.length ? hit[0].object.userData.door : -1;
+    var visible = doorMeshes.filter(function(m){ return m.userData.env === env; });
+    var hit = ray.intersectObjects(visible, false);
+    return hit.length ? hit[0].object : null;
   }
   canvas.addEventListener('pointerdown', function(e){
-    var d = pick(e);
-    if (d > -1){ go(d); return; }
+    var m = pick(e);
+    if (m){ goLabel(m.userData.door.label); return; }
     dragging = true; lastX = e.clientX; lastY = e.clientY;
   });
   canvas.addEventListener('pointermove', function(e){
-    var hovering = pick(e);
-    canvas.classList.toggle('over', hovering > -1);
-    doorMeshes.forEach(function(m, i){ m.material.color.setScalar(i === hovering ? 1.12 : 1); });
+    var m = pick(e);
+    canvas.classList.toggle('over', !!m);
+    doorMeshes.forEach(function(d){ d.material.color.setScalar(m === d ? 1.15 : 1); });
     if (!dragging) return;
-    cam.yaw -= (e.clientX - lastX) * 0.0028;
+    cam.yaw -= (e.clientX - lastX) * 0.0026;
     cam.pitch -= (e.clientY - lastY) * 0.002;
     cam.pitch = Math.max(-0.5, Math.min(0.5, cam.pitch));
     lastX = e.clientX; lastY = e.clientY;
@@ -219,28 +345,26 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
 
   var last = performance.now();
   function ease(t){ return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  function angleLerp(a, b, k){ var d = Math.atan2(Math.sin(b - a), Math.cos(b - a)); return a + d * k; }
   function frame(now){
     var dt = Math.min(0.05, (now - last) / 1000); last = now;
+    var b = bounds[env];
     if (walk){
       walk.t += dt / walk.dur;
-      var p = Math.min(1, walk.t);
-      cam.z = walk.fromZ + (walk.toZ - walk.fromZ) * ease(p);
-      if (p >= 1){
-        leaving = true;
-        var href = DOORS[walk.door].href;
-        walk = null;
-        document.getElementById('fade').classList.add('on');
-        setTimeout(function(){ window.location.href = href; }, 900);
-      }
+      var p = Math.min(1, walk.t), k = ease(p), w = walk;
+      cam.x = w.from.x + (w.to.x - w.from.x) * k;
+      cam.z = w.from.z + (w.to.z - w.from.z) * k;
+      cam.yaw = angleLerp(w.from.yaw, w.to.yaw, k);
+      if (p >= 1){ var d = w.door; walk = null; act(d); }
     } else if (!leaving){
       var f = (keys.f ? 1 : 0) - (keys.b ? 1 : 0);
       var s = (keys.r ? 1 : 0) - (keys.l ? 1 : 0);
-      var sp = 2.4 * dt;
+      var sp = 2.2 * dt;
       cam.x += Math.cos(cam.yaw) * s * sp;
       cam.z += -Math.cos(cam.yaw) * f * sp;
     }
-    cam.x = Math.max(-HALF + .8, Math.min(HALF - .8, cam.x));
-    cam.z = Math.max(-LEN + 10, Math.min(5, cam.z));
+    cam.x = Math.max(-b.x, Math.min(b.x, cam.x));
+    cam.z = Math.max(b.zMin, Math.min(b.zMax, cam.z));
     camera.position.set(cam.x, 1.6, cam.z);
     camera.rotation.y = cam.yaw;
     camera.rotation.x = cam.pitch;
