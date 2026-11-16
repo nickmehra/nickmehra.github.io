@@ -12,7 +12,7 @@
 
   var css = document.createElement('style');
   css.textContent =
-    '#talk{position:relative;z-index:5;padding:72px 0 40px}' +
+    '#talk{position:relative;z-index:5;padding:24px 0 40px}' +
     '#talk .wrap{max-width:900px;margin:0 auto;padding:0 20px;display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center}' +
     '#talk .tk-form{width:100%;max-width:680px;border:1px solid var(--line);background:var(--bg);box-shadow:0 18px 50px rgba(0,0,0,.18);padding:22px 20px;display:flex;flex-direction:column;gap:12px}' +
     '#talk .tk-on{display:flex;align-items:center;gap:12px;justify-content:center;font-size:.95rem;color:var(--muted)}' +
