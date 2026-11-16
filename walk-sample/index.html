@@ -92,7 +92,7 @@ html[data-theme="light"] .ui button{background:#fff;color:#111}
     m.position.set(side * (HALF - 0.02), 1.6, z);
     m.rotation.y = -side * Math.PI / 2;
     scene.add(m);
-    stops.push({x: 0, z: z + 1.5, yaw: side * Math.PI / 2});
+    stops.push({x: 0, z: z, yaw: -side * Math.PI / 2});
   });
 
   var cam = {x: 0, z: 6, yaw: 0, pitch: 0};
