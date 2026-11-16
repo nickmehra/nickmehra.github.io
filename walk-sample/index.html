@@ -318,7 +318,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
         var tex = drawPanel(rp.def);
         rp.mesh.material = new THREE.MeshBasicMaterial({map: tex});
         if (rp.def.enter){
-          rp.mesh.userData.door = {label: 'Dealership', sub: 'Showroom and inventory', enter: rp.def.enter};
+          rp.mesh.userData.door = {label: 'Dealership', sub: 'Showroom and inventory', enter: rp.def.enter, side: Math.sign(rp.mesh.position.x), z: rp.mesh.position.z};
           rp.mesh.userData.env = n;
           doorMeshes.push(rp.mesh);
         }
