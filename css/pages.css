@@ -113,9 +113,9 @@ article.entry blockquote{margin:38px 0;padding:0;font-family:var(--display);font
 .bs-mini{padding:20px 0 110px}
 .stage{height:clamp(600px,calc(100svh - 92px),900px)}
 /* tighter gap above the BlackSheep block */
-.bs{padding-top:56px}
+.bs{padding-top:24px}
 .doors{padding-bottom:70px}
-#work{padding-bottom:60px}
+#work{padding-bottom:24px}
 
 .ring{display:none}
 #dust{transform:translateZ(-160px) scale(1.12)!important}
