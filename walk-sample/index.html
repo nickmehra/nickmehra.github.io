@@ -122,6 +122,7 @@ header.hdr nav a:focus-visible{outline:1px solid rgba(239,235,227,.16);outline-o
  .hs .lbl{padding:5px 8px}
  #cap{bottom:calc(76px + env(safe-area-inset-bottom));font-size:15px;max-width:92vw}
 }
+#car{z-index:40!important}
 </style>
 </head>
 <body>
@@ -163,7 +164,7 @@ var ROOMS={
   {x:13,y:63,i:'Fireplaces are lit for every shoot. Warm practicals make a home feel lived in.'},
   {x:56,y:64,i:'Soft furnishings are lit low and wide so the texture reads in the listing photo.'},
   {x:93,y:40,i:'Built-ins are styled and shot square-on so storage looks generous.'}]},
- kitchen:{name:'Kitchen & dining',floor:'Main floor',day:'kitchen-day',night:null,spots:[
+ kitchen:{name:'Kitchen & dining',floor:'Main floor',day:'kitchen-day',night:'kitchen-night',spots:[
   {x:66,y:62,t:'Pricing & instant quote',href:'../pricing/'},
   {x:44,y:80,t:'Back to great room',go:'great'},
   {x:20,y:68,i:'Stone islands are shot bracketed so the veining and reflections stay clean.'},
@@ -179,7 +180,7 @@ var ROOMS={
 };
 var CARS=[
  {name:'Gloss-black grand-touring coupe',spin:M+'car1-spin.mp4',doors:M+'car1-doors.mp4',s:'Drag left or right to walk around the car. Open the doors to see the cabin.'},
- {name:'Crimson mid-engine supercar',crop:'84% 76%',s:'Full walkaround coming soon.'},
+ {name:'Crimson mid-engine supercar',spin:M+'car2-spin.mp4',s:'Drag left or right to walk around the car.'},
  {name:'Pearl-white luxury SUV',crop:'33% 50%',s:'Full walkaround coming soon.'},
  {name:'Midnight-blue convertible',crop:'60% 40%',s:'Full walkaround coming soon.'}
 ];
@@ -263,7 +264,7 @@ function openCar(i){
  frame.innerHTML='';btns.innerHTML='';
  if(c.spin){
   var v=document.createElement('video');v.src=c.spin;v.muted=true;v.playsInline=true;v.preload='auto';frame.appendChild(v);
-  var d=document.createElement('video');d.src=c.doors;d.muted=true;d.playsInline=true;d.preload='auto';d.style.opacity='0';d.style.transition='opacity .4s';frame.appendChild(d);
+  var d=document.createElement('video');if(c.doors)d.src=c.doors;d.muted=true;d.playsInline=true;d.preload='auto';d.style.opacity='0';d.style.transition='opacity .4s';frame.appendChild(d);
   var hint=document.createElement('div');hint.className='hint';hint.textContent='Drag to walk around';frame.appendChild(hint);
   var dx=null,t0=0,open=false;
   frame.onpointerdown=function(e){if(open)return;dx=e.clientX;t0=v.currentTime;try{frame.setPointerCapture(e.pointerId)}catch(_){}};
@@ -274,10 +275,16 @@ function openCar(i){
    open=!open;b.textContent=open?'Close doors':'Open doors';cancelAnimationFrame(raf);
    if(open){d.style.opacity='1';d.currentTime=0;d.play()}
    else{d.pause();var last=performance.now();(function step(now){var dt=(now-last)/1000;last=now;d.currentTime=Math.max(0,d.currentTime-dt);if(d.currentTime>0.03)raf=requestAnimationFrame(step);else d.style.opacity='0'})(last)}
-  };btns.appendChild(b);
+  };if(c.doors)btns.appendChild(b);
  }else{
   var st=document.createElement('div');st.className='still';st.style.backgroundImage='url('+img(ROOMS.show.day)+')';
   st.style.backgroundSize='320% auto';st.style.backgroundPosition=c.crop;frame.appendChild(st);
+ }
+ if(c.interior){
+  var inn=document.createElement('div');inn.className='still inside';inn.style.backgroundImage='url('+M+c.interior+(innerWidth<900?'-m':'')+'.webp)';inn.style.backgroundSize='cover';inn.style.backgroundPosition='50% 50%';inn.style.opacity='0';inn.style.transition='opacity .5s';inn.style.position='absolute';inn.style.inset='0';inn.style.pointerEvents='none';frame.appendChild(inn);
+  var ib=document.createElement('button');ib.type='button';ib.textContent='Step inside';var ins=false;
+  ib.onclick=function(){ins=!ins;inn.style.opacity=ins?'1':'0';ib.textContent=ins?'Back outside':'Step inside';if(ins&&b&&open)b.onclick()};
+  btns.appendChild(ib);
  }
  var bk=document.createElement('a');bk.href='../booking.php';bk.textContent='Book a dealership shoot';btns.appendChild(bk);
  var x=document.createElement('button');x.type='button';x.textContent='Back to showroom';x.onclick=closeCar;btns.appendChild(x);
