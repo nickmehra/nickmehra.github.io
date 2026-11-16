@@ -4,52 +4,67 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>Walk-through sample | BlackSheep Digital Works</title>
+<title>Walk-through | BlackSheep Digital Works</title>
 <link rel="stylesheet" href="../fonts/fonts.css">
 <style>
-html,body{margin:0;height:100%;overflow:hidden;background:#0A0B0D;color:#EFEBE3;font-family:Georgia,serif}
-html[data-theme="light"],html[data-theme="light"] body{background:#F5F5F2;color:#111}
-#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
-.hint{position:fixed;top:14px;left:0;right:0;margin:0;text-align:center;font-size:13px;letter-spacing:.12em;text-transform:uppercase;opacity:.85;pointer-events:none}
-.ui{position:fixed;left:0;right:0;bottom:0;padding:14px 10px calc(14px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;gap:8px;justify-content:center;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.6))}
-.ui button{font:600 12px/1 Georgia,serif;letter-spacing:.18em;text-transform:uppercase;padding:0 12px;min-height:44px;background:rgba(10,11,13,.75);color:#EFEBE3;border:1px solid #C49E4E;cursor:pointer}
-html[data-theme="light"] .ui{background:linear-gradient(rgba(245,245,242,0),rgba(245,245,242,.9))}
-html[data-theme="light"] .ui button{background:#fff;color:#111}
-.ui button:focus-visible{outline:2px solid #C49E4E;outline-offset:3px}
+:root{--bg:#F5F5F2;--fg:#08090A;--muted:#25292E;--line:rgba(8,9,10,.24);--red:#9A1219;--display:"Cinzel","Trajan Pro",Georgia,serif;--body:"EB Garamond",Garamond,Georgia,serif}
+:root[data-theme="dark"]{--bg:#0A0B0D;--fg:#EFEBE3;--muted:#A9ADB3;--line:rgba(239,235,227,.16);--red:#D11F26}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--fg);font-family:var(--body)}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:default}
+#c.over{cursor:pointer}
+.hint{position:fixed;top:64px;left:0;right:0;margin:0;text-align:center;font-family:var(--display);font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);pointer-events:none}
+.bar{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;background:linear-gradient(var(--bg),rgba(0,0,0,0))}
+.bar a.logo{font-family:var(--display);font-size:14px;letter-spacing:.2em;color:var(--fg);text-decoration:none;text-transform:uppercase}
+.bar a.logo span{color:var(--red)}
+.bar .classic{font-family:var(--display);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+.ui{position:fixed;left:0;right:0;bottom:0;padding:12px 10px calc(12px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;gap:8px;justify-content:center;background:linear-gradient(rgba(0,0,0,0),var(--bg))}
+.ui button{font-family:var(--display);font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:0 12px;min-height:44px;background:transparent;color:var(--fg);border:1px solid var(--red);cursor:pointer}
+.ui button:hover,.ui button:focus-visible{background:var(--red);color:#F5F5F2;outline:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#fade{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .9s ease}
+#fade.on{opacity:1}
 </style>
 </head>
 <body>
-<canvas id="c" aria-label="First-person walk-through sample"></canvas>
-<p class="hint">Drag to look · WASD or arrow keys to walk · or use the buttons</p>
-<div class="ui" role="toolbar" aria-label="Walk-through controls">
-  <button type="button" data-go="0">Home</button>
-  <button type="button" data-go="1">Services</button>
-  <button type="button" data-go="2">Portfolio</button>
-  <button type="button" data-go="3">About</button>
-  <button type="button" data-go="4">Pricing</button>
-  <button type="button" data-go="5">Contact</button>
-  <button type="button" id="back" aria-label="Walk back">Back</button>
-  <button type="button" id="fwd" aria-label="Walk forward">Forward</button>
-  <button type="button" id="theme">Light / Dark</button>
+<canvas id="c" aria-label="Walk-through of BlackSheep Digital Works. Press a door to enter that section."></canvas>
+<div class="bar">
+  <a class="logo" href="../">BlackSheep <span>Digital Works</span></a>
+  <a class="classic" href="../">Classic view</a>
 </div>
+<p class="hint">Drag to look · Arrow keys to walk · Press a door to enter</p>
+<nav class="ui" aria-label="Walk-through doors">
+  <button type="button" data-go="0">Services</button>
+  <button type="button" data-go="1">Portfolio</button>
+  <button type="button" data-go="2">Pricing</button>
+  <button type="button" data-go="3">About</button>
+  <button type="button" data-go="4">Journal</button>
+  <button type="button" data-go="5">Book a shoot</button>
+  <button type="button" id="theme">Light / Dark</button>
+</nav>
+<nav class="sr" aria-label="All pages">
+  <a href="../services/">Services</a> <a href="../#portfolio">Portfolio</a> <a href="../pricing/">Pricing</a>
+  <a href="../about/">About</a> <a href="../journal/">Journal</a> <a href="../booking.php">Book a shoot</a>
+</nav>
+<div id="fade"></div>
 <script src="../vendor/three-r128.min.js"></script>
 <script>
 (function(){
   var root = document.documentElement;
   var stored = localStorage.getItem('walk-theme'); if (stored) root.dataset.theme = stored;
   var dark = root.dataset.theme !== 'light';
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   var T = dark
-    ? {bg:0x0A0B0D, wall:0x15171b, floor:0x0d0e11, ceil:0x101216, panel:'#1a1c21', ink:'#EFEBE3', muted:'#A9ADB3', accent:'#C49E4E'}
-    : {bg:0xF5F5F2, wall:0xe9e6df, floor:0xd8d4cb, ceil:0xf0eee9, panel:'#ffffff', ink:'#111111', muted:'#55595f', accent:'#9A1219'};
+    ? {bg:0x0A0B0D, wall:0x101216, floor:0x0c0d10, ceil:0x0d0e12, panel:'#111215', ink:'#EFEBE3', muted:'#A9ADB3', red:'#D11F26', line:'rgba(239,235,227,.28)', light:0xEFEBE3, lightA:.5}
+    : {bg:0xF5F5F2, wall:0xEBE9E4, floor:0xDAD7D0, ceil:0xF1F0EC, panel:'#FFFFFF', ink:'#08090A', muted:'#25292E', red:'#9A1219', line:'rgba(8,9,10,.3)', light:0xFFFFFF, lightA:.8};
 
-  var SECTIONS = [
-    {t:'Home', s:'Real estate and dealership media'},
-    {t:'Services', s:'Photography, video, drone, floor plans'},
-    {t:'Portfolio', s:'Selected work'},
-    {t:'About', s:'Who we are'},
-    {t:'Pricing', s:'Packages for listings and events'},
-    {t:'Contact', s:'Book a shoot'}
+  var DOORS = [
+    {label:'Services', sub:'Photography, video, drone, floor plans', href:'../services/'},
+    {label:'Portfolio', sub:'Selected work', href:'../#portfolio'},
+    {label:'Pricing', sub:'Packages for listings and events', href:'../pricing/'},
+    {label:'About', sub:'Who we are', href:'../about/'},
+    {label:'Journal', sub:'Articles and updates', href:'../journal/'},
+    {label:'Book a shoot', sub:'Request a date', href:'../booking.php'}
   ];
 
   var canvas = document.getElementById('c');
@@ -57,48 +72,95 @@ html[data-theme="light"] .ui button{background:#fff;color:#111}
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   var scene = new THREE.Scene();
   scene.background = new THREE.Color(T.bg);
-  scene.fog = new THREE.Fog(T.bg, 12, 70);
-  var camera = new THREE.PerspectiveCamera(65, 1, 0.1, 200);
+  scene.fog = new THREE.Fog(T.bg, 16, 84);
+  var camera = new THREE.PerspectiveCamera(58, 1, 0.1, 220);
   camera.rotation.order = 'YXZ';
 
-  var LEN = 90, HALF = 4;
-  function slab(w, h, color, pos, rot){
+  var HALF = 4, GAP = 14, N = DOORS.length, LEN = GAP * N + 14;
+  function plane(w, h, color, pos, rot){
     var m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({color: color}));
     m.position.set(pos[0], pos[1], pos[2]); if (rot) m.rotation.set(rot[0], rot[1], rot[2]);
     scene.add(m); return m;
   }
-  slab(HALF*2, LEN, T.floor, [0, 0, -LEN/2 + 10], [-Math.PI/2, 0, 0]);
-  slab(HALF*2, LEN, T.ceil, [0, 3.2, -LEN/2 + 10], [Math.PI/2, 0, 0]);
-  slab(LEN, 3.2, T.wall, [-HALF, 1.6, -LEN/2 + 10], [0, Math.PI/2, 0]);
-  slab(LEN, 3.2, T.wall, [HALF, 1.6, -LEN/2 + 10], [0, -Math.PI/2, 0]);
-  slab(HALF*2, 3.2, T.wall, [0, 1.6, -LEN + 10], [0, 0, 0]);
+  var zMid = -LEN / 2 + 8;
+  plane(HALF * 2, LEN, T.floor, [0, 0, zMid], [-Math.PI / 2, 0, 0]);
+  plane(HALF * 2, LEN, T.ceil, [0, 3.3, zMid], [Math.PI / 2, 0, 0]);
+  plane(LEN, 3.3, T.wall, [-HALF, 1.65, zMid], [0, Math.PI / 2, 0]);
+  plane(LEN, 3.3, T.wall, [HALF, 1.65, zMid], [0, -Math.PI / 2, 0]);
+  plane(HALF * 2, 3.3, T.wall, [0, 1.65, -LEN + 8], [0, 0, 0]);
 
-  function panelTexture(sec){
+  // Ceiling light strips, so the corridor reads as a gallery and not an empty box
+  for (var lz = 4; lz > -LEN + 8; lz -= 7){
+    plane(0.5, 5.5, T.light, [0, 3.28, lz], [Math.PI / 2, 0, 0]).material.opacity = T.lightA;
+  }
+
+  // Sample views: architectural line drawings, placeholder until the real portfolio goes here
+  function drawPlan(seed, label){
     var c = document.createElement('canvas'); c.width = 1024; c.height = 640;
     var x = c.getContext('2d');
     x.fillStyle = T.panel; x.fillRect(0, 0, 1024, 640);
-    x.fillStyle = T.accent; x.fillRect(80, 300, 120, 3);
-    x.fillStyle = T.ink; x.font = '600 96px Georgia, serif'; x.fillText(sec.t, 80, 230);
-    x.fillStyle = T.muted; x.font = '400 40px Georgia, serif'; x.fillText(sec.s, 80, 380);
-    var tex = new THREE.CanvasTexture(c); tex.needsUpdate = true;
-    return tex;
+    var s = seed * 9301 + 49297; function r(){ s = (s * 9301 + 49297) % 233280; return s / 233280; }
+    x.strokeStyle = T.line; x.lineWidth = 4;
+    var ox = 90, oy = 70, w = 844, h = 420;
+    x.strokeRect(ox, oy, w, h);
+    var cols = 3 + Math.floor(r() * 2);
+    for (var i = 1; i < cols; i++){ var px = ox + (w / cols) * i + (r() - .5) * 40; x.beginPath(); x.moveTo(px, oy); x.lineTo(px, oy + h * (r() < .5 ? .55 : 1)); x.stroke(); }
+    var py = oy + h * (.45 + r() * .1); x.beginPath(); x.moveTo(ox, py); x.lineTo(ox + w * .6, py); x.stroke();
+    x.strokeStyle = T.red; x.lineWidth = 3;
+    for (var d = 0; d < 3; d++){
+      var dx = ox + r() * w * .8, dy = oy + h * .45;
+      x.beginPath(); x.arc(dx, dy, 38, 0, Math.PI / 2); x.stroke();
+    }
+    x.fillStyle = T.muted; x.font = '400 26px "EB Garamond", Georgia, serif';
+    x.fillText(label, 90, 560);
+    var tex = new THREE.CanvasTexture(c); tex.needsUpdate = true; return tex;
+  }
+  // Each door plaque: the section name and a short line, with a red rule
+  function drawDoor(d){
+    var c = document.createElement('canvas'); c.width = 1024; c.height = 640;
+    var x = c.getContext('2d');
+    x.fillStyle = T.panel; x.fillRect(0, 0, 1024, 640);
+    x.strokeStyle = T.red; x.lineWidth = 6; x.strokeRect(24, 24, 976, 592);
+    x.fillStyle = T.ink; x.font = '600 96px "Cinzel", Georgia, serif'; x.textAlign = 'center';
+    x.fillText(d.label, 512, 300);
+    x.fillStyle = T.red; x.fillRect(452, 340, 120, 3);
+    x.fillStyle = T.muted; x.font = '400 40px "EB Garamond", Georgia, serif'; x.fillText(d.sub, 512, 410);
+    x.fillStyle = T.red; x.font = '600 30px "Cinzel", Georgia, serif'; x.fillText('ENTER  →', 512, 530);
+    var tex = new THREE.CanvasTexture(c); tex.needsUpdate = true; return tex;
   }
 
-  var stops = [];
-  SECTIONS.forEach(function(sec, i){
-    var side = i % 2 ? 1 : -1;
-    var z = 6 - i * 13;
-    var m = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 2.25), new THREE.MeshBasicMaterial({map: panelTexture(sec)}));
-    m.position.set(side * (HALF - 0.02), 1.6, z);
-    m.rotation.y = -side * Math.PI / 2;
-    scene.add(m);
-    stops.push({x: 0, z: z, yaw: -side * Math.PI / 2});
-  });
+  // Build after the fonts load, so the canvas text uses Cinzel and EB Garamond
+  var doorMeshes = [], doorZ = [];
+  function build(){
+    DOORS.forEach(function(d, i){
+      var z = -GAP * (i + 1) - 2;
+      doorZ.push(z);
+      plane(HALF * 2, 3.3, T.wall, [0, 1.65, z], [0, 0, 0]);
+      var m = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 2.1), new THREE.MeshBasicMaterial({map: drawDoor(d)}));
+      m.position.set(0, 1.55, z + .03); m.userData.door = i;
+      scene.add(m); doorMeshes.push(m);
+      var spot = new THREE.Mesh(new THREE.PlaneGeometry(5, 1), new THREE.MeshBasicMaterial({color: T.red, transparent: true, opacity: .25}));
+      spot.position.set(0, .02, z + 2.8); spot.rotation.x = -Math.PI / 2; scene.add(spot);
+    });
+    var k = 0;
+    for (var z = 3; z > -LEN + 10; z -= 4.6){
+      var near = doorZ.some(function(dz){ return Math.abs(z - dz) < 3.2; });
+      if (near) continue;
+      var side = (k % 2) ? 1 : -1;
+      var tex = drawPlan(k + 3, 'Sample view ' + String(k + 1).padStart(2, '0'));
+      var v = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 1.6), new THREE.MeshBasicMaterial({map: tex}));
+      v.position.set(side * (HALF - .03), 1.6, z);
+      v.rotation.y = -side * Math.PI / 2;
+      scene.add(v); k++;
+    }
+  }
+  var fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+  fontsReady.then(build);
 
   var cam = {x: 0, z: 6, yaw: 0, pitch: 0};
-  var target = null;
-  var keys = {}, moveDir = 0;
-  var dragging = false, lastX = 0, lastY = 0;
+  var walk = null, leaving = false;
+  var keys = {}, dragging = false, lastX = 0, lastY = 0;
+  var ray = new THREE.Raycaster(), mouse = new THREE.Vector2();
 
   function resize(){
     var w = window.innerWidth, h = window.innerHeight;
@@ -107,67 +169,78 @@ html[data-theme="light"] .ui button{background:#fff;color:#111}
   }
   window.addEventListener('resize', resize); resize();
 
-  function jump(i){ target = stops[i]; }
-  Array.prototype.forEach.call(document.querySelectorAll('[data-go]'), function(b){
-    b.addEventListener('click', function(){ jump(+b.dataset.go); });
-  });
-  function hold(btn, dir){
-    btn.addEventListener('pointerdown', function(e){ moveDir = dir; target = null; btn.setPointerCapture(e.pointerId); });
-    btn.addEventListener('pointerup', function(){ moveDir = 0; });
-    btn.addEventListener('pointercancel', function(){ moveDir = 0; });
+  function go(i){
+    if (walk || leaving) return;
+    if (reduce){ window.location.href = DOORS[i].href; return; }
+    walk = {fromZ: cam.z, toZ: doorZ[i] + 3.2, t: 0, dur: 5.2, door: i};
   }
-  hold(document.getElementById('fwd'), 1);
-  hold(document.getElementById('back'), -1);
+  Array.prototype.forEach.call(document.querySelectorAll('[data-go]'), function(b){
+    b.addEventListener('click', function(){ go(+b.dataset.go); });
+  });
   document.getElementById('theme').addEventListener('click', function(){
-    var next = root.dataset.theme === 'light' ? 'dark' : 'light';
-    localStorage.setItem('walk-theme', next);
+    localStorage.setItem('walk-theme', root.dataset.theme === 'light' ? 'dark' : 'light');
     location.reload();
   });
 
-  window.addEventListener('keydown', function(e){
-    if (['KeyW','ArrowUp'].indexOf(e.code) > -1) keys.f = true;
-    if (['KeyS','ArrowDown'].indexOf(e.code) > -1) keys.b = true;
-    if (['KeyA','ArrowLeft'].indexOf(e.code) > -1) keys.l = true;
-    if (['KeyD','ArrowRight'].indexOf(e.code) > -1) keys.r = true;
-    if (keys.f || keys.b || keys.l || keys.r) target = null;
-  });
-  window.addEventListener('keyup', function(e){
-    if (['KeyW','ArrowUp'].indexOf(e.code) > -1) keys.f = false;
-    if (['KeyS','ArrowDown'].indexOf(e.code) > -1) keys.b = false;
-    if (['KeyA','ArrowLeft'].indexOf(e.code) > -1) keys.l = false;
-    if (['KeyD','ArrowRight'].indexOf(e.code) > -1) keys.r = false;
-  });
+  function setKey(e, on){
+    var c = e.code;
+    if (c === 'ArrowUp' || c === 'KeyW') keys.f = on;
+    if (c === 'ArrowDown' || c === 'KeyS') keys.b = on;
+    if (c === 'ArrowLeft' || c === 'KeyA') keys.l = on;
+    if (c === 'ArrowRight' || c === 'KeyD') keys.r = on;
+  }
+  window.addEventListener('keydown', function(e){ setKey(e, true); });
+  window.addEventListener('keyup', function(e){ setKey(e, false); });
 
-  canvas.addEventListener('pointerdown', function(e){ dragging = true; lastX = e.clientX; lastY = e.clientY; target = null; });
-  window.addEventListener('pointerup', function(){ dragging = false; });
-  window.addEventListener('pointermove', function(e){
+  function pick(e){
+    var rect = canvas.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    ray.setFromCamera(mouse, camera);
+    var hit = ray.intersectObjects(doorMeshes, false);
+    return hit.length ? hit[0].object.userData.door : -1;
+  }
+  canvas.addEventListener('pointerdown', function(e){
+    var d = pick(e);
+    if (d > -1){ go(d); return; }
+    dragging = true; lastX = e.clientX; lastY = e.clientY;
+  });
+  canvas.addEventListener('pointermove', function(e){
+    var hovering = pick(e);
+    canvas.classList.toggle('over', hovering > -1);
+    doorMeshes.forEach(function(m, i){ m.material.color.setScalar(i === hovering ? 1.12 : 1); });
     if (!dragging) return;
-    cam.yaw -= (e.clientX - lastX) * 0.004;
-    cam.pitch -= (e.clientY - lastY) * 0.003;
-    cam.pitch = Math.max(-0.6, Math.min(0.6, cam.pitch));
+    cam.yaw -= (e.clientX - lastX) * 0.0028;
+    cam.pitch -= (e.clientY - lastY) * 0.002;
+    cam.pitch = Math.max(-0.5, Math.min(0.5, cam.pitch));
     lastX = e.clientX; lastY = e.clientY;
   });
+  window.addEventListener('pointerup', function(){ dragging = false; });
 
   var last = performance.now();
+  function ease(t){ return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
   function frame(now){
     var dt = Math.min(0.05, (now - last) / 1000); last = now;
-    var speed = 5.0 * dt;
-    if (target){
-      cam.x += (target.x - cam.x) * Math.min(1, dt * 3);
-      cam.z += (target.z - cam.z) * Math.min(1, dt * 3);
-      var dyaw = Math.atan2(Math.sin(target.yaw - cam.yaw), Math.cos(target.yaw - cam.yaw));
-      cam.yaw += dyaw * Math.min(1, dt * 3);
-      if (Math.abs(target.z - cam.z) < 0.02 && Math.abs(dyaw) < 0.01) target = null;
-    } else {
-      var fwd = (keys.f ? 1 : 0) - (keys.b ? 1 : 0) + moveDir;
-      var strafe = (keys.r ? 1 : 0) - (keys.l ? 1 : 0);
-      var fx = -Math.sin(cam.yaw), fz = -Math.cos(cam.yaw);
-      var sx = Math.cos(cam.yaw), sz = -Math.sin(cam.yaw);
-      cam.x += (fx * fwd + sx * strafe) * speed;
-      cam.z += (fz * fwd + sz * strafe) * speed;
+    if (walk){
+      walk.t += dt / walk.dur;
+      var p = Math.min(1, walk.t);
+      cam.z = walk.fromZ + (walk.toZ - walk.fromZ) * ease(p);
+      if (p >= 1){
+        leaving = true;
+        var href = DOORS[walk.door].href;
+        walk = null;
+        document.getElementById('fade').classList.add('on');
+        setTimeout(function(){ window.location.href = href; }, 900);
+      }
+    } else if (!leaving){
+      var f = (keys.f ? 1 : 0) - (keys.b ? 1 : 0);
+      var s = (keys.r ? 1 : 0) - (keys.l ? 1 : 0);
+      var sp = 2.4 * dt;
+      cam.x += Math.cos(cam.yaw) * s * sp;
+      cam.z += -Math.cos(cam.yaw) * f * sp;
     }
-    cam.x = Math.max(-HALF + 0.6, Math.min(HALF - 0.6, cam.x));
-    cam.z = Math.max(-LEN + 12, Math.min(8, cam.z));
+    cam.x = Math.max(-HALF + .8, Math.min(HALF - .8, cam.x));
+    cam.z = Math.max(-LEN + 10, Math.min(5, cam.z));
     camera.position.set(cam.x, 1.6, cam.z);
     camera.rotation.y = cam.yaw;
     camera.rotation.x = cam.pitch;
