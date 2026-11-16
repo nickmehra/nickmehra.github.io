@@ -2079,9 +2079,9 @@ main,section,footer{background-color:transparent}
       for(var b=a+1;b<N;b++){
         var A=pts[a], B=pts[b], ex=A.x-B.x, ey=A.y-B.y, dist=Math.sqrt(ex*ex+ey*ey);
         if(dist<LINK){
-          var o=(1-dist/LINK)*.22;
+          var o=(1-dist/LINK)*.42;
           var mxd=Math.min(Math.hypot(A.x-mx,A.y-my),Math.hypot(B.x-mx,B.y-my));
-          if(mxd<R) o+= (1-mxd/R)*.35;
+          if(mxd<R) o+= (1-mxd/R)*.5;
           ctx.strokeStyle='rgba(196,158,78,'+o.toFixed(3)+')';
           ctx.beginPath(); ctx.moveTo(A.x,A.y); ctx.lineTo(B.x,B.y); ctx.stroke();
         }
@@ -2089,7 +2089,7 @@ main,section,footer{background-color:transparent}
     }
     for(var k=0;k<N;k++){
       var q=pts[k], near=Math.hypot(q.x-mx,q.y-my)<R;
-      ctx.fillStyle=near?'rgba(209,59,66,.85)':'rgba(196,158,78,.55)';
+      ctx.fillStyle=near?'rgba(209,59,66,.85)':'rgba(196,158,78,.8)';
       ctx.beginPath(); ctx.arc(q.x,q.y,q.r+(near?1:0),0,6.283); ctx.fill();
     }
     if(!reduce) requestAnimationFrame(frame);
