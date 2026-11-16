@@ -553,9 +553,9 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   <section id="approach" data-cam="approach">
     <div class="wrap">
       <figure>
-        <div class="frame tilt carousel" data-photos="random" role="region" aria-roledescription="carousel" aria-label="Fall Fun Fest photos"><div class="cslides"></div></div>
+        <div class="frame tilt carousel" data-photos="random" role="region" aria-roledescription="carousel" aria-label="BlackSheep services"><div class="cslides"></div></div>
         <div class="cctl"><button type="button" class="cbtn lk" data-dir="-1" aria-label="Previous photo">&#8249;</button><span class="cdots"></span><button type="button" class="cbtn lk" data-dir="1" aria-label="Next photo">&#8250;</button></div>
-        <figcaption class="ccap">Fall Fun Fest 2026</figcaption>
+        <figcaption class="ccap">Our services</figcaption>
       </figure>
       <div class="copy-col panel">
         <span class="eyebrow">The approach</span>
@@ -608,7 +608,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
       <div class="head" style="margin-bottom:10px">
         <span class="eyebrow">Portfolio</span>
         <h2>Selected <em>work.</em></h2>
-        <p>Fall Fun Fest 2026. Drag the ring to spin it, then tap a photo to open it.</p>
+        <p>Drag the ring to spin it, then tap a card to open it.</p>
       </div>
       <div class="stage" id="stage" aria-label="Photo ring. Use the buttons below or open photos from the list."></div>
       <div class="grid-fallback" id="gridFallback"></div>
@@ -669,9 +669,9 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
         <p class="sign">Nick Mehra<small>Owner &amp; Creative Director</small></p>
       </div>
       <figure style="margin-top:40px">
-        <div class="frame tilt carousel" data-photos="random" role="region" aria-roledescription="carousel" aria-label="Fall Fun Fest photos"><div class="cslides"></div></div>
+        <div class="frame tilt carousel" data-photos="random" role="region" aria-roledescription="carousel" aria-label="BlackSheep services"><div class="cslides"></div></div>
         <div class="cctl"><button type="button" class="cbtn lk" data-dir="-1" aria-label="Previous photo">&#8249;</button><span class="cdots"></span><button type="button" class="cbtn lk" data-dir="1" aria-label="Next photo">&#8250;</button></div>
-        <figcaption class="ccap">Fall Fun Fest 2026</figcaption>
+        <figcaption class="ccap">Our services</figcaption>
       </figure>
       <div class="head" style="margin:70px 0 30px"><span class="eyebrow">What holds the standard up</span><h2>Three <em>pillars</em></h2></div>
       <div class="values">
@@ -865,106 +865,55 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   var $ = function(id){ return document.getElementById(id); };
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Every Fall Fun Fest photo, all cut to the same 3:2 frame. The order is shuffled on every visit.
+  // Service cards, all cut to the same 3:2 frame. The order is shuffled on every visit.
+/* Service cards: drawn on a canvas, so they stay sharp and need no photos. */
+  var CARD_ART = {
+    'hero':                    {title:'BlackSheep', sub:'From Conviction to Legacy', icon:'none'},
+    'real-estate-photography': {title:'Real estate photography', sub:'BlackSheep Digital Works', icon:'house'},
+    'video':                   {title:'Video & social reels', sub:'BlackSheep Digital Works', icon:'video'},
+    'drone':                   {title:'Drone & aerial', sub:'BlackSheep Digital Works', icon:'drone'},
+    'floor-plans':             {title:'Floor plans & 3D', sub:'BlackSheep Digital Works', icon:'plan'},
+    'events':                  {title:'Event coverage', sub:'BlackSheep Digital Works', icon:'stage'},
+    'dealerships':             {title:'Dealership inventory', sub:'BlackSheep Digital Works', icon:'car'}
+  };
+  var CARD_ICONS = {
+    house: function(x){ x.beginPath(); x.moveTo(510,380); x.lineTo(600,296); x.lineTo(690,380); x.stroke(); x.strokeRect(534,380,132,92); x.beginPath(); x.arc(600,424,16,0,Math.PI*2); x.stroke(); },
+    video: function(x){ x.strokeRect(500,292,200,128); x.beginPath(); x.moveTo(576,320); x.lineTo(576,392); x.lineTo(636,356); x.closePath(); x.fill(); },
+    drone: function(x){ x.strokeRect(578,334,44,30); [[500,300],[700,300],[500,392],[700,392]].forEach(function(p){ x.beginPath(); x.moveTo(p[0] < 600 ? 578 : 622, p[1] < 350 ? 334 : 364); x.lineTo(p[0], p[1]); x.stroke(); x.beginPath(); x.arc(p[0],p[1],26,0,Math.PI*2); x.stroke(); }); },
+    plan:  function(x){ x.strokeRect(500,292,200,124); x.beginPath(); x.moveTo(600,292); x.lineTo(600,350); x.moveTo(500,350); x.lineTo(600,350); x.moveTo(650,350); x.lineTo(650,416); x.stroke(); },
+    stage: function(x){ x.save(); x.globalAlpha = .18; x.beginPath(); x.moveTo(596,300); x.lineTo(506,420); x.lineTo(694,420); x.closePath(); x.fill(); x.restore(); var cx=600, cy=346, r=30, i, a; x.beginPath(); for(i=0;i<10;i++){ a=-Math.PI/2 + i*Math.PI/5; var rr = i%2 ? r*.45 : r; x.lineTo(cx+rr*Math.cos(a), cy+rr*Math.sin(a)); } x.closePath(); x.fill(); },
+    car:   function(x){ x.beginPath(); x.moveTo(500,392); x.lineTo(512,344); x.quadraticCurveTo(522,322,548,320); x.lineTo(652,320); x.quadraticCurveTo(678,322,688,344); x.lineTo(700,392); x.closePath(); x.stroke(); x.beginPath(); x.arc(548,392,24,0,Math.PI*2); x.stroke(); x.beginPath(); x.arc(652,392,24,0,Math.PI*2); x.stroke(); },
+    none:  function(x){ x.beginPath(); x.moveTo(540,360); x.lineTo(660,360); x.stroke(); }
+  };
+  function cardArt(id){
+    cardArt.cache = cardArt.cache || {};
+    if (cardArt.cache[id]) return cardArt.cache[id];
+    var d = CARD_ART[id]; if (!d) return cardArt(id);
+    var c = document.createElement('canvas'); c.width = 1200; c.height = 800;
+    var x = c.getContext('2d');
+    var g = x.createLinearGradient(0,0,0,800); g.addColorStop(0,'#12244A'); g.addColorStop(1,'#0A1426');
+    x.fillStyle = g; x.fillRect(0,0,1200,800);
+    var rg = x.createRadialGradient(600,360,40,600,360,560); rg.addColorStop(0,'rgba(196,158,78,0.22)'); rg.addColorStop(1,'rgba(196,158,78,0)');
+    x.fillStyle = rg; x.fillRect(0,0,1200,800);
+    x.strokeStyle = 'rgba(196,158,78,0.45)'; x.lineWidth = 3; x.strokeRect(56,56,1088,688);
+    x.strokeStyle = '#C49E4E'; x.fillStyle = '#C49E4E'; x.lineWidth = 12; x.lineCap = 'round'; x.lineJoin = 'round';
+    (CARD_ICONS[d.icon] || CARD_ICONS.none)(x);
+    x.textAlign = 'center';
+    x.fillStyle = '#F6F0E2'; x.font = '600 66px "EB Garamond", Georgia, serif'; x.fillText(d.title, 600, 560);
+    x.fillStyle = '#C49E4E'; x.font = '600 24px Inter, Arial, sans-serif';
+    if ('letterSpacing' in x) x.letterSpacing = '6px';
+    x.fillText(d.sub.toUpperCase(), 600, 622);
+    return cardArt.cache[id] = c.toDataURL('image/jpeg', .92);
+  }
+
   var PHOTOS = [
-    ['ff-229', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
-    ['ff-230', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
-    ['ff-231', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
-    ['ff-232', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
-    ['ff-234', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
-    ['ff-235', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
-    ['ff-236', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
-    ['ff-237', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
-    ['ff-238', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
-    ['ff-241', 'Branded sponsor tote bags on the grass at Fall Fun Fest', 'Detail'],
-    ['ff-243', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
-    ['ff-244', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
-    ['ff-245', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
-    ['ff-246', 'Close view down a row of large orange pumpkins', 'Detail'],
-    ['ff-247', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
-    ['ff-248', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
-    ['ff-249', 'Giant lawn games set up on the grass at Fall Fun Fest', 'Games'],
-    ['ff-250', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
-    ['ff-251', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
-    ['ff-252', 'Painted Welcome Fall sign with hay bales, pumpkins and corn stalks', 'Set design'],
-    ['ff-253', 'Autumn decorations of pumpkins, hay bales and signage at Fall Fun Fest', 'Set design'],
-    ['ff-254', 'Giant blue four-in-a-row game on a lawn with event tents behind', 'Games'],
-    ['ff-255', 'Giant lawn games set up on the grass at Fall Fun Fest', 'Games'],
-    ['ff-256', 'Giant lawn games set up on the grass at Fall Fun Fest', 'Games'],
-    ['ff-257', 'Giant lawn games set up on the grass at Fall Fun Fest', 'Games'],
-    ['ff-261', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-268', 'Families decorating pumpkins at a long outdoor table', 'Pumpkin table'],
-    ['ff-269', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-270', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-271', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-272', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-274', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-275', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-276', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-277', 'Three boys walking across the lawn in bright sun', 'Candid'],
-    ['ff-278', 'Food being served at an outdoor stall at Fall Fun Fest', 'Food service'],
-    ['ff-279', 'Food being served at an outdoor stall at Fall Fun Fest', 'Food service'],
-    ['ff-280', 'Food being served at an outdoor stall at Fall Fun Fest', 'Food service'],
-    ['ff-281', 'Food being served at an outdoor stall at Fall Fun Fest', 'Food service'],
-    ['ff-282', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-289', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-290', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-291', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-292', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-293', 'Two guests talking near pumpkins and hay bales', 'Candid'],
-    ['ff-294', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-295', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-296', 'Guests posing for a portrait on the lawn at Fall Fun Fest', 'Portraits'],
-    ['ff-297', 'Guests posing for a portrait on the lawn at Fall Fun Fest', 'Portraits'],
-    ['ff-298', 'Two men seated at a wooden table with pumpkins', 'Candid'],
-    ['ff-299', 'Guests posing for a portrait on the lawn at Fall Fun Fest', 'Portraits'],
-    ['ff-300', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-301', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-302', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-303', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-304', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-305', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-306', 'Guests enjoying a sunny afternoon at Fall Fun Fest', 'Candid'],
-    ['ff-307', 'Families decorating pumpkins at a long outdoor table', 'Pumpkin table'],
-    ['ff-308', 'Guests posing for a portrait on the lawn at Fall Fun Fest', 'Portraits'],
-    ['ff-309', 'Two women posing together on the lawn', 'Portraits'],
-    ['ff-311', 'Guests posing for a portrait on the lawn at Fall Fun Fest', 'Portraits'],
-    ['ff-312', 'Volunteers serving food at an outdoor stall with bunting', 'Food service'],
-    ['ff-313', 'A man and a boy smiling beside the lawn games', 'Portraits'],
-    ['ff-314', 'A man in a cap and jacket holding a cup on the lawn', 'Portraits'],
-    ['ff-315', 'Guests posing for a portrait on the lawn at Fall Fun Fest', 'Portraits'],
-    ['ff-318', 'Guests posing for a portrait on the lawn at Fall Fun Fest', 'Portraits'],
-    ['ff-319', 'Guests posing for a portrait on the lawn at Fall Fun Fest', 'Portraits'],
-    ['ff-320', 'A smiling man crouching beside a child in a white knit hat', 'Portraits'],
-    ['ff-321', 'Families watching the animal show inside the event tent', 'The audience'],
-    ['ff-322', 'Families watching the animal show inside the event tent', 'The audience'],
-    ['ff-323', 'Families watching the animal show inside the event tent', 'The audience'],
-    ['ff-324', 'Families watching the animal show inside the event tent', 'The audience'],
-    ['ff-325', 'Three adults and a toddler standing beside a Fall Fun Fest sign', 'Portraits'],
-    ['ff-326', 'Families watching the animal show inside the event tent', 'The audience'],
-    ['ff-327', 'A man crouching with two young children beside a Fall Fun Fest sign', 'Portraits'],
-    ['ff-328', 'A couple posing on the lawn with the event behind them', 'Portraits'],
-    ['ff-331', 'Families watching the animal show inside the event tent', 'The audience'],
-    ['ff-332', 'Families watching the animal show inside the event tent', 'The audience'],
-    ['ff-333', 'Families watching the animal show inside the event tent', 'The audience'],
-    ['ff-334', 'Families watching the animal show inside the event tent', 'The audience'],
-    ['ff-335', 'A couple posing on the lawn in front of autumn trees', 'Portraits'],
-    ['ff-336', 'An animal presenter on stage at Fall Fun Fest', 'Live show'],
-    ['ff-337', 'A group of guests gathered near the hay bales', 'Candid'],
-    ['ff-338', 'An animal presenter on stage at Fall Fun Fest', 'Live show'],
-    ['ff-339', 'Families watching the animal show inside the event tent', 'The audience'],
-    ['ff-340', 'An animal presenter on stage at Fall Fun Fest', 'Live show'],
-    ['ff-341', 'An animal presenter on stage at Fall Fun Fest', 'Live show'],
-    ['ff-342', 'A crowd of children and parents seated inside a white event tent', 'The audience'],
-    ['ff-343', 'A presenter holding a green parrot in front of a seated audience', 'Live show'],
-    ['ff-344', 'Families watching the animal show inside the event tent', 'The audience'],
-    ['ff-345', 'Families watching the animal show inside the event tent', 'The audience'],
-    ['ff-346', 'An animal presenter on stage at Fall Fun Fest', 'Live show'],
-    ['ff-347', 'An animal presenter on stage at Fall Fun Fest', 'Live show'],
-    ['ff-348', 'An animal presenter on stage at Fall Fun Fest', 'Live show'],
-    ['ff-357', 'An animal presenter on stage at Fall Fun Fest', 'Live show'],
-    ['ff-358', 'An animal presenter on stage at Fall Fun Fest', 'Live show'],
-    ['hero', 'Families decorating pumpkins at a long outdoor table on a sunny autumn day', 'The day']
+    ['hero', 'BlackSheep Digital Works, from conviction to legacy', 'The brand'],
+    ['real-estate-photography', 'Real estate photography', 'Service'],
+    ['video', 'Video and social reels', 'Service'],
+    ['drone', 'Drone and aerial', 'Service'],
+    ['floor-plans', 'Floor plans and 3D', 'Service'],
+    ['events', 'Event coverage', 'Service'],
+    ['dealerships', 'Dealership inventory', 'Service']
   ];
   (function(){ for (var i = PHOTOS.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)), t = PHOTOS[i]; PHOTOS[i] = PHOTOS[j]; PHOTOS[j] = t; } })();
 
@@ -1016,9 +965,9 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   function setPhoto(i){
     lbIndex = (i + PHOTOS.length) % PHOTOS.length;
     var p = PHOTOS[lbIndex];
-    lbImg.src = 'img/' + p[0] + '.jpg'; lbImg.alt = p[1];
+    lbImg.src = cardArt(p[0]); lbImg.alt = p[1];
     lb.style.setProperty('--lbsrc', 'url(img/' + p[0] + '.jpg)');
-    $('lbCap').textContent = 'Fall Fun Fest · ' + p[2] + ' · ' + (lbIndex + 1) + ' of ' + PHOTOS.length;
+    $('lbCap').textContent = 'BlackSheep · ' + p[2] + ' · ' + (lbIndex + 1) + ' of ' + PHOTOS.length;
     var d = lbImg.decode ? lbImg.decode() : Promise.resolve();
     return d.catch(function(){});
   }
@@ -1076,7 +1025,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   // Grid used when WebGL is unavailable
   PHOTOS.forEach(function(p, i){
     var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', 'Open photo: ' + p[1]);
-    var im = document.createElement('img'); im.src = 'img/' + p[0] + '.jpg'; im.alt = ''; im.loading = 'lazy';
+    var im = document.createElement('img'); im.src = cardArt(p[0]); im.alt = ''; im.loading = 'lazy';
     b.appendChild(im); b.addEventListener('click', function(){ openLB(i, b.getBoundingClientRect()); });
     $('gridFallback').appendChild(b);
   });
@@ -1469,7 +1418,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
     var imgs = [], dotBtns = [], cur = 0, timer = null, hover = false;
     ids.forEach(function(id, i){
       var p = PHOTOS[photoIndex(id)];
-      var im = document.createElement('img'); im.src = 'img/' + id + '.jpg'; im.alt = p ? p[1] : ''; im.loading = 'eager'; im.decoding = 'async';
+      var im = document.createElement('img'); im.src = cardArt(id); im.alt = p ? p[1] : ''; im.loading = 'eager'; im.decoding = 'async';
       if (pos[i]) im.style.objectPosition = pos[i] + ' 50%';
       if (i === 0) im.className = 'on'; else im.setAttribute('aria-hidden', 'true');
       im.addEventListener('click', function(){ var r = im.getBoundingClientRect(); openLB(photoIndex(id), r, function(){ return im.getBoundingClientRect(); }); });
@@ -1480,7 +1429,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
     });
     function label(){
       var p = PHOTOS[photoIndex(ids[cur])];
-      cap.textContent = 'Fall Fun Fest 2026' + (p ? ' · ' + p[2] : '');
+      cap.textContent = 'Our services' + (p ? ' · ' + p[2] : '');
       dotBtns.forEach(function(d, i){ d.setAttribute('aria-current', i === cur ? 'true' : 'false'); });
       frame.style.setProperty('--src', 'url(img/' + ids[cur] + '.jpg)');
     }
@@ -1757,7 +1706,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
     var e = cache[id];
     if (!e){
       e = cache[id] = {t:null, cbs:[]};
-      loader.load('img/' + id + '.jpg', function(t){
+      loader.load(cardArt(id), function(t){
         t.encoding = THREE.sRGBEncoding; t.anisotropy = Math.min(8, maxAniso);
         e.t = t; e.cbs.forEach(function(f){ f(t); }); e.cbs = [];
       });
