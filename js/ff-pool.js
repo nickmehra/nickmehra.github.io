@@ -5,7 +5,7 @@ var CARD_ART = {
   'real-estate-photography': {title:'Real estate photography', sub:'BlackSheep Digital Works', icon:'house'},
   'video':                   {title:'Video & social reels', sub:'BlackSheep Digital Works', icon:'video'},
   'drone':                   {title:'Drone & aerial', sub:'BlackSheep Digital Works', icon:'drone'},
-  'floor-plans':             {title:'Floor plans & 3D', sub:'BlackSheep Digital Works', icon:'plan'},
+  'floor-plans':             {title:'2D/3D Floorplans', sub:'BlackSheep Digital Works', icon:'plan'},
   'events':                  {title:'Event coverage', sub:'BlackSheep Digital Works', icon:'stage'},
   'dealerships':             {title:'Dealership inventory', sub:'BlackSheep Digital Works', icon:'car'}
 };
