@@ -3,7 +3,7 @@ Facts only: nothing here claims licences, insurance, awards or results that have
 
 import os
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-UPDATED = 'November 14, 2026'
+UPDATED = 'November 15, 2026'
 EMAIL = 'nic.mehra@gmail.com'
 PHONE = '647.888.3098'
 AREA = 'Pickering to Kingston and north to Peterborough, plus the GTA'
@@ -93,7 +93,7 @@ def legal_pages():
 <ul>
 <li>This website does not store your contact details, quotes or booking details.</li>
 <li>What our web host does store: the <b>name and comment</b> you choose to post, totals of likes and dislikes, the numbers of quotes that have been approved.</li>
-<li>No advertising, no tracking pixels, no analytics, no cookies for tracking. Fonts and other files are served from our own site, so your browser doesn't contact Google or other third parties when you visit.</li>
+<li>No advertising, no tracking pixels and no tracking cookies. Fonts and other files are served from our own site, so your browser doesn't contact Google or other third parties when you visit. The only usage figure is one anonymous running total of site visits, shown in the footer (see Site visit counter below).</li>
 <li>You can ask us to see, correct or delete your information at any time: <a class="lk" href="mailto:{EMAIL}">{EMAIL}</a>.</li>
 </ul>
 
@@ -110,6 +110,8 @@ def legal_pages():
 <p>The chat bubble is an automated assistant that answers from the information on this website; it is not a live person and it does not use an outside AI service. Your messages, and any email or phone number you choose to give, are emailed to Nick so he can read the conversation and reply to questions the assistant couldn't answer. Chat messages are not stored on the website. The conversation is kept in your browser tab only until you close it. Please don't share sensitive personal information in the chat.</p>
 <h3>Comments</h3>
 <p>If you comment, we store the name you enter, your comment, when you posted it, and (for comments on our photos) which photo and which comment you replied to, so we can show it in the right thread after we approve it. We do not store your email, IP address or device details with comments. Please don't put private information in a comment, because approved comments are public.</p>
+<h3>Site visit counter</h3>
+<p>The footer shows one running total of visits to the whole site. Each page load adds 1 to that single number. We do not store IP addresses, cookies, device details, or which pages anyone looked at, so the total can't be linked to a person. Automated traffic (bots) may be included in it.</p>
 <h3>Likes and dislikes</h3>
 <p>We store only the running totals for each photo. Your own choice is remembered in your browser so you can change it; nothing identifies you on our side.</p>
 <h3>Things kept in your browser only</h3>
