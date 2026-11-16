@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="A walk through Nick Mehra's studio: story, selected work, portraits, journal and contact.">
+<title>The studio | Nick Mehra</title>
+<link rel="canonical" href="https://nickmehra.ca/studio/">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+:root{--bg:#F5F5F2;--fg:#08090A;--muted:#25292E;--red:#9A1219;--display:"Cinzel","Trajan Pro",Georgia,serif;--body:"EB Garamond",Garamond,Georgia,serif}
+:root[data-theme="dark"]{--bg:#0A0B0D;--fg:#EFEBE3;--muted:#A9ADB3;--red:#D11F26}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--fg);font-family:var(--body)}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:default}
+#c.over{cursor:pointer}
+.vig{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse 70% 62% at 50% 46%,rgba(0,0,0,0) 55%,rgba(0,0,0,.5) 100%)}
+:root[data-theme="light"] .vig{background:radial-gradient(ellipse 70% 62% at 50% 46%,rgba(0,0,0,0) 60%,rgba(60,50,30,.18) 100%)}
+.hint{position:fixed;top:64px;left:0;right:0;margin:0;text-align:center;font-family:var(--display);font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);pointer-events:none}
+.bar{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;background:linear-gradient(var(--bg),rgba(0,0,0,0))}
+.bar a.logo{font-family:var(--display);font-size:14px;letter-spacing:.2em;color:var(--fg);text-decoration:none;text-transform:uppercase}
+.bar a.logo span{color:var(--red)}
+.bar .classic{font-family:var(--display);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+.ui{position:fixed;left:0;right:0;bottom:0;padding:12px 10px calc(12px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;gap:8px;justify-content:center;background:linear-gradient(rgba(0,0,0,0),var(--bg))}
+.ui button{font-family:var(--display);font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:0 12px;min-height:44px;background:transparent;color:var(--fg);border:1px solid var(--red);cursor:pointer}
+.ui button:hover,.ui button:focus-visible{background:var(--red);color:#F5F5F2;outline:none}
+.ui button[hidden]{display:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#fade{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .8s ease}
+#fade.on{opacity:1}
+</style>
+</head>
+<body>
+<canvas id="c" aria-label="Walk-through of Nick Mehra's studio. Press a door or panel to enter that section."></canvas>
+<div class="vig" aria-hidden="true"></div>
+<div class="bar">
+  <a class="logo" href="../">Nick <span>Mehra</span></a>
+  <a class="classic" href="../">Classic view</a>
+</div>
+<p class="hint">Drag to look · Arrow keys to walk · Press a door to enter</p>
+<nav class="ui" aria-label="Studio doors">
+  <button type="button" data-go="Story">Story</button>
+  <button type="button" data-go="Work">Work</button>
+  <button type="button" data-go="Portraits">Portraits</button>
+  <button type="button" data-go="Journal">Journal</button>
+  <button type="button" data-go="Now">Now</button>
+  <button type="button" data-go="Experience">Experience</button>
+  <button type="button" data-go="Contact">Contact</button>
+  <button type="button" data-go="Back to the studio" id="back" hidden>Back to the studio</button>
+  <button type="button" id="theme">Light / Dark</button>
+</nav>
+<nav class="sr" aria-label="All pages">
+  <a href="../story/">Story</a> <a href="../work/">Work</a> <a href="../portraits/">Portraits</a> <a href="../journal/">Journal</a>
+  <a href="../now/">Now</a> <a href="../experience/">Experience</a> <a href="../contact/">Contact</a>
+</nav>
+<div id="fade"></div>
+<script src="../vendor/three-r128.min.js"></script>
+<script>
+(function(){
+  var root = document.documentElement;
+  var stored = localStorage.getItem('studio-theme'); if (stored) root.dataset.theme = stored;
+  var dark = root.dataset.theme !== 'light';
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Dark: low-key studio with warm rim light. Light: bright, clean, daylight studio.
+  var P = dark ? {
+    cyc:0x17181c, floor:0x1f2024, wall:0x111216, ceil:0x0c0d10, soft:0xfff3e2, softI:1.6, ambient:.25,
+    fog:0x0a0b0d, bg:'#0A0B0D', panel:'#111215', ink:'#EFEBE3', muted:'#A9ADB3', red:'#D11F26', exposure:1.0, roomLamp:1.2
+  } : {
+    cyc:0xF1EFEA, floor:0xD9D6CF, wall:0xEEEBE4, ceil:0xF8F7F4, soft:0xffffff, softI:1.0, ambient:.9,
+    fog:0xF3F1EC, bg:'#F5F5F2', panel:'#FFFFFF', ink:'#08090A', muted:'#25292E', red:'#9A1219', exposure:1.0, roomLamp:.4
+  };
+
+  var canvas = document.getElementById('c');
+  var renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = P.exposure;
+  var scene = new THREE.Scene();
+  scene.background = new THREE.Color(P.bg);
+  var camera = new THREE.PerspectiveCamera(58, 1, 0.1, 220);
+  camera.rotation.order = 'YXZ';
+
+  var groups = {};
+  function addGroup(name){ var g = new THREE.Group(); g.visible = false; scene.add(g); groups[name] = g; return g; }
+  var hall = addGroup('hall'); hall.visible = true;
+
+  function mat(color, rough, metal){ return new THREE.MeshStandardMaterial({color: color, roughness: rough === undefined ? .85 : rough, metalness: metal || 0}); }
+  function plane(g, w, h, material, pos, rot){
+    var m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), material);
+    m.position.set(pos[0], pos[1], pos[2]); if (rot) m.rotation.set(rot[0], rot[1], rot[2]);
+    g.add(m); return m;
+  }
+  function softbox(g, x, y, z, rotY){
+    var m = plane(g, 1.6, 2.6, new THREE.MeshBasicMaterial({color: P.soft}), [x, y, z], [0, rotY, 0]);
+    return m;
+  }
+  // Studio shell: seamless cyc backdrop at the far end, plain walls on either side
+  var SW = 11, Z0 = 5, Z1 = -18, L = Z0 - Z1, C = (Z0 + Z1) / 2;
+  function shell(g, zNear, zFar, cycAtFar){
+    var Lg = zNear - zFar, Cg = (zNear + zFar) / 2;
+    plane(g, SW, Lg, mat(P.floor, .5, .05), [0, 0, Cg], [-Math.PI / 2, 0, 0]);
+    plane(g, SW, Lg, mat(P.ceil, .95), [0, 3.8, Cg], [Math.PI / 2, 0, 0]);
+    plane(g, Lg, 3.8, mat(P.wall), [-SW / 2, 1.9, Cg], [0, Math.PI / 2, 0]);
+    plane(g, Lg, 3.8, mat(P.wall), [SW / 2, 1.9, Cg], [0, -Math.PI / 2, 0]);
+    plane(g, SW, 3.8, mat(cycAtFar ? P.cyc : P.wall, .95), [0, 1.9, zFar], [0, 0, 0]);
+  }
+  shell(hall, Z0, Z1, true);
+  // Backdrop gradient on the cyc so it reads as a seamless studio sweep
+  (function(){
+    var c = document.createElement('canvas'); c.width = 512; c.height = 512;
+    var x = c.getContext('2d');
+    var g = x.createLinearGradient(0, 0, 0, 512);
+    g.addColorStop(0, dark ? '#1a1b20' : '#F4F2EC'); g.addColorStop(.6, dark ? '#14151a' : '#EDEAE3'); g.addColorStop(1, dark ? '#0c0d10' : '#DDD9D0');
+    x.fillStyle = g; x.fillRect(0, 0, 512, 512);
+    var t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding;
+    plane(hall, SW - .2, 3.6, new THREE.MeshBasicMaterial({map: t}), [0, 1.8, Z1 + .03], [0, 0, 0]);
+  })();
+  // Key softboxes flanking the set, a camera on a tripod and a stool in the middle
+  [[-SW / 2 + .04, 2.2, -3, Math.PI / 2], [SW / 2 - .04, 2.2, -3, -Math.PI / 2], [-SW / 2 + .04, 2.2, -11, Math.PI / 2], [SW / 2 - .04, 2.2, -11, -Math.PI / 2]].forEach(function(s){
+    softbox(hall, s[0], s[1], s[2], s[3]);
+  });
+  var stool = new THREE.Group(); hall.add(stool); stool.position.set(0, 0, -7.5);
+  var seat = new THREE.Mesh(new THREE.CylinderGeometry(.4, .4, .08, 32), mat(0x2a2b30, .6)); seat.position.y = .72; stool.add(seat);
+  var pole = new THREE.Mesh(new THREE.CylinderGeometry(.05, .05, .72, 16), mat(0x888888, .3, .8)); pole.position.y = .36; stool.add(pole);
+  var camBody = new THREE.Group(); hall.add(camBody); camBody.position.set(2.4, 0, -4.6);
+  var tripod = new THREE.Mesh(new THREE.CylinderGeometry(.03, .03, 1.5, 12), mat(0x222222, .4, .6)); tripod.position.y = .75; camBody.add(tripod);
+  var cm = new THREE.Mesh(new THREE.BoxGeometry(.28, .2, .32), mat(0x111111, .4, .3)); cm.position.y = 1.5; camBody.add(cm);
+  hall.add(new THREE.AmbientLight(0xffffff, P.ambient));
+  var rim = new THREE.PointLight(P.soft, P.softI * (dark ? 3 : 1), 22, 1.2);
+  rim.position.set(0, 3.4, -8); hall.add(rim);
+  var key = new THREE.DirectionalLight(0xffffff, dark ? .3 : .8);
+  key.position.set(-6, 4, 2); key.target.position.set(0, 0, -8); hall.add(key); hall.add(key.target);
+
+  /* ---------- Rooms: each section is a set with its own panels ---------- */
+  var ROOMS = {
+    story: {title:'Story', href:'../story/', full:'Full story', panels:[
+      {t:'A life in five chapters', s:'Almost two decades in security and enforcement. Then a camera, a company, and a name that finally fit.'},
+      {t:'Coming to Toronto', s:'I came to Canada as a child and grew up in Toronto. It has been home ever since.'},
+      {t:'The odd one out', s:'At work, among friends, in my own family, I have always been the odd one out.'},
+      {t:'Finding peace', s:'I stopped fighting it a long time ago. I find my peace in depth, in the bigger questions about life and why any of us are here.'}
+    ]},
+    work: {title:'Work', href:'../work/', full:'Full selected work', panels:[
+      {t:'Selected work', s:'BlackSheep Digital Works is where all of this went. Photography, film and drone for properties, inventory and events, edited in-house and delivered in 24 to 48 hours.'},
+      {t:'From conviction to legacy', s:'Owner & Creative Director, BlackSheep Digital Works. Almost two decades in security and public service law enforcement before the lens.'}
+    ]},
+    portraits: {title:'Portraits', href:'../portraits/', full:'Full portraits', photos:['../img/nick-portrait.webp','../img/nick-hero.webp','../img/nick-storm.webp'], panels:[
+      {t:'In frame', s:'Portraits from the studio.'}
+    ]},
+    journal: {title:'Journal', href:'../journal/', full:'Full journal', panels:[
+      {t:'Notes from the restart', s:'Short entries on leaving one career and building the next.'},
+      {t:'Starting from zero', s:'Starting from zero sounds like a loss. Some days it feels like one. Experience does not show up on a portfolio.'}
+    ]},
+    now: {title:'Now', href:'../now/', full:'Full now page', panels:[
+      {t:'What I’m focused on', s:'Real estate, dealership and event media across Durham, the GTA and east to Kingston. Every shoot is a chance to make the work sharper.'},
+      {t:'Writing', s:'A personal journal here, and the BlackSheep Journal on listing media, local market notes and the rules that shape them.'}
+    ]},
+    experience: {title:'Experience', href:'../experience/', full:'Full experience', panels:[
+      {t:'A working record', s:'Almost two decades in security and public service law enforcement. Now the owner and creative director of BlackSheep Digital Works, a media company in Ontario.'},
+      {t:'On request', s:'Full employment details are available on request.'}
+    ]},
+    contact: {title:'Contact', href:'../contact/', full:'Contact page', panels:[
+      {t:'Let’s talk', s:'Owner & Creative Director, BlackSheep Digital Works. Use the contact page to get in touch.'}
+    ]}
+  };
+  var ROOM_Z0 = 5, ROOM_Z1 = -10, RW = SW;
+  var roomPanels = {};
+  var HALL_DOORS = [
+    {label:'Story', sub:'A life in five chapters', enter:'story', side:-1, z:-2},
+    {label:'Work', sub:'Selected work', enter:'work', side:1, z:-4.5},
+    {label:'Portraits', sub:'In frame', enter:'portraits', side:-1, z:-7},
+    {label:'Journal', sub:'Notes from the restart', enter:'journal', side:1, z:-9.5},
+    {label:'Now', sub:'What I’m focused on', enter:'now', side:-1, z:-12},
+    {label:'Experience', sub:'A working record', enter:'experience', side:1, z:-14},
+    {label:'Contact', sub:'Let’s talk', enter:'contact', side:-1, z:-16}
+  ];
+  function roomDoors(name){
+    var r = ROOMS[name];
+    return [
+      {label:'Back to the studio', sub:'Return to the hall', enter:'hall', pos:[-2.6, 1.6, ROOM_Z1 + .04]},
+      {label:r.full, sub:'Open the full page', href:r.href, pos:[2.6, 1.6, ROOM_Z1 + .04]}
+    ];
+  }
+  var doorMeshes = [];
+  var doorDefs = {hall: HALL_DOORS};
+  Object.keys(ROOMS).forEach(function(n){ doorDefs[n] = roomDoors(n); });
+
+  Object.keys(ROOMS).forEach(function(name){
+    var g = addGroup(name);
+    shell(g, ROOM_Z0, ROOM_Z1, false);
+    var cyc = plane(g, RW - .2, 3.6, mat(P.cyc, .95), [0, 1.8, ROOM_Z1 + .03], [0, 0, 0]);
+    g.add(new THREE.AmbientLight(0xffffff, P.ambient));
+    var lamp = new THREE.PointLight(P.soft, P.roomLamp * 6, 16, 1.4); lamp.position.set(0, 3.2, -3); g.add(lamp);
+    var lamp2 = new THREE.PointLight(P.soft, P.roomLamp * 6, 16, 1.4); lamp2.position.set(0, 3.2, -8); g.add(lamp2);
+    roomPanels[name] = [];
+    var photos = ROOMS[name].photos || [];
+    ROOMS[name].panels.forEach(function(p, i){
+      var side = i % 2 ? 1 : -1;
+      var z = -1.6 - Math.floor(i / 2) * 2.8;
+      var m = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 1.8), new THREE.MeshBasicMaterial({color: 0xffffff}));
+      m.position.set(side * (RW / 2 - .04), 1.6, z);
+      m.rotation.y = -side * Math.PI / 2;
+      g.add(m);
+      roomPanels[name].push({mesh: m, def: p, idx: i, side: side, z: z});
+    });
+    if (photos.length){
+      photos.forEach(function(src, i){
+        var side = i % 2 ? -1 : 1;
+        var m = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.6), new THREE.MeshBasicMaterial({color: 0xffffff}));
+        m.position.set(side * (RW / 2 - .04), 1.6, -5.2 - i * 1.6);
+        m.rotation.y = -side * Math.PI / 2;
+        g.add(m);
+        new THREE.TextureLoader().load(src, function(t){
+          t.encoding = THREE.sRGBEncoding;
+          var a = t.image.width / t.image.height, want = 2.4 / 1.6;
+          if (a > want){ t.repeat.set(want / a, 1); t.offset.set((1 - want / a) / 2, 0); }
+          else { t.repeat.set(1, a / want); t.offset.set(0, (1 - a / want) / 2); }
+          m.material = new THREE.MeshBasicMaterial({map: t});
+        });
+      });
+    }
+  });
+
+  function drawPlaque(d){
+    var c = document.createElement('canvas'); c.width = 768; c.height = 480;
+    var x = c.getContext('2d');
+    x.fillStyle = P.panel; x.fillRect(0, 0, 768, 480);
+    x.strokeStyle = P.red; x.lineWidth = 5; x.strokeRect(18, 18, 732, 444);
+    x.fillStyle = P.ink; x.font = '600 56px "Cinzel", Georgia, serif'; x.textAlign = 'center';
+    x.fillText(d.label, 384, 215);
+    x.fillStyle = P.red; x.fillRect(324, 245, 120, 3);
+    x.fillStyle = P.muted; x.font = '400 28px "EB Garamond", Georgia, serif'; x.fillText(d.sub || '', 384, 298);
+    x.fillStyle = P.red; x.font = '600 24px "Cinzel", Georgia, serif'; x.fillText('ENTER  →', 384, 390);
+    var t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t;
+  }
+  function wrap(x, text, maxW){
+    var words = text.split(' '), lines = [], line = '';
+    words.forEach(function(w){
+      var test = line ? line + ' ' + w : w;
+      if (x.measureText(test).width > maxW && line){ lines.push(line); line = w; } else line = test;
+    });
+    if (line) lines.push(line);
+    return lines;
+  }
+  function drawPanel(p){
+    var c = document.createElement('canvas'); c.width = 780; c.height = 540;
+    var x = c.getContext('2d');
+    x.fillStyle = P.panel; x.fillRect(0, 0, 780, 540);
+    x.strokeStyle = P.red; x.lineWidth = 4; x.strokeRect(14, 14, 752, 512);
+    x.fillStyle = P.ink; x.font = '600 46px "Cinzel", Georgia, serif'; x.textAlign = 'left';
+    x.fillText(p.t, 56, 110);
+    x.fillStyle = P.red; x.fillRect(56, 136, 90, 3);
+    x.fillStyle = P.muted; x.font = '400 28px "EB Garamond", Georgia, serif';
+    wrap(x, p.s, 668).slice(0, 8).forEach(function(l, i){ x.fillText(l, 56, 196 + i * 40); });
+    var t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t;
+  }
+  function placeDefs(env, group, wallX, defs){
+    defs.forEach(function(d){
+      var m = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.5), new THREE.MeshBasicMaterial({map: drawPlaque(d)}));
+      if (d.pos){ m.position.set(d.pos[0], d.pos[1], d.pos[2]); }
+      else { m.position.set(d.side * (wallX - .04), 1.6, d.z); m.rotation.y = -d.side * Math.PI / 2; }
+      m.userData.door = d; m.userData.env = env;
+      group.add(m); doorMeshes.push(m);
+    });
+  }
+  function fontsReady(){ return (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve(); }
+  fontsReady().then(function(){
+    placeDefs('hall', hall, SW / 2, HALL_DOORS);
+    Object.keys(ROOMS).forEach(function(n){
+      placeDefs(n, groups[n], RW / 2, doorDefs[n]);
+      roomPanels[n].forEach(function(rp){
+        rp.mesh.material = new THREE.MeshBasicMaterial({map: drawPanel(rp.def)});
+      });
+    });
+  });
+
+  /* ---------- Camera, input, walking ---------- */
+  var env = 'hall';
+  var cam = {x: 0, z: 4, yaw: 0, pitch: 0};
+  var walk = null, leaving = false;
+  var keys = {}, dragging = false, lastX = 0, lastY = 0;
+  var ray = new THREE.Raycaster(), mouse = new THREE.Vector2();
+  var bounds = {};
+  Object.keys(groups).forEach(function(n){ bounds[n] = {x: 4.9, zMin: -9.2, zMax: 4}; });
+  bounds.hall = {x: 4.9, zMin: Z1 + 1.2, zMax: 4};
+
+  function resize(){
+    var w = window.innerWidth, h = window.innerHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize); resize();
+
+  function setEnv(name){
+    env = name;
+    Object.keys(groups).forEach(function(n){ groups[n].visible = (n === name); });
+    var inRoom = name !== 'hall';
+    scene.fog = new THREE.Fog(P.fog, 14, 42);
+    document.getElementById('back').hidden = !inRoom;
+    document.querySelectorAll('[data-go]').forEach(function(b){ if (b.id !== 'back') b.hidden = inRoom; });
+  }
+  setEnv('hall');
+
+  function fadeThen(fn){
+    var f = document.getElementById('fade');
+    f.classList.add('on');
+    setTimeout(function(){ fn(); setTimeout(function(){ f.classList.remove('on'); }, 60); }, 850);
+  }
+  function enter(name){
+    walk = null;
+    fadeThen(function(){ setEnv(name); cam.x = 0; cam.yaw = 0; cam.pitch = 0; cam.z = 2.5; });
+  }
+  function findDoor(label){
+    var list = doorDefs[env] || [];
+    for (var i = 0; i < list.length; i++){ if (list[i].label === label) return list[i]; }
+    return null;
+  }
+  function goLabel(label){
+    if (walk || leaving) return;
+    var d = findDoor(label);
+    if (d) startWalk(d);
+  }
+  function startWalk(d){
+    if (walk || leaving) return;
+    if (reduce){ act(d); return; }
+    if (d.pos){
+      walk = {from:{x:cam.x, z:cam.z, yaw:cam.yaw}, to:{x:0, z:d.pos[2] + 3.2, yaw:0}, t:0, dur:5.5, door:d};
+      return;
+    }
+    walk = {from:{x:cam.x, z:cam.z, yaw:cam.yaw}, to:{x:d.side * 3.1, z:d.z, yaw:-d.side * Math.PI / 2}, t:0, dur:5.5, door:d};
+  }
+  function act(d){
+    if (d.enter){ enter(d.enter); return; }
+    leaving = true;
+    document.getElementById('fade').classList.add('on');
+    setTimeout(function(){ window.location.href = d.href; }, 900);
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-go]'), function(b){
+    b.addEventListener('click', function(){ goLabel(b.dataset.go); });
+  });
+  document.getElementById('back').addEventListener('click', function(){ goLabel('Back to the studio'); });
+  document.getElementById('theme').addEventListener('click', function(){
+    localStorage.setItem('studio-theme', root.dataset.theme === 'light' ? 'dark' : 'light');
+    location.reload();
+  });
+
+  function setKey(e, on){
+    var c = e.code;
+    if (c === 'ArrowUp' || c === 'KeyW') keys.f = on;
+    if (c === 'ArrowDown' || c === 'KeyS') keys.b = on;
+    if (c === 'ArrowLeft' || c === 'KeyA') keys.l = on;
+    if (c === 'ArrowRight' || c === 'KeyD') keys.r = on;
+  }
+  window.addEventListener('keydown', function(e){ setKey(e, true); });
+  window.addEventListener('keyup', function(e){ setKey(e, false); });
+
+  function pick(e){
+    var rect = canvas.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    ray.setFromCamera(mouse, camera);
+    var visible = doorMeshes.filter(function(m){ return m.userData.env === env && groups[env].visible; });
+    var hit = ray.intersectObjects(visible, false);
+    return hit.length ? hit[0].object : null;
+  }
+  canvas.addEventListener('pointerdown', function(e){
+    var m = pick(e);
+    if (m){ startWalk(m.userData.door); return; }
+    dragging = true; lastX = e.clientX; lastY = e.clientY;
+  });
+  canvas.addEventListener('pointermove', function(e){
+    var m = pick(e);
+    canvas.classList.toggle('over', !!m);
+    doorMeshes.forEach(function(d){ d.material.color.setScalar(m === d ? 1.15 : 1); });
+    if (!dragging) return;
+    cam.yaw -= (e.clientX - lastX) * 0.0026;
+    cam.pitch -= (e.clientY - lastY) * 0.002;
+    cam.pitch = Math.max(-0.5, Math.min(0.5, cam.pitch));
+    lastX = e.clientX; lastY = e.clientY;
+  });
+  window.addEventListener('pointerup', function(){ dragging = false; });
+
+  var last = performance.now();
+  function ease(t){ return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  function angleLerp(a, b, k){ var d = Math.atan2(Math.sin(b - a), Math.cos(b - a)); return a + d * k; }
+  function frame(now){
+    var dt = Math.min(0.05, (now - last) / 1000); last = now;
+    var b = bounds[env];
+    if (walk){
+      walk.t += dt / walk.dur;
+      var p = Math.min(1, walk.t), k = ease(p), w = walk;
+      cam.x = w.from.x + (w.to.x - w.from.x) * k;
+      cam.z = w.from.z + (w.to.z - w.from.z) * k;
+      cam.yaw = angleLerp(w.from.yaw, w.to.yaw, k);
+      if (p >= 1){ var d = w.door; walk = null; act(d); }
+    } else if (!leaving){
+      var f = (keys.f ? 1 : 0) - (keys.b ? 1 : 0);
+      var s = (keys.r ? 1 : 0) - (keys.l ? 1 : 0);
+      var sp = 2.2 * dt;
+      cam.x += Math.cos(cam.yaw) * s * sp;
+      cam.z += -Math.cos(cam.yaw) * f * sp;
+    }
+    cam.x = Math.max(-b.x, Math.min(b.x, cam.x));
+    cam.z = Math.max(b.zMin, Math.min(b.zMax, cam.z));
+    camera.position.set(cam.x, 1.6, cam.z);
+    camera.rotation.y = cam.yaw;
+    camera.rotation.x = cam.pitch;
+    renderer.render(scene, camera);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
