@@ -136,6 +136,7 @@ FOOTER_CSS = HEADER_CSS + ('footer{padding-block:64px 26px!important;text-align:
               'footer .fcol a{min-height:44px}footer .fcol:last-child{grid-column:1/-1}footer .fbar{flex-direction:column-reverse;align-items:flex-start;margin-top:36px}'
               'footer .flegal a{display:inline-flex;align-items:center;min-height:40px}}')
 FOOTER_CSS += RAM_CSS
+FOOTER_CSS += ('@media (max-width:600px){''footer .fgrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:30px 16px!important;justify-items:center;text-align:center}''footer .fbrand{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;text-align:center}''footer .fbrand p{margin:14px auto 0;text-align:center}''footer .fcol{align-items:center!important}''footer .fcol h4{text-align:center}''footer .fcol h4::after{margin-left:auto;margin-right:auto}''footer .fcol:last-child{grid-column:1/-1}''footer .fbar{flex-direction:column!important;justify-content:center!important;text-align:center}''footer .flegal{justify-content:center}''}')
 
 def page(title, desc, canonical, body, depth, og_image, extra_head=''):
     up = '../' * depth
