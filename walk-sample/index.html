@@ -29,13 +29,13 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
 </style>
 </head>
 <body>
-<canvas id="c" aria-label="Walk-through of BlackSheep Digital Works. Press a door to enter that section."></canvas>
+<canvas id="c" aria-label="Walk-through of BlackSheep Digital Works. Press a door or panel to enter that section."></canvas>
 <div class="vig" aria-hidden="true"></div>
 <div class="bar">
   <a class="logo" href="../">BlackSheep <span>Digital Works</span></a>
   <a class="classic" href="../">Classic view</a>
 </div>
-<p class="hint" id="hint">Drag to look · Arrow keys to walk · Press a door to enter</p>
+<p class="hint">Drag to look · Arrow keys to walk · Press a door to enter</p>
 <nav class="ui" aria-label="Walk-through doors">
   <button type="button" data-go="Services">Services</button>
   <button type="button" data-go="Portfolio">Portfolio</button>
@@ -60,13 +60,12 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
   var dark = root.dataset.theme !== 'light';
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Palettes: evening interior and showroom in dark, daylight interior and showroom in light
   var P = dark ? {
     wall:0x1c1d22, ceil:0x131418, floorA:'#4a3424', floorB:'#3b2a1d', fabric:0x2e2f35, wood:0x3a2a1c, rug:0x2a2220, lamp:0xffc98a, ambient:0.45, sun:0.0,
-    fog:0x0b0c0f, bg:'#0A0B0D', showFloor:0x17181c, showWall:0x0d0e11, spot:2.4, ink:'#EFEBE3', muted:'#A9ADB3', panel:'#111215', red:'#D11F26', exposure:1.05
+    fog:0x0b0c0f, bg:'#0A0B0D', showFloor:0x17181c, showWall:0x0d0e11, spot:2.4, ink:'#EFEBE3', muted:'#A9ADB3', panel:'#111215', red:'#D11F26', exposure:1.05, roomLamp:1.6
   } : {
     wall:0xEEE9DF, ceil:0xF8F6F2, floorA:'#C9A783', floorB:'#B8946F', fabric:0x8F8068, wood:0x7A5A40, rug:0xBBAF9A, lamp:0xfff1d6, ambient:0.85, sun:1.05,
-    fog:0xF2EFE9, bg:'#F5F5F2', showFloor:0xC9C9C6, showWall:0xE9E8E4, spot:1.2, ink:'#08090A', muted:'#25292E', panel:'#FFFFFF', red:'#9A1219', exposure:1.0
+    fog:0xF2EFE9, bg:'#F5F5F2', showFloor:0xC9C9C6, showWall:0xE9E8E4, spot:1.2, ink:'#08090A', muted:'#25292E', panel:'#FFFFFF', red:'#9A1219', exposure:1.0, roomLamp:0.35
   };
 
   var canvas = document.getElementById('c');
@@ -80,9 +79,11 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
   var camera = new THREE.PerspectiveCamera(58, 1, 0.1, 220);
   camera.rotation.order = 'YXZ';
 
-  var estate = new THREE.Group(), showroom = new THREE.Group();
-  scene.add(estate); scene.add(showroom);
-  showroom.visible = false;
+  var groups = {};
+  function addGroup(name){ var g = new THREE.Group(); g.visible = false; scene.add(g); groups[name] = g; return g; }
+  var estate = addGroup('estate');
+  var showroom = addGroup('showroom');
+  estate.visible = true;
 
   function mat(color, rough, metal){
     return new THREE.MeshStandardMaterial({color: color, roughness: rough === undefined ? .85 : rough, metalness: metal || 0});
@@ -97,7 +98,6 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
     g.add(m); return m;
   }
 
-  // Procedural wood floor: planks in the palette colours, so it reads as real flooring
   function woodTexture(a, b){
     var c = document.createElement('canvas'); c.width = 1024; c.height = 1024;
     var x = c.getContext('2d');
@@ -120,18 +120,20 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
     t.encoding = THREE.sRGBEncoding; return t;
   }
 
-  /* ---------- Estate: a real-estate living room, window onto the estate photograph ---------- */
+  /* ---------- Shared room shell (width EW, length from RZ0 to RZ1) ---------- */
   var EW = 11, EZ0 = 5, EZ1 = -16;
-  var eLen = EZ0 - EZ1;
-  var eCenter = (EZ0 + EZ1) / 2;
-  var floorM = new THREE.MeshStandardMaterial({map: woodTexture(P.floorA, P.floorB), roughness: .55});
-  plane(estate, EW, eLen, floorM, [0, 0, eCenter], [-Math.PI / 2, 0, 0]);
-  plane(estate, EW, eLen, mat(P.ceil, .95), [0, 3.6, eCenter], [Math.PI / 2, 0, 0]);
-  plane(estate, eLen, 3.6, mat(P.wall), [-EW / 2, 1.8, eCenter], [0, Math.PI / 2, 0]);
-  plane(estate, eLen, 3.6, mat(P.wall), [EW / 2, 1.8, eCenter], [0, -Math.PI / 2, 0]);
-  plane(estate, EW, 3.6, mat(P.wall), [0, 1.8, EZ1], [0, 0, 0]);
+  var RZ1 = -10;
+  function shell(g, zNear, zFar, floorA, floorB){
+    var L = zNear - zFar, C = (zNear + zFar) / 2;
+    plane(g, EW, L, new THREE.MeshStandardMaterial({map: woodTexture(floorA, floorB), roughness: .55}), [0, 0, C], [-Math.PI / 2, 0, 0]);
+    plane(g, EW, L, mat(P.ceil, .95), [0, 3.6, C], [Math.PI / 2, 0, 0]);
+    plane(g, L, 3.6, mat(P.wall), [-EW / 2, 1.8, C], [0, Math.PI / 2, 0]);
+    plane(g, L, 3.6, mat(P.wall), [EW / 2, 1.8, C], [0, -Math.PI / 2, 0]);
+    plane(g, EW, 3.6, mat(P.wall), [0, 1.8, zFar], [0, 0, 0]);
+  }
 
-  // Window wall: the estate photograph is the view outside
+  /* ---------- Estate: real-estate living room, window onto the estate photograph ---------- */
+  shell(estate, EZ0, EZ1, P.floorA, P.floorB);
   var windowTex = null;
   new THREE.TextureLoader().load('../img/estate.jpg', function(t){
     t.encoding = THREE.sRGBEncoding; windowTex = t;
@@ -141,14 +143,12 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
   box(estate, 8.8, .12, .12, 0x111111, [0, .33, EZ1 + .06]);
   box(estate, .12, 3.2, .12, 0x111111, [-4.4, 1.9, EZ1 + .06]);
   box(estate, .12, 3.2, .12, 0x111111, [4.4, 1.9, EZ1 + .06]);
-
-  // Furniture
   var sofa = new THREE.Group(); estate.add(sofa); sofa.position.set(-2.4, 0, -8);
   box(sofa, 3.2, .45, 1.0, P.fabric, [0, .3, 0]);
   box(sofa, 3.2, .7, .26, P.fabric, [0, .72, -.37]);
   box(sofa, .26, .6, 1.0, P.fabric, [-1.5, .55, 0]);
   box(sofa, .26, .6, 1.0, P.fabric, [1.5, .55, 0]);
-  var rug = plane(estate, 4.6, 3.2, mat(P.rug, 1), [0, .01, -8.2], [-Math.PI / 2, 0, 0]);
+  plane(estate, 4.6, 3.2, mat(P.rug, 1), [0, .01, -8.2], [-Math.PI / 2, 0, 0]);
   var table = new THREE.Group(); estate.add(table); table.position.set(0, 0, -8.3);
   box(table, 1.7, .08, .95, P.wood, [0, .42, 0], .4);
   box(table, .08, .4, .08, P.wood, [-.7, .2, -.36]); box(table, .08, .4, .08, P.wood, [.7, .2, -.36]);
@@ -157,12 +157,9 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
   box(dining, 2.2, .08, 1.0, P.wood, [0, .76, 0], .4);
   box(dining, .1, .75, .1, P.wood, [-.95, .37, -.4]); box(dining, .1, .75, .1, P.wood, [.95, .37, -.4]);
   box(dining, .1, .75, .1, P.wood, [-.95, .37, .4]); box(dining, .1, .75, .1, P.wood, [.95, .37, .4]);
-  // Floor lamp
   box(estate, .06, 1.9, .06, 0x111111, [4.5, .95, -4]);
   var shade = new THREE.Mesh(new THREE.CylinderGeometry(.28, .36, .42, 24, 1, true), new THREE.MeshBasicMaterial({color: P.lamp, side: THREE.DoubleSide}));
   shade.position.set(4.5, 2.0, -4); estate.add(shade);
-
-  // Pendant lights
   [[0, -4], [0, -11]].forEach(function(p){
     var bulb = new THREE.Mesh(new THREE.SphereGeometry(.12, 16, 16), new THREE.MeshBasicMaterial({color: P.lamp}));
     bulb.position.set(p[0], 3.05, p[1]); estate.add(bulb);
@@ -173,14 +170,58 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
   var sunL = new THREE.DirectionalLight(0xfff4e0, P.sun);
   sunL.position.set(0, 3, -18); sunL.target.position.set(0, 0, -4); estate.add(sunL); estate.add(sunL.target);
 
-  /* ---------- Showroom: dealership floor, car on a pedestal, spotlights ---------- */
+  /* ---------- Content rooms: page text on the walls, with a door out to the full page ---------- */
+  var ROOMS = {
+    services: {title:'Services', href:'../services/', full:'Full services page', panels:[
+      {t:'Real estate photography', s:'Bracketed HDR interiors with true-to-life colour and straight verticals, and exteriors that show the home at its best.'},
+      {t:'Video & social reels', s:'Cinematic walkthroughs and short vertical cuts built for Instagram and Reels, for listings, dealerships and events.'},
+      {t:'Drone & aerial', s:'Lot lines, neighbourhood context and the approach to the front door, captured from above.'},
+      {t:'Floor plans & 3D', s:'Measured floor plans so buyers understand the layout and flow of a home before they book a visit.'},
+      {t:'Event coverage', s:'Community festivals, brand activations, corporate and private events, covered from the wide scene to the candid moment.'},
+      {t:'Dealership inventory', s:'Consistent lot and inventory photography that keeps every listing uniform, with walkaround video for every unit.', enter:'showroom'}
+    ]},
+    pricing: {title:'Pricing', href:'../pricing/', full:'Full pricing page', panels:[
+      {t:'Clear prices. No surprises.', s:'Prices in CAD, plus 13% HST. Travel within the GTA included; beyond the GTA quoted per km. Delivery in 24–72 hours, most within 24–48.'},
+      {t:'Homes', s:'Packages cover homes up to 2,999 sq ft. 3,000–3,999 sq ft adds $100, 4,000–4,999 sq ft adds $200, 5,000+ is quoted.'},
+      {t:'Dealerships', s:'Per-unit visits start at 10 cars or trucks, or 5 RVs. Monthly lot programs and RV shows are quoted.', enter:'showroom'},
+      {t:'Events', s:'Coverage runs up to 3 hours per event, with unlimited edited photos. Weddings are not offered.'},
+      {t:'Get a quote', s:'Pick a package, add what you need, and get a numbered quote by email in seconds, with a PDF you can approve.'}
+    ]},
+    about: {title:'About', href:'../about/', full:'Full about page', panels:[
+      {t:'Nick Mehra', s:'Owner & Creative Director. Almost two decades in security and public service law enforcement. Now every frame at BlackSheep Digital Works is shot by Nick.'},
+      {t:'Background', s:'Private security first, then sworn peace officer roles with several public service agencies, among them the Government of Ontario.'},
+      {t:'Based in Ontario', s:'BlackSheep Digital Works · Ontario. Nick’s full story, portraits and personal journal live on nickmehra.ca.'}
+    ]},
+    journal: {title:'Journal', href:'../journal/', full:'Full journal', panels:[
+      {t:'Notes from behind the lens.', s:'Listing media, market moves and the craft of making a property stand apart in Durham and across Ontario.'}
+    ]}
+  };
+  var ROOM_W = EW, ROOM_Z0 = 5, ROOM_Z1 = -10;
+  var roomPanels = {};   // name -> [{mesh, def, idx}]
+  Object.keys(ROOMS).forEach(function(name){
+    var g = addGroup(name);
+    shell(g, ROOM_Z0, ROOM_Z1, P.floorA, P.floorB);
+    g.add(new THREE.AmbientLight(0xffffff, dark ? .3 : .9));
+    var lamp = new THREE.PointLight(P.lamp, P.roomLamp * 6, 16, 1.4); lamp.position.set(0, 3.1, -3); g.add(lamp);
+    var lamp2 = new THREE.PointLight(P.lamp, P.roomLamp * 6, 16, 1.4); lamp2.position.set(0, 3.1, -8); g.add(lamp2);
+    roomPanels[name] = [];
+    ROOMS[name].panels.forEach(function(p, i){
+      var side = i % 2 ? 1 : -1;
+      var z = -1.6 - Math.floor(i / 2) * 2.8;
+      var m = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 1.8), new THREE.MeshBasicMaterial({color: 0xffffff}));
+      m.position.set(side * (ROOM_W / 2 - .04), 1.6, z);
+      m.rotation.y = -side * Math.PI / 2;
+      g.add(m);
+      roomPanels[name].push({mesh: m, def: p, idx: i});
+    });
+  });
+
   var SW = 12, SZ0 = 5, SZ1 = -12, sLen = SZ0 - SZ1, sCenter = (SZ0 + SZ1) / 2;
   plane(showroom, SW, sLen, mat(P.showFloor, .22, .15), [0, 0, sCenter], [-Math.PI / 2, 0, 0]);
   plane(showroom, SW, sLen, mat(P.showWall, .9), [0, 4.2, sCenter], [Math.PI / 2, 0, 0]);
   plane(showroom, sLen, 4.2, mat(P.showWall, .9), [-SW / 2, 2.1, sCenter], [0, Math.PI / 2, 0]);
   plane(showroom, sLen, 4.2, mat(P.showWall, .9), [SW / 2, 2.1, sCenter], [0, -Math.PI / 2, 0]);
   plane(showroom, SW, 4.2, mat(P.showWall, .9), [0, 2.1, SZ1], [0, 0, 0]);
-  // Backdrop: the BlackSheep car photograph
   new THREE.TextureLoader().load('../img/nick-car.webp', function(t){
     t.encoding = THREE.sRGBEncoding;
     plane(showroom, 6.4, 3.6, new THREE.MeshBasicMaterial({map: t}), [0, 2.0, SZ1 + .03], [0, 0, 0]);
@@ -194,51 +235,96 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
   });
   showroom.add(new THREE.AmbientLight(0xffffff, dark ? .35 : .9));
 
-  /* ---------- Plaques (doors) ---------- */
+  /* ---------- Doors and plaques ---------- */
   var ESTATE_DOORS = [
-    {label:'Services', sub:'Photography, video, drone, floor plans', href:'../services/', side:-1, z:-2},
+    {label:'Services', sub:'Photography, video, drone, floor plans', enter:'services', side:-1, z:-2},
     {label:'Portfolio', sub:'Selected work', href:'../#portfolio', side:1, z:-4.5},
-    {label:'Pricing', sub:'Packages for listings and events', href:'../pricing/', side:-1, z:-7},
-    {label:'About', sub:'Who we are', href:'../about/', side:1, z:-9.5},
-    {label:'Journal', sub:'Articles and updates', href:'../journal/', side:-1, z:-12},
+    {label:'Pricing', sub:'Packages for listings and events', enter:'pricing', side:-1, z:-7},
+    {label:'About', sub:'Who we are', enter:'about', side:1, z:-9.5},
+    {label:'Journal', sub:'Articles and updates', enter:'journal', side:-1, z:-12},
     {label:'Book a shoot', sub:'Request a date', href:'../booking.php', side:1, z:-14},
     {label:'Dealership', sub:'Showroom and inventory', enter:'showroom', side:-1, z:-14.5}
   ];
   var SHOW_DOORS = [
     {label:'Book a shoot', sub:'Request a date', href:'../booking.php', side:-1, z:-2},
-    {label:'Services', sub:'Photography, video, drone, floor plans', href:'../services/', side:1, z:-2},
+    {label:'Services', sub:'Photography, video, drone, floor plans', enter:'services', side:1, z:-2},
     {label:'Back to the property', sub:'Return to the estate', enter:'estate', side:-1, z:-7}
   ];
-  var doorMeshes = [];   // each mesh holds userData.door
+  function roomDoors(name){
+    var r = ROOMS[name];
+    return [
+      {label:'Back to the property', sub:'Return to the estate', enter:'estate', pos:[-2.6, 1.6, ROOM_Z1 + .04]},
+      {label:r.full, sub:'Open the full page', href:r.href, pos:[2.6, 1.6, ROOM_Z1 + .04]}
+    ];
+  }
+  var doorMeshes = [];
   var doorDefs = {estate: ESTATE_DOORS, showroom: SHOW_DOORS};
+  Object.keys(ROOMS).forEach(function(n){ doorDefs[n] = roomDoors(n); });
 
   function drawPlaque(d){
     var c = document.createElement('canvas'); c.width = 768; c.height = 480;
     var x = c.getContext('2d');
     x.fillStyle = P.panel; x.fillRect(0, 0, 768, 480);
     x.strokeStyle = P.red; x.lineWidth = 5; x.strokeRect(18, 18, 732, 444);
-    x.fillStyle = P.ink; x.font = '600 66px "Cinzel", Georgia, serif'; x.textAlign = 'center';
+    x.fillStyle = P.ink; x.font = '600 56px "Cinzel", Georgia, serif'; x.textAlign = 'center';
     x.fillText(d.label, 384, 215);
     x.fillStyle = P.red; x.fillRect(324, 245, 120, 3);
-    x.fillStyle = P.muted; x.font = '400 30px "EB Garamond", Georgia, serif'; x.fillText(d.sub, 384, 298);
+    x.fillStyle = P.muted; x.font = '400 28px "EB Garamond", Georgia, serif'; x.fillText(d.sub || '', 384, 298);
     x.fillStyle = P.red; x.font = '600 24px "Cinzel", Georgia, serif'; x.fillText('ENTER  →', 384, 390);
     var t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t;
   }
-  function placeDoors(){
-    Object.keys(doorDefs).forEach(function(env){
-      var group = env === 'estate' ? estate : showroom;
-      var wallX = env === 'estate' ? EW / 2 : SW / 2;
-      doorDefs[env].forEach(function(d){
-        var m = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.5), new THREE.MeshBasicMaterial({map: drawPlaque(d)}));
-        m.position.set(d.side * (wallX - .04), 1.6, d.z);
-        m.rotation.y = -d.side * Math.PI / 2;
-        m.userData.door = d; m.userData.env = env;
-        group.add(m); doorMeshes.push(m);
-      });
+  function wrap(x, text, maxW){
+    var words = text.split(' '), lines = [], line = '';
+    words.forEach(function(w){
+      var test = line ? line + ' ' + w : w;
+      if (x.measureText(test).width > maxW && line){ lines.push(line); line = w; } else line = test;
+    });
+    if (line) lines.push(line);
+    return lines;
+  }
+  function drawPanel(p){
+    var c = document.createElement('canvas'); c.width = 780; c.height = 540;
+    var x = c.getContext('2d');
+    x.fillStyle = P.panel; x.fillRect(0, 0, 780, 540);
+    x.strokeStyle = P.red; x.lineWidth = 4; x.strokeRect(14, 14, 752, 512);
+    x.fillStyle = P.ink; x.font = '600 46px "Cinzel", Georgia, serif'; x.textAlign = 'left';
+    x.fillText(p.t, 56, 110);
+    x.fillStyle = P.red; x.fillRect(56, 136, 90, 3);
+    x.fillStyle = P.muted; x.font = '400 28px "EB Garamond", Georgia, serif';
+    var lines = wrap(x, p.s, 668);
+    lines.slice(0, 8).forEach(function(l, i){ x.fillText(l, 56, 196 + i * 40); });
+    if (p.enter === 'showroom'){
+      x.fillStyle = P.red; x.font = '600 22px "Cinzel", Georgia, serif';
+      x.fillText('TAP TO VISIT THE DEALERSHIP SHOWROOM  →', 56, 490);
+    }
+    var t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t;
+  }
+  function placeDefs(env, group, wallX, defs){
+    defs.forEach(function(d){
+      var m = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.5), new THREE.MeshBasicMaterial({map: drawPlaque(d)}));
+      if (d.pos){ m.position.set(d.pos[0], d.pos[1], d.pos[2]); }
+      else { m.position.set(d.side * (wallX - .04), 1.6, d.z); m.rotation.y = -d.side * Math.PI / 2; }
+      m.userData.door = d; m.userData.env = env;
+      group.add(m); doorMeshes.push(m);
     });
   }
-  fontsReady().then(placeDoors);
   function fontsReady(){ return (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve(); }
+  fontsReady().then(function(){
+    placeDefs('estate', estate, EW / 2, ESTATE_DOORS);
+    placeDefs('showroom', showroom, SW / 2, SHOW_DOORS);
+    Object.keys(ROOMS).forEach(function(n){
+      placeDefs(n, groups[n], ROOM_W / 2, doorDefs[n]);
+      roomPanels[n].forEach(function(rp){
+        var tex = drawPanel(rp.def);
+        rp.mesh.material = new THREE.MeshBasicMaterial({map: tex});
+        if (rp.def.enter){
+          rp.mesh.userData.door = {label: 'Dealership', sub: 'Showroom and inventory', enter: rp.def.enter};
+          rp.mesh.userData.env = n;
+          doorMeshes.push(rp.mesh);
+        }
+      });
+    });
+  });
 
   /* ---------- Camera, input, walking ---------- */
   var env = 'estate';
@@ -246,7 +332,10 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
   var walk = null, leaving = false;
   var keys = {}, dragging = false, lastX = 0, lastY = 0;
   var ray = new THREE.Raycaster(), mouse = new THREE.Vector2();
-  var bounds = {estate:{x:4.9, zMin:EZ1 + 1.2, zMax:4}, showroom:{x:5, zMin:SZ1 + 1.2, zMax:4}};
+  var bounds = {};
+  Object.keys(groups).forEach(function(n){ bounds[n] = {x: 4.9, zMin: -9.2, zMax: 4}; });
+  bounds.estate = {x: 4.9, zMin: EZ1 + 1.2, zMax: 4};
+  bounds.showroom = {x: 5, zMin: SZ1 + 1.2, zMax: 4};
 
   function resize(){
     var w = window.innerWidth, h = window.innerHeight;
@@ -257,12 +346,13 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
 
   function setEnv(name){
     env = name;
-    estate.visible = name === 'estate';
-    showroom.visible = name === 'showroom';
-    scene.fog = name === 'estate' ? new THREE.Fog(P.fog, 14, 40) : new THREE.Fog(P.fog, 12, 32);
-    document.getElementById('back').hidden = name !== 'showroom';
+    Object.keys(groups).forEach(function(n){ groups[n].visible = (n === name); });
+    var inRoom = name !== 'estate';
+    scene.fog = (name === 'showroom') ? new THREE.Fog(P.fog, 12, 32) : new THREE.Fog(P.fog, 14, 40);
+    document.getElementById('back').hidden = !inRoom;
     document.querySelectorAll('[data-go]').forEach(function(b){
-      b.hidden = (name === 'showroom' && b.id !== 'back') || (name === 'estate' && b.id === 'back');
+      if (b.id === 'back') return;
+      b.hidden = inRoom;
     });
   }
   setEnv('estate');
@@ -276,8 +366,8 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
     walk = null;
     fadeThen(function(){
       setEnv(name);
-      if (name === 'showroom'){ cam.x = 0; cam.z = 3.5; cam.yaw = 0; cam.pitch = 0; }
-      else { cam.x = 0; cam.z = 2.5; cam.yaw = 0; cam.pitch = 0; }
+      cam.x = 0; cam.yaw = 0; cam.pitch = 0;
+      cam.z = (name === 'showroom') ? 3.5 : 2.5;
     });
   }
   function findDoor(label){
@@ -289,6 +379,17 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
     if (walk || leaving) return;
     var d = findDoor(label);
     if (!d) return;
+    startWalk(d);
+  }
+  function startWalk(d){
+    if (walk || leaving) return;
+    if (d.pos){
+      var px = d.pos[0], pz = d.pos[2];
+      var stopZ = pz + 3.2;
+      if (reduce){ act(d); return; }
+      walk = {from:{x:cam.x, z:cam.z, yaw:cam.yaw}, to:{x:0, z:stopZ, yaw:0}, t:0, dur:5.5, door:d};
+      return;
+    }
     if (reduce){ act(d); return; }
     var stopX = d.side * 3.1;
     walk = {from:{x:cam.x, z:cam.z, yaw:cam.yaw}, to:{x:stopX, z:d.z, yaw:-d.side * Math.PI / 2}, t:0, dur:5.5, door:d};
@@ -322,13 +423,13 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
     mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
     ray.setFromCamera(mouse, camera);
-    var visible = doorMeshes.filter(function(m){ return m.userData.env === env; });
+    var visible = doorMeshes.filter(function(m){ return m.userData.env === env && groups[env].visible; });
     var hit = ray.intersectObjects(visible, false);
     return hit.length ? hit[0].object : null;
   }
   canvas.addEventListener('pointerdown', function(e){
     var m = pick(e);
-    if (m){ goLabel(m.userData.door.label); return; }
+    if (m){ startWalk(m.userData.door); return; }
     dragging = true; lastX = e.clientX; lastY = e.clientY;
   });
   canvas.addEventListener('pointermove', function(e){
