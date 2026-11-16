@@ -137,6 +137,7 @@ for f in glob.glob(os.path.join(R, '**/*.html'), recursive=True):
     s = open(f).read()
     if '<footer' not in s: continue
     s = re.sub(r'<footer>.*?</footer>', FOOTER, s, flags=re.S)
+    if '/js/navmore.js' not in s: s = s.replace('</body>', '<script src="/js/navmore.js?v=1" defer></script>\n</body>', 1)
     if '/chat.js' not in s: s = s.replace('</body>', '<script src="/chat-kb.js?v=1" defer></script><script src="/chat.js?v=1" defer></script>\n</body>', 1)
     s = re.sub(r'/css/site\.css\?v=\d+', '/css/site.css?v=' + CSS_V, s)
     s = re.sub(r'/css/pages\.css\?v=\d+', '/css/pages.css?v=16', s)
