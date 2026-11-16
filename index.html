@@ -915,13 +915,7 @@ main,section,footer{background-color:transparent}
   }
 
   var PHOTOS = [
-    ['hero', 'BlackSheep Digital Works, from conviction to legacy', 'The brand'],
-    ['real-estate-photography', 'Real estate photography', 'Service'],
-    ['video', 'Video and social reels', 'Service'],
-    ['drone', 'Drone and aerial', 'Service'],
-    ['floor-plans', '2D/3D Floorplans', 'Service'],
-    ['events', 'Event coverage', 'Service'],
-    ['dealerships', 'Dealership inventory', 'Service']
+    ['hero', 'BlackSheep Digital Works, from conviction to legacy', 'The brand']
   ];
   (function(){ for (var i = PHOTOS.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)), t = PHOTOS[i]; PHOTOS[i] = PHOTOS[j]; PHOTOS[j] = t; } })();
 
@@ -1798,11 +1792,11 @@ main,section,footer{background-color:transparent}
   scene.add(hero.group);
 
   // The ring shows 22 photos picked at random each visit; the corridor shows the rest
-  var RING_N = Math.min(22, PHOTOS.length);
+  var RING_N = 0;
 
   // The corridor: prints floating on both sides of the camera path
   var corridor = [];
-  (function(){
+  (function(){ if (RING_N >= 0) return;
     var n = PHOTOS.length;
     // Spaced out: one print per side every 10 units, the two sides staggered by 5,
     // alternating high and low so neighbours never stack into one bright patch.
@@ -1840,7 +1834,7 @@ main,section,footer{background-color:transparent}
     ring.add(f.group); panels.push(f);
   });
   var halo = new THREE.Mesh(new THREE.RingGeometry(R - .25, R + .05, 120), new THREE.MeshBasicMaterial({color:0xd11f26, side:THREE.DoubleSide, transparent:true, opacity:.5}));
-  halo.rotation.x = -Math.PI / 2; halo.position.set(0, -2.4, RZ); scene.add(halo);
+  halo.rotation.x = -Math.PI / 2; halo.position.set(0, -2.4, RZ);
 
   var ringAngle = 0, ringTarget = 0, ringStep = Math.PI * 2 / RING_N, lastInteract = 0;
   function frontIndex(){ var k = Math.round(ringTarget / ringStep); return ((-k) % RING_N + RING_N) % RING_N; }
