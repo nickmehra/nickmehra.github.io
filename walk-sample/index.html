@@ -91,7 +91,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
 
   // Ceiling light strips, so the corridor reads as a gallery and not an empty box
   for (var lz = 4; lz > -LEN + 8; lz -= 7){
-    plane(0.5, 5.5, T.light, [0, 3.28, lz], [Math.PI / 2, 0, 0]).material.opacity = T.lightA;
+    var lm = plane(0.5, 5.5, T.light, [0, 3.28, lz], [Math.PI / 2, 0, 0]).material; lm.transparent = true; lm.opacity = T.lightA;
   }
 
   // Sample views: architectural line drawings, placeholder until the real portfolio goes here
