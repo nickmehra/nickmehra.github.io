@@ -490,9 +490,11 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
 <script src="pricing/calc.js?v=2"></script>
 <script src="/booking-gate.js?v=2" defer></script>
 <style>@media (max-width:760px){section:not(.hero){padding-top:48px!important;padding-bottom:48px!important}}</style>
+<style id="silk-css">html{background:var(--bg)}body{background:transparent!important}#silk{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:-1;pointer-events:none}</style>
 </head>
 <body>
 
+<canvas id="silk" aria-hidden="true"></canvas>
 <canvas id="scene" aria-hidden="true"></canvas>
 <div class="veil" aria-hidden="true"></div>
 
@@ -1783,6 +1785,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   hero.glow.visible = false; hero.shadow.visible = false;
   hero.group.position.set(0, 1.5, -26); hero.baseY = 1.5; hero.baseZ = -26;
   scene.add(hero.group);
+  if (document.getElementById('silk')) hero.group.visible = false; // the silk backdrop replaces the estate photo
 
   // The ring shows 22 photos picked at random each visit; the corridor shows the rest
   var RING_N = 0;
@@ -2038,5 +2041,6 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
 <script>(function(){var n=document.querySelector('.view-note');if(!n)return;try{if(localStorage.getItem('vn-off')||sessionStorage.getItem('vn-seen')){n.remove();return}}catch(e){}if(!window.matchMedia||!matchMedia('(max-width:760px)').matches){n.remove();return}document.body.appendChild(n);n.hidden=false;try{sessionStorage.setItem('vn-seen','1')}catch(e){}var gone=false;function hide(keep){if(gone)return;gone=true;n.classList.remove('on');if(keep){try{localStorage.setItem('vn-off','1')}catch(e){}}setTimeout(function(){n.remove()},600)}setTimeout(function(){n.classList.add('on')},900);setTimeout(function(){hide(false)},8000);addEventListener('scroll',function(){if(scrollY>240)hide(false)},{passive:true});n.querySelector('.vn-x').addEventListener('click',function(){hide(true)});})();</script>
 <script src="/chat-kb.js?v=1" defer></script><script src="/chat.js?v=1" defer></script>
 <script src="js/navmore.js" defer></script>
+<script src="js/silk.js?v=1" defer></script>
 </body>
 </html>
