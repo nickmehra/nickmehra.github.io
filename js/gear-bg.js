@@ -1,10 +1,11 @@
 /* BlackSheep homepage backdrop: stealth gear.
-   Three pieces of the kit, modelled in matte graphite and lit only by thin rim lights:
-   a prime lens, a camera drone and a 360 camera on a tripod. They float well behind the page,
-   turn slowly, follow the pointer with their gaze, and "take a picture" when the visitor clicks
-   or lingers near one: the lens irises shut and open, the drone's gimbal flashes, the 360 camera
-   sends a capture ring around itself, and a faint frame flies out toward the viewer.
-   Rendered on a transparent canvas under all content; pointer-events never reach it. */
+   Three pieces of the kit, modelled in matte graphite and lit by thin rim lights: a prime lens,
+   a camera drone and a 360 camera on a tripod. They sit large in the margins, well behind the page,
+   and move slowly: every so often, at random, each one performs a small unhurried action (the lens
+   stops down its aperture, the drone glides and tilts its camera, the 360 camera turns or sweeps a
+   faint capture ring). The pointer is a soft spotlight: the kit turns gently toward it, it casts real
+   shadows on the wall behind, and lingering or clicking near a piece invites it to act. Nothing flashes.
+   Rendered on a transparent canvas under all content; pointer events never reach it. */
 (function(){
   var cv = document.getElementById('gear');
   if (!cv || !window.THREE) { if (cv) cv.remove(); return; }
@@ -87,7 +88,7 @@
       var led = new T.Mesh(new T.SphereGeometry(.035, 8, 8), new T.MeshBasicMaterial({color: p[1] > 0 ? 0xd11f26 : 0x2c6b4a})); led.position.set(p[0]*1.25, -.02, p[1]*1.25); d.add(led);
       var hub = new T.Group(); hub.position.set(p[0]*1.25, .28, p[1]*1.25); d.add(hub);
       for (var b = 0; b < 2; b++){ var bl = new T.Mesh(new T.BoxGeometry(1.0, .012, .09), rubber); bl.rotation.y = b * Math.PI; bl.position.x = 0; hub.add(bl); }
-      var disc = new T.Mesh(new T.CircleGeometry(.52, 40), new T.MeshBasicMaterial({color:0x9fb7d6, transparent:true, opacity:.05, depthWrite:false, side:T.DoubleSide}));
+      var disc = new T.Mesh(new T.CircleGeometry(.52, 40), new T.MeshBasicMaterial({color:0x9fb7d6, transparent:true, opacity:.06, depthWrite:false, side:T.DoubleSide}));
       disc.rotation.x = -Math.PI/2; hub.add(disc);
       hub.userData.dir = i % 2 ? 1 : -1; props.push(hub);
       var leg = new T.Mesh(new T.CylinderGeometry(.025, .025, .45, 8), rubber); leg.position.set(p[0]*.45, -.42, p[1]*.55); d.add(leg);
@@ -137,46 +138,61 @@
   kit.forEach(function(o){ scene.add(o); o.userData.flash = 0; o.userData.snapT = -9; o.userData.dwell = 0; o.userData.face = new T.Vector2(); });
   lens.scale.setScalar(.85); drone.scale.setScalar(.95); tsix.scale.setScalar(.7);
 
-  /* ---------- placement: keep the middle of the page clear for headlines and buttons ---------- */
-  var aspect = 1, layout = {};
+  /* ---------- placement: large, set into the margins; on phones they sit behind the content at the edges ---------- */
+  var aspect = 1, vwHalf = 1, vhHalf = 1;
+  function rnd(a, b){ return a + Math.random() * (b - a); }
   function place(){
     var w = innerWidth, h = innerHeight; aspect = w / h;
     renderer.setSize(w, h, false); cam.aspect = aspect; cam.updateProjectionMatrix();
-    var vw = Math.tan(cam.fov * Math.PI / 360) * cam.position.z * aspect;   // half the visible width at z = 0
-    if (aspect >= 1){
-      layout = {lens:[-vw*.74, -1.7, -1], drone:[vw*.7, 2.6, -2.5], tsix:[vw*.76, -2.4, -1.5]};
-    } else {        // phones: tucked into the corners, smaller
-      layout = {lens:[-vw*.78, -4.6, -3], drone:[vw*.6, 3.6, -4], tsix:[vw*.78, -4.9, -3]};
+    vhHalf = Math.tan(cam.fov * Math.PI / 360) * cam.position.z; vwHalf = vhHalf * aspect;
+    var L;
+    if (aspect >= 1.15){
+      L = {lens:[-vwHalf*.72, -1.3, -.5, 1.0], drone:[vwHalf*.62, 2.75, -1.5, .95], tsix:[vwHalf*.8, -2.2, -.5, .85]};
+    } else if (aspect >= .8){
+      L = {lens:[-vwHalf*.64, -2.5, -.5, .9], drone:[vwHalf*.5, 3.1, -1.5, .9], tsix:[vwHalf*.7, -2.6, -.5, .75]};
+    } else {        // phones: big enough to read clearly, anchored to the edges
+      L = {lens:[-vwHalf*.72, -3.35, 0, .62], drone:[vwHalf*.45, 3.0, -.5, .72], tsix:[vwHalf*.82, -2.75, 0, .56]};
     }
-    var s = aspect >= 1 ? 1 : .5;
-    lens.scale.setScalar(.85*s); drone.scale.setScalar(.95*s); tsix.scale.setScalar(.7*s);
-    [['lens',lens],['drone',drone],['tsix',tsix]].forEach(function(p){ var v = layout[p[0]]; p[1].userData.home = new T.Vector3(v[0], v[1], v[2]); p[1].position.copy(p[1].userData.home); });
+    [['lens',lens],['drone',drone],['tsix',tsix]].forEach(function(p){
+      var v = L[p[0]], u = p[1].userData; u.home = new T.Vector3(v[0], v[1], v[2]); p[1].scale.setScalar(v[3]);
+      if (!u.placed){ p[1].position.copy(u.home); u.placed = true; }
+      u.homeScreen = null;
+    });
   }
 
-  /* ---------- the captured frame that flies out on each shot ---------- */
-  var frames = [];
-  function shootFrame(o){
-    var geo = new T.EdgesGeometry(new T.PlaneGeometry(1.5, 1));
-    var ln = new T.LineSegments(geo, new T.LineBasicMaterial({color:0xf1ece2, transparent:true, opacity:.55, depthWrite:false}));
-    var p = new T.Vector3(); (o.userData.glass || o).getWorldPosition(p); ln.position.copy(p); ln.scale.setScalar(.25);
-    ln.userData = {t:0, from:p.clone()}; scene.add(ln); frames.push(ln);
-    var fl = new T.PointLight(0xfff3e0, 0, 6); fl.position.copy(p).add(new T.Vector3(0, 0, .8)); scene.add(fl); ln.userData.light = fl;
-  }
-  function snap(o, now){
-    if (now - o.userData.snapT < 900) return;
-    o.userData.snapT = now; o.userData.flash = 1; shootFrame(o);
+  /* ---------- slow, randomised behaviour ---------- */
+  // Each piece has a small repertoire. Every so often (at random) it performs one, slowly;
+  // lingering near it or clicking near it asks it to perform one sooner. Nothing flashes.
+  function ease(x){ x = Math.max(0, Math.min(1, x)); return x * x * x * (x * (x * 6 - 15) + 10); }   // smootherstep
+  function bell(x){ return Math.sin(Math.PI * Math.max(0, Math.min(1, x))); }
+  kit.forEach(function(o){
+    var u = o.userData;
+    u.act = null; u.next = performance.now() + rnd(4000, 11000);
+    u.drift = new T.Vector3(); u.driftT = new T.Vector3(); u.yaw = rnd(-.4, .4); u.yawT = u.yaw;
+    u.spinDir = Math.random() < .5 ? -1 : 1; u.phase = rnd(0, 6.28);
+  });
+  function perform(o, now){
+    var u = o.userData; if (u.act) return;
+    var kinds = u.kind === 'lens' ? ['iris', 'turn'] : u.kind === 'drone' ? ['glide', 'look'] : ['sweep', 'turn'];
+    u.act = {k: kinds[Math.floor(Math.random() * kinds.length)], t0: now, dur: rnd(3200, 4800), amt: rnd(.55, .9)};
+    if (u.act.k === 'glide') u.driftT.set(rnd(-.6, .6), rnd(-.4, .4), rnd(-.4, .3));
+    if (u.act.k === 'turn' || u.act.k === 'look') u.yawT = rnd(-.9, .9);
+    u.next = now + u.act.dur + rnd(7000, 15000);
   }
 
-  /* ---------- pointer ---------- */
-  var mx = 0, my = 0, hasPtr = false, ptrX = -1e4, ptrY = -1e4, lastPtr = 0, sl = {x:0, y:0};
-  addEventListener('pointermove', function(e){ hasPtr = true; lastPtr = performance.now(); ptrX = e.clientX; ptrY = e.clientY; mx = e.clientX / innerWidth * 2 - 1; my = -(e.clientY / innerHeight * 2 - 1); }, {passive:true});
-  document.addEventListener('pointerleave', function(){ ptrX = ptrY = -1e4; });
+  /* ---------- pointer, heavily smoothed so the kit never twitches ---------- */
+  var ptr = {x: .5, y: .5, has: false, last: 0}, sp = {x: .5, y: .5};
+  addEventListener('pointermove', function(e){ ptr.has = true; ptr.last = performance.now(); ptr.x = e.clientX / innerWidth; ptr.y = e.clientY / innerHeight; }, {passive:true});
   var tmp = new T.Vector3();
-  function screenOf(o){ o.getWorldPosition(tmp); tmp.project(cam); return [(tmp.x + 1) / 2 * innerWidth, (1 - tmp.y) / 2 * innerHeight]; }
+  function homeScreen(o){
+    var u = o.userData; if (u.homeScreen) return u.homeScreen;
+    tmp.copy(u.home).project(cam); return (u.homeScreen = [(tmp.x + 1) / 2, (1 - tmp.y) / 2]);
+  }
   addEventListener('pointerdown', function(e){
     if (e.target.closest && e.target.closest('a,button,input,select,textarea,label,summary,[role="button"],.lightbox')) return;   // links and controls keep their click
-    var best = null, bd = 1e9; kit.forEach(function(o){ var s = screenOf(o), d = Math.hypot(s[0] - e.clientX, s[1] - e.clientY); if (d < bd){ bd = d; best = o; } });
-    if (best) snap(best, performance.now());
+    var x = e.clientX / innerWidth, y = e.clientY / innerHeight, best = null, bd = 1e9;
+    kit.forEach(function(o){ var s = homeScreen(o), d = Math.hypot((s[0] - x) * aspect, s[1] - y); if (d < bd){ bd = d; best = o; } });
+    if (best && bd < .45) perform(best, performance.now());
   }, {passive:true});
 
   function isDark(){
@@ -184,65 +200,64 @@
     if (!m) return true; var n = parseInt(m[1], 16); return ((n >> 16) + ((n >> 8) & 255) + (n & 255)) / 3 < 128;
   }
   function theme(){
-    var dk = isDark();
-    var sm = innerWidth < 760 ? .7 : 1; cv.style.opacity = String((dk ? .62 : .4) * sm);                       // in the background, never louder than the page
-    amb.intensity = dk ? .16 : .5; key.intensity = dk ? .55 : .9;
-    wall.material = dk ? wallDark : wallLight; spot.intensity = dk ? 2.2 : 1.4;
+    var dk = isDark(), phone = innerWidth < 760;
+    // present but quiet: always behind the content, a little stronger on phones so it reads at small sizes
+    cv.style.opacity = String(dk ? (phone ? .7 : .6) : (phone ? .5 : .42));
+    amb.intensity = dk ? .22 : .5; key.intensity = dk ? .7 : .9;
+    wall.material = dk ? wallDark : wallLight; spot.intensity = dk ? 2.0 : 1.3;
   }
   theme(); new MutationObserver(theme).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme','class']});
 
-  var running = true; document.addEventListener('visibilitychange', function(){ running = !document.hidden; if (running) requestAnimationFrame(loop); });
-  var rs; addEventListener('resize', function(){ clearTimeout(rs); rs = setTimeout(place, 120); });
+  var running = true; document.addEventListener('visibilitychange', function(){ running = !document.hidden; if (running){ last = performance.now(); requestAnimationFrame(loop); } });
+  var rs; addEventListener('resize', function(){ clearTimeout(rs); rs = setTimeout(function(){ place(); theme(); }, 150); });
 
-  var t0 = performance.now(), last = t0;
+  var t0 = performance.now(), last = t0, sy = 0;
+  function damp(a, b, rate, dt){ return a + (b - a) * (1 - Math.exp(-rate * dt)); }
   function loop(now){
     if (!running) return;
     var dt = Math.min(.05, (now - last) / 1000); last = now; var t = (now - t0) / 1000;
-    var sy = scrollY / Math.max(innerHeight, 1);
-    var lx, ly;
-    if (hasPtr && now - lastPtr < 4000){ lx = mx; ly = my; } else { lx = Math.sin(t*.16)*.75; ly = Math.sin(t*.23 + 1)*.45; }
-    sl.x += (lx - sl.x) * .07; sl.y += (ly - sl.y) * .07;
-    var hw = Math.tan(cam.fov * Math.PI / 360) * cam.position.z;
-    spot.position.set(sl.x * hw * aspect, sl.y * hw, 6);
-    spot.target.position.set(sl.x * hw * aspect * 1.3, sl.y * hw * 1.3, WALL_Z);
+    sy = damp(sy, scrollY / Math.max(innerHeight, 1), 3, dt);
+    // pointer target: the real pointer while it moves, a slow wander when it rests (and on touch screens)
+    var idle = !ptr.has || now - ptr.last > 5000;
+    var tx = idle ? .5 + Math.sin(t * .07) * .32 : ptr.x, ty = idle ? .45 + Math.sin(t * .09 + 1) * .22 : ptr.y;
+    sp.x = damp(sp.x, tx, 1.6, dt); sp.y = damp(sp.y, ty, 1.6, dt);
+    var lx = sp.x * 2 - 1, ly = -(sp.y * 2 - 1);
+    spot.position.set(lx * vwHalf, ly * vhHalf, 6);
+    spot.target.position.set(lx * vwHalf * 1.3, ly * vhHalf * 1.3, WALL_Z);
+
     kit.forEach(function(o, i){
-      var u = o.userData, h = u.home;
-      // float, and drift a little with scroll so the kit feels set back in depth
-      o.position.x = h.x + Math.sin(t*.3 + i*2) * .12 - mx * .25;
-      o.position.y = h.y + Math.sin(t*.45 + i) * .18 + sy * .6 * (i === 1 ? 1.4 : 1) - my * .15;
-      // gaze: each piece turns toward the pointer, more strongly the closer it is
-      var s = screenOf(o), d = Math.hypot(s[0] - ptrX, s[1] - ptrY), near = Math.max(0, 1 - d / 420);
-      u.face.x += (((hasPtr ? (ptrX - s[0]) / innerWidth : 0) * (0.6 + near * 1.2)) - u.face.x) * .05;
-      u.face.y += (((hasPtr ? (ptrY - s[1]) / innerHeight : 0) * (0.4 + near * 1.0)) - u.face.y) * .05;
-      // lingering near a piece takes a picture
-      if (near > .55) { u.dwell += dt; if (u.dwell > .9) { snap(o, now); u.dwell = -1.2; } } else u.dwell = Math.max(0, u.dwell - dt);
-      u.flash = Math.max(0, u.flash - dt * 2.2);
-      var since = (now - u.snapT) / 1000;
+      var u = o.userData, h = u.home, hs = homeScreen(o);
+      if (!reduce && !u.act && now > u.next) perform(o, now);
+      // lingering near a piece invites it to act (slowly), never more than once per cycle
+      var near = Math.max(0, 1 - Math.hypot((sp.x - hs[0]) * aspect, sp.y - hs[1]) / .32);
+      if (!idle && near > .5){ u.dwell = (u.dwell || 0) + dt; if (u.dwell > 1.6){ perform(o, now); u.dwell = -6; } } else if (u.dwell > 0) u.dwell = 0; else if (u.dwell < 0) u.dwell = Math.min(0, u.dwell + dt);
+      var a = u.act, p = a ? (now - a.t0) / a.dur : 0, b = a ? bell(p) : 0;
+      if (a && p >= 1){ u.act = null; if (a.k === 'glide') u.driftT.set(0, 0, 0); }
+      // gentle gaze toward the (smoothed) pointer, measured from the piece's resting place so it can't feed back on itself
+      var gx = Math.max(-.35, Math.min(.35, (sp.x - hs[0]) * .6)), gy = Math.max(-.22, Math.min(.22, (sp.y - hs[1]) * .45));
+      u.yaw = damp(u.yaw, u.yawT, .6, dt); if (!a) u.yawT = damp(u.yawT, 0, .15, dt);
+      u.drift.x = damp(u.drift.x, u.driftT.x, .5, dt); u.drift.y = damp(u.drift.y, u.driftT.y, .5, dt); u.drift.z = damp(u.drift.z, u.driftT.z, .5, dt);
+      o.position.x = h.x + Math.sin(t * .21 + u.phase) * .1 + u.drift.x;
+      o.position.y = h.y + Math.sin(t * .27 + u.phase) * .14 + sy * .5 + u.drift.y;
+      o.position.z = h.z + u.drift.z;
       if (u.kind === 'lens'){
-        o.rotation.y = t * .12 + u.face.x * 1.1; o.rotation.x = u.face.y * .8;
-        // iris: blades swing in on the shot, then open again
-        var c = since < .6 ? Math.sin(Math.min(1, since / .6) * Math.PI) : 0;
-        u.blades.forEach(function(b){ b.scale.x = .06 + c * .94; b.rotation.z = c * .35; });
+        o.rotation.y = damp(o.rotation.y, Math.sin(t * .05 + u.phase) * .5 + gx + u.yaw, 1.2, dt);
+        o.rotation.x = damp(o.rotation.x, gy, 1.2, dt);
+        var c = a && a.k === 'iris' ? b * a.amt : 0;
+        u.blades.forEach(function(bl){ bl.scale.x = .06 + c * .94; bl.rotation.z = c * .3; });
       } else if (u.kind === 'drone'){
-        o.rotation.y = Math.sin(t * .2) * .5 + u.face.x * 1.3; o.rotation.x = u.face.y * .5; o.rotation.z = -u.face.x * .25;
-        u.props.forEach(function(p){ p.rotation.y += p.userData.dir * dt * (reduce ? 0 : 38); });
-        u.gim.rotation.x = .2 + u.face.y * .6;
+        o.rotation.y = damp(o.rotation.y, Math.sin(t * .06 + u.phase) * .4 + gx * 1.1 + u.yaw, 1, dt);
+        o.rotation.x = damp(o.rotation.x, gy * .35, 1, dt);
+        o.rotation.z = damp(o.rotation.z, Math.max(-.18, Math.min(.18, -(u.drift.x - u.driftT.x) * .6)), 1, dt);   // banks into the glide
+        u.props.forEach(function(pp){ pp.rotation.y += pp.userData.dir * dt * (reduce ? 0 : 2.4); });
+        u.gim.rotation.x = damp(u.gim.rotation.x, .2 + gy * .5 + (a && a.k === 'look' ? b * .5 : 0), 1, dt);
       } else {
-        u.spin.rotation.y = t * .5 + u.face.x * 1.5; o.rotation.y = Math.sin(t*.1)*.15; o.rotation.x = u.face.y * .15;
-        var hr = since < 1.4 ? since / 1.4 : 1; u.halo.scale.setScalar(1 + hr * 9); u.halo.material.opacity = (1 - hr) * .5;
+        u.spinSpeed = damp(u.spinSpeed || .18, (a && a.k === 'turn') ? .5 * u.spinDir : .18 * u.spinDir, .8, dt);
+        u.spin.rotation.y += u.spinSpeed * dt * (reduce ? 0 : 1);
+        o.rotation.y = damp(o.rotation.y, gx * .3, 1, dt); o.rotation.x = damp(o.rotation.x, gy * .12, 1, dt);
+        var hr = a && a.k === 'sweep' ? ease(p) : 1; u.halo.scale.setScalar(1 + hr * 7); u.halo.material.opacity = a && a.k === 'sweep' ? bell(p) * .18 : 0;
       }
-      // the glass flashes on the shot
-      var gls = u.fish || [u.glass]; gls.forEach(function(gm){ gm.material = gm.material; });
-      glass.emissiveIntensity = .35 + Math.max(lens.userData.flash, drone.userData.flash, tsix.userData.flash) * 3;
     });
-    for (var j = frames.length - 1; j >= 0; j--){
-      var f = frames[j], fu = f.userData; fu.t += dt;
-      var k = fu.t / 1.3;
-      f.position.set(fu.from.x * (1 - k * .5), fu.from.y * (1 - k * .5), fu.from.z + k * 7);
-      f.scale.setScalar(.25 + k * 1.4); f.material.opacity = .55 * (1 - k);
-      fu.light.intensity = Math.max(0, 1 - fu.t * 6) * 4;
-      if (k >= 1){ scene.remove(f); scene.remove(fu.light); f.geometry.dispose(); f.material.dispose(); frames.splice(j, 1); }
-    }
     renderer.render(scene, cam);
     if (!reduce) requestAnimationFrame(loop);
   }
