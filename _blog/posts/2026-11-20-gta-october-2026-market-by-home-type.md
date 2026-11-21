@@ -1,5 +1,5 @@
 ---
-title: "The GTA in October 2026 by home type: where buyers had the most choice"
+title: The GTA in October 2026 by home type: where buyers had the most choice
 date: 2026-11-20
 description: TRREB's October 2026 figures for detached houses, semis, townhouses and condo apartments across the GTA, and what each segment's level of competition means for how a listing should be presented.
 image: img/nick-portrait-navy.webp
