@@ -1,7 +1,7 @@
 /* Interactive hero backdrop: a lens of light follows the pointer and brings the scene into focus,
    dust drifts through the sunlit side and parts around the cursor, a tap pulls focus. */
 .reel{--lx:50%;--ly:55%;--lr:240px;transform:translateZ(-160px) scale(1.28)!important}
-.reel img.lens{z-index:3;opacity:1;filter:saturate(1.15) brightness(1.02) contrast(1.05)!important;
+.reel img.lens{z-index:3;opacity:1;filter:saturate(1.15) brightness(1.2) contrast(1.05)!important;
   -webkit-mask-image:radial-gradient(circle var(--lr) at var(--lx) var(--ly),#000 0%,rgba(0,0,0,.55) 45%,transparent 100%);
   mask-image:radial-gradient(circle var(--lr) at var(--lx) var(--ly),#000 0%,rgba(0,0,0,.55) 45%,transparent 100%);
   transition:none}
@@ -17,3 +17,17 @@
 :root[data-theme="light"] .reel img.lens{filter:saturate(1) brightness(1.06) contrast(.98)!important;opacity:.9}
 :root[data-theme="light"] .reel canvas.motes{mix-blend-mode:multiply;opacity:.6}
 @media (prefers-reduced-motion:reduce){.reel img.lens,.reel canvas.motes,.reel .focus{display:none}.reel .beam{transition:none}}
+
+/* Cast light: the spotlight is a point light in front of Nick. His shadow falls on the wall on the
+   opposite side (offset, enlarged and softened with distance, as a real point light would cast it),
+   a warm rim catches the edge facing the light, and the far side of the figure falls into shade. */
+.fx-shadow,.fx-rim,.fx-shade{position:absolute;left:50%;pointer-events:none;will-change:transform,opacity,filter;
+  -webkit-mask-image:url(/img/nick-hero.webp?v=9),linear-gradient(#000 80%,transparent 100%);-webkit-mask-size:100% 100%,100% 100%;-webkit-mask-repeat:no-repeat;-webkit-mask-composite:source-in;
+  mask-image:url(/img/nick-hero.webp?v=9),linear-gradient(#000 80%,transparent 100%);mask-size:100% 100%,100% 100%;mask-repeat:no-repeat;mask-composite:intersect}
+.fx-shadow{background:#000;opacity:0;transform-origin:50% 100%}
+.fx-rim{background:#ffcf96;opacity:0}
+.fx-shade{opacity:1}
+:root[data-theme="light"] .fx-shadow{background:#2a1f16}
+:root[data-theme="light"] .fx-rim{background:#ffb070}
+.stage.fx-on .figure{filter:var(--fig-shadow)!important}
+@media (prefers-reduced-motion:reduce){.fx-shadow,.fx-rim,.fx-shade{display:none}}

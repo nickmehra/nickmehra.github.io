@@ -11,7 +11,7 @@
     W=reel.offsetWidth; H=reel.offsetHeight; cv.width=W*dpr; cv.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
     var n=Math.round(Math.min(140,Math.max(50,W*H/9000))); motes=[];
     for(var i=0;i<n;i++)motes.push(mote(true));
-    rt=r=Math.max(150,Math.min(320,W*.2));
+    rt=r=Math.max(190,Math.min(420,W*.27));
   }
   function mote(any){
     // most dust lives in the warm, sunlit right side; a few cooler specks drift on the platform side
@@ -61,5 +61,46 @@
       ctx.fill();
     }
   }
+  /* ---- Cast light on the figure ---- */
+  var scene=document.getElementById('scene'), fig=scene&&scene.querySelector('.figure');
+  var sh=scene&&scene.querySelector('.fx-shadow'), rim=scene&&scene.querySelector('.fx-rim'), shade=scene&&scene.querySelector('.fx-shade');
+  var Z={sh:-100,rim:68,shade:71};
+  function fit(){
+    if(!fig||!sh)return; var cs=getComputedStyle(fig);
+    [sh,rim,shade].forEach(function(el){el.style.bottom=cs.bottom;el.style.height=cs.height;el.style.width=cs.width;});
+  }
+  function isLight(){return document.documentElement.getAttribute('data-theme')==='light';}
+  var sox=0,soy=0,sblur=10,sop=0;
+  function castLight(){
+    if(!fig||!sh||!fig.complete)return;
+    var b=reel.getBoundingClientRect(), f=fig.getBoundingClientRect(), st=stage.getBoundingClientRect();
+    var Lx=b.left+x*b.width, Ly=b.top+y*b.height;           // where the spotlight is
+    var Fx=f.left+f.width/2, Fy=f.top+f.height*.42;          // the figure's centre of mass (chest height)
+    var vx=Fx-Lx, vy=Fy-Ly, d=Math.hypot(vx,vy)||1, ux=vx/d, uy=vy/d, span=Math.max(st.width,600);
+    // point light in front of the subject, wall behind: the shadow is displaced away from the light by
+    // (wall depth / light depth) times the light's offset, enlarged by the same ratio, and its penumbra widens with distance
+    var k=.32, ox=vx*k, oy=vy*k*.75, lim=f.height*.42, ol=Math.hypot(ox,oy); if(ol>lim){ox*=lim/ol;oy*=lim/ol;}
+    var near=Math.max(0,1-d/(span*.95));                       // inverse fall-off: closer light, darker and crisper shadow
+    var light=isLight();
+    sox+=(ox-sox)*.25; soy+=(oy-soy)*.25;
+    sblur+=((3+ (1-near)*16)-sblur)*.2;
+    sop+=(((light?.30:.62)+near*(light?.25:.33))-sop)*.2;
+    var sc=1.04+ol/f.height*.25;
+    sh.style.transform='translate3d(-50%,0,'+Z.sh+'px) translate('+sox.toFixed(1)+'px,'+soy.toFixed(1)+'px) scale('+sc.toFixed(3)+')';
+    sh.style.filter='blur('+sblur.toFixed(1)+'px)'; sh.style.opacity=sop.toFixed(3);
+    // rim light: a warm edge on the side facing the light
+    var rr=1.5+near*2.5;
+    rim.style.transform='translate3d(-50%,0,'+Z.rim+'px) translate('+(-ux*rr).toFixed(1)+'px,'+(-uy*rr).toFixed(1)+'px)';
+    rim.style.filter='blur('+(2.5+(1-near)*2).toFixed(1)+'px)'; rim.style.opacity=((light?.3:.12+near*.4)*(st.width<820?.45:1)).toFixed(3);
+    // form shading: lit toward the light, falling into shadow on the far side
+    var ang=Math.atan2(ux,-uy)*180/Math.PI;
+    shade.style.transform='translate3d(-50%,0,'+Z.shade+'px)';
+    shade.style.background='linear-gradient('+ang.toFixed(1)+'deg,rgba(255,214,160,'+(light?.10:.12+near*.14).toFixed(3)+') 0%,rgba(0,0,0,0) 42%,rgba(0,0,0,'+(light?.22:.3+near*.25).toFixed(3)+') 100%)';
+    // contact shadow under the figure leans away from the light too
+    stage.style.setProperty('--fig-shadow','drop-shadow('+(ux*14).toFixed(1)+'px '+(24+uy*10).toFixed(1)+'px 36px rgba(0,0,0,'+(light?.28:.6)+'))');
+  }
+  if(fig&&sh){stage.classList.add('fx-on');fit();addEventListener('resize',function(){setTimeout(fit,160);});if(!fig.complete)fig.addEventListener('load',fit);
+    var _frame=frame; frame=function(now){_frame(now); if(visible)castLight();};}
+
   size(); requestAnimationFrame(frame);
 })();
