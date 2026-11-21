@@ -11,7 +11,8 @@
   // hero: a slow film reel behind the portrait tells the story without words:
   // night platform, dawn commute, a camera at sunrise, then the work itself.
   var reel=document.getElementById('reel');
-  if(reel){var frames=[].slice.call(reel.children), cur=0;
+  if(reel){var frames=[].slice.call(reel.querySelectorAll('img.frame')), cur=0;
+    if(!frames.length)frames=[].slice.call(reel.querySelectorAll('img:not(.lens)'));
     frames[0].classList.add('on');
     if(!reduce&&frames.length>1)setInterval(function(){var prev=frames[cur];cur=(cur+1)%frames.length;var next=frames[cur];
       next.classList.remove('on');void next.offsetWidth;next.classList.add('on');setTimeout(function(){prev.classList.remove('on');},2600);},7000);}
