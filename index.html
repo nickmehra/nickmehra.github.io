@@ -15,13 +15,13 @@
   --body:"EB Garamond","Garamond","Iowan Old Style",Georgia,serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0A0B0D; --panel:rgba(12,14,18,.74); --fg:#EFEBE3; --muted:#A9ADB3; --line:rgba(239,235,227,.16);
-  --hdr:rgba(10,11,13,.72); --field:rgba(10,11,13,.72); --ghost:rgba(10,11,13,.4); --ts:rgba(0,0,0,.92); --veil:rgba(10,11,13,.6); --shadow:rgba(0,0,0,.7); --on-fg:#0B0C0E;
+  --bg:#030304; --panel:rgba(6,7,9,.88); --fg:#EFEBE3; --muted:#A9ADB3; --line:rgba(239,235,227,.16);
+  --hdr:rgba(4,4,5,.86); --field:rgba(6,7,9,.82); --ghost:rgba(4,4,5,.5); --ts:rgba(0,0,0,.92); --veil:rgba(3,3,4,.72); --shadow:rgba(0,0,0,.7); --on-fg:#0B0C0E;
   --red:#D11F26; --red-hi:#FF3B42; --red-1:#9E141A; --red-2:#7A0E12; --red-3:#560A0D; --err:#FF9A8F; color-scheme:dark;
 }}
 :root[data-theme="dark"]{
-  --bg:#0A0B0D; --panel:rgba(12,14,18,.74); --fg:#EFEBE3; --muted:#A9ADB3; --line:rgba(239,235,227,.16);
-  --hdr:rgba(10,11,13,.72); --field:rgba(10,11,13,.72); --ghost:rgba(10,11,13,.4); --ts:rgba(0,0,0,.92); --veil:rgba(10,11,13,.6); --shadow:rgba(0,0,0,.7); --on-fg:#0B0C0E;
+  --bg:#030304; --panel:rgba(6,7,9,.88); --fg:#EFEBE3; --muted:#A9ADB3; --line:rgba(239,235,227,.16);
+  --hdr:rgba(4,4,5,.86); --field:rgba(6,7,9,.82); --ghost:rgba(4,4,5,.5); --ts:rgba(0,0,0,.92); --veil:rgba(3,3,4,.72); --shadow:rgba(0,0,0,.7); --on-fg:#0B0C0E;
   --red:#D11F26; --red-hi:#FF3B42; --red-1:#9E141A; --red-2:#7A0E12; --red-3:#560A0D; --err:#FF9A8F; color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -354,11 +354,11 @@ input[type=date]{width:100%;background:var(--field);color:var(--fg);border:1px s
 
 footer{border-top:1px solid var(--line);padding-block:44px;color:var(--muted);font-size:.9rem;background:var(--hdr)}
 /* logo always sits on dark */
-footer{background:#0A0B0D;color:#A9ADB3;border-top-color:rgba(239,235,227,.16)}footer a{color:#EFEBE3}
+footer{background:#030304;color:#A9ADB3;border-top-color:rgba(239,235,227,.16)}footer a{color:#EFEBE3}
 /* Light mode legibility + brand rule: the header (with the ram logo) always stays dark, the big logo always sits on a dark plate,
    and the dark call-to-action panel keeps dark-mode colours in light mode. */
-header{--bg:#0A0B0D;--panel:rgba(12,14,18,.74);--fg:#EFEBE3;--muted:#A9ADB3;--line:rgba(239,235,227,.16);--hdr:rgba(10,11,13,.92);--field:rgba(10,11,13,.72);--ghost:rgba(10,11,13,.4);--ts:rgba(0,0,0,.92);--shadow:rgba(0,0,0,.7);--on-fg:#0B0C0E;--red:#D11F26;--red-hi:#FF3B42;--red-1:#9E141A;--red-2:#7A0E12;--red-3:#560A0D;color:var(--fg)}
-.logo-full{background:#0A0B0D;padding:clamp(18px,4vw,34px);border-radius:28px;box-sizing:border-box}
+header{--bg:#030304;--panel:rgba(6,7,9,.88);--fg:#EFEBE3;--muted:#A9ADB3;--line:rgba(239,235,227,.16);--hdr:rgba(4,4,5,.94);--field:rgba(10,11,13,.72);--ghost:rgba(10,11,13,.4);--ts:rgba(0,0,0,.92);--shadow:rgba(0,0,0,.7);--on-fg:#0B0C0E;--red:#D11F26;--red-hi:#FF3B42;--red-1:#9E141A;--red-2:#7A0E12;--red-3:#560A0D;color:var(--fg)}
+.logo-full{background:#030304;padding:clamp(18px,4vw,34px);border-radius:28px;box-sizing:border-box}
 
 footer .wrap{gap:20px}
 .logo-foot{display:block;width:150px;height:auto}
@@ -437,7 +437,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
 <link rel="canonical" href="https://blacksheepdigitalworks.ca/">
 <link rel="alternate" type="application/rss+xml" title="The BlackSheep Journal" href="https://blacksheepdigitalworks.ca/journal/feed.xml">
 <meta name="author" content="Nick Mehra">
-<meta name="theme-color" content="#0A0B0D">
+<meta name="theme-color" content="#030304">
 <meta name="geo.region" content="CA-ON">
 <meta name="geo.placename" content="Durham Region, Ontario">
 
@@ -550,7 +550,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
     <p class="hint" aria-hidden="true">Scroll to move through the work</p>
   </section>
 
-  <section id="brandfilm" style="padding:72px 0;background:#0A0B0D"><div style="max-width:1100px;margin:0 auto;padding:0 20px"><p style="font:600 12px/1 Cinzel,serif;letter-spacing:.3em;color:#9A1219;margin:0 0 14px;text-transform:uppercase">Concept sample</p><h2 style="margin:0 0 22px;color:#EFEBE3">A typical real estate video tour</h2><video controls playsinline preload="metadata" poster="/video/blacksheep-reel-poster.jpg" style="width:100%;border-radius:4px;background:#000;display:block"><source src="/video/blacksheep-reel.mp4" type="video/mp4"></video><p style="margin:12px 0 0;font-size:13px;color:#A9ADB3">This is a concept sample of the kind of video tour we would produce for a listing. It is a mock-up, not a real property. The brand intro opens the film.</p></div></section>
+  <section id="brandfilm" style="padding:72px 0;background:#030304"><div style="max-width:1100px;margin:0 auto;padding:0 20px"><p style="font:600 12px/1 Cinzel,serif;letter-spacing:.3em;color:#9A1219;margin:0 0 14px;text-transform:uppercase">Concept sample</p><h2 style="margin:0 0 22px;color:#EFEBE3">A typical real estate video tour</h2><video controls playsinline preload="metadata" poster="/video/blacksheep-reel-poster.jpg" style="width:100%;border-radius:4px;background:#000;display:block"><source src="/video/blacksheep-reel.mp4" type="video/mp4"></video><p style="margin:12px 0 0;font-size:13px;color:#A9ADB3">This is a concept sample of the kind of video tour we would produce for a listing. It is a mock-up, not a real property. The brand intro opens the film.</p></div></section>
   <section id="services" data-cam="services">
     <div class="wrap">
       <div class="head">
@@ -1800,14 +1800,14 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   // Theme factors: on black the prints are dimmed so they sit softly; on white they show at full strength.
   var dark = isDark();
   var THEME = {
-    dark:  {print:.3, hero:.4, ring:.85, shadow:.9, glow:.1, border:.85, satP:.6, satH:.55, satR:.9},
+    dark:  {print:.26, hero:.3, ring:.85, shadow:.9, glow:.1, border:.85, satP:.6, satH:.55, satR:.9},
     light: {print:.94, hero:.22, ring:1,  shadow:.5, glow:.28, border:1, satP:.96, satH:.95, satR:1}
   };
   var BORDER_DARK = new THREE.Color(0x4a4e55), BORDER_LIGHT = new THREE.Color(0xffffff), borderNow = new THREE.Color(0x4a4e55);
   var tf = THEME[dark ? 'dark' : 'light'], tfNow = {}; for (var tk in tf) tfNow[tk] = tf[tk];
   window.__theme3d = function(d){
     dark = d; tf = THEME[d ? 'dark' : 'light'];
-    var v = getComputedStyle(root).getPropertyValue('--bg').trim() || (d ? '#0A0B0D' : '#F5F5F2');
+    var v = getComputedStyle(root).getPropertyValue('--bg').trim() || (d ? '#030304' : '#F5F5F2');
     bgColor.set(v); scene.fog.color.set(v);
     // light mode: push the haze back so distant prints stay crisp instead of melting into white
     scene.fog.near = d ? 30 : 70; scene.fog.far = d ? 100 : 190;
@@ -2118,6 +2118,6 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
 <script>(function(){var n=document.querySelector('.view-note');if(!n)return;try{if(localStorage.getItem('vn-off')||sessionStorage.getItem('vn-seen')){n.remove();return}}catch(e){}if(!window.matchMedia||!matchMedia('(max-width:760px)').matches){n.remove();return}document.body.appendChild(n);n.hidden=false;try{sessionStorage.setItem('vn-seen','1')}catch(e){}var gone=false;function hide(keep){if(gone)return;gone=true;n.classList.remove('on');if(keep){try{localStorage.setItem('vn-off','1')}catch(e){}}setTimeout(function(){n.remove()},600)}setTimeout(function(){n.classList.add('on')},900);setTimeout(function(){hide(false)},8000);addEventListener('scroll',function(){if(scrollY>240)hide(false)},{passive:true});n.querySelector('.vn-x').addEventListener('click',function(){hide(true)});})();</script>
 <script src="/chat-kb.js?v=1" defer></script><script src="/chat.js?v=1" defer></script>
 <script src="js/navmore.js" defer></script>
-<script src="js/gear-bg.js?v=2" defer></script>
+<script src="js/gear-bg.js?v=3" defer></script>
 </body>
 </html>
