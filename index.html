@@ -20,7 +20,7 @@
 <body>
 <header class="nav"><div class="bar">
   <a class="mark" href="/">Nick <span>Mehra</span></a>
-  <nav class="links" aria-label="Main"><a class="l" href="/" aria-current="page">Home</a><a class="l" href="/story/">Story</a><a class="l" href="/portraits/">Portraits</a><a class="l" href="/work/">Work</a><a class="l" href="/journal/">Journal</a><a class="l" href="/contact/">Contact</a></nav>
+  <nav class="links" aria-label="Main"><a class="l" href="/" aria-current="page">Home</a><a class="l" href="/story/">Story</a><a class="l" href="/portraits/">Portraits</a><a class="l" href="/work/">Work</a><a class="l" href="/#series">Series</a><a class="l" href="/journal/">Journal</a><a class="l" href="/contact/">Contact</a></nav>
   <button id="theme" type="button" aria-label="Switch between dark and light">Light</button>
 </div></header>
 <div class="view-note" role="note"><span>Best viewed in light mode on Chrome, Safari, Firefox or Edge. Using Opera? Turn off its <b>Dark web pages</b> setting, or switch this site to Dark.</span><button type="button" class="vn-x" aria-label="Close this note">&times;</button></div>
@@ -51,6 +51,48 @@
   </div>
 </div></section>
 <section id="film" style="padding:72px 0;background:#0A0B0D"><div style="max-width:1100px;margin:0 auto;padding:0 20px"><p style="font:600 12px/1 Cinzel,serif;letter-spacing:.3em;color:#9A1219;margin:0 0 14px;text-transform:uppercase">Concept sample</p><h2 style="margin:0 0 22px;color:#EFEBE3">A typical real estate video tour</h2><video controls playsinline preload="metadata" poster="/video/blacksheep-reel-poster.jpg" style="width:100%;border-radius:4px;background:#000;display:block"><source src="/video/blacksheep-reel.mp4" type="video/mp4"></video><p style="margin:12px 0 0;font-size:13px;color:#A9ADB3">This is a concept sample of the kind of video tour we would produce for a listing. It is a mock-up, not a real property. The brand intro opens the film.</p></div></section>
+<section id="series" aria-labelledby="series-h">
+<style>#series{padding:96px 0;background:linear-gradient(180deg,#07080A 0%,#0B0C0F 100%);border-top:1px solid #16181C;border-bottom:1px solid #16181C}
+#series .s-wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+#series .s-eye{font:600 12px/1 Cinzel,serif;letter-spacing:.3em;color:#B3141C;margin:0 0 14px;text-transform:uppercase}
+#series h2{margin:0 0 18px;color:#EFEBE3}
+#series h2 em{font-style:normal;color:#C9CCD1}
+#series .s-wrap{text-align:center}
+#series .s-lead{max-width:720px;margin-left:auto!important;margin-right:auto!important;color:#B8BCC2;font-size:17px;line-height:1.7;margin:0 0 30px}
+#series .s-row{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:0 0 42px}
+#series .s-btn{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border-radius:3px;font:600 13px/1 Montserrat,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;transition:background .25s,border-color .25s,color .25s}
+#series .s-btn.red{background:#A3121A;color:#fff;border:1px solid #A3121A}
+#series .s-btn.red:hover{background:#C0161F;border-color:#C0161F}
+#series .s-btn.ghost{color:#E6E2DA;border:1px solid #3A3D43}
+#series .s-btn.ghost:hover{border-color:#8A8E95}
+#series .s-btn svg{width:18px;height:18px;fill:currentColor}
+#series .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,360px));justify-content:center;gap:26px;text-align:left}
+#series .ep-body{text-align:center}
+#series .ep{background:#0F1114;border:1px solid #1C1F24;border-radius:4px;overflow:hidden}
+#series .ep-media{position:relative;display:block;width:100%;aspect-ratio:16/9;padding:0;border:0;background:#050607;cursor:pointer;overflow:hidden}
+#series .ep-media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease,filter .6s ease}
+#series .ep-media:hover img{transform:scale(1.03);filter:brightness(1.08)}
+#series .ep-play{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;background:rgba(163,18,26,.92);box-shadow:0 8px 30px rgba(0,0,0,.5)}
+#series .ep-play:after{content:"";position:absolute;left:26px;top:20px;border-left:18px solid #fff;border-top:12px solid transparent;border-bottom:12px solid transparent}
+#series .ep-len{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.78);color:#fff;font:600 12px/1 Montserrat,system-ui,sans-serif;padding:5px 7px;border-radius:2px}
+#series .ep-frame{display:block;width:100%;aspect-ratio:16/9;border:0}
+#series .ep-body{padding:18px 20px 22px}
+#series .ep-tag{display:inline-block;font:600 11px/1 Cinzel,serif;letter-spacing:.22em;color:#B3141C;text-transform:uppercase;margin:0 0 8px}
+#series .ep-body h3{margin:0 0 8px;color:#EFEBE3;font-size:20px}
+#series .ep-body p{margin:0;color:#9EA3AA;font-size:14px;line-height:1.6}
+#series .soon .ep-media{cursor:default;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:radial-gradient(ellipse at 50% 40%,#1A1C21 0%,#08090B 70%)}
+#series .soon .ep-media .ep-tag{margin:0}
+#series .ep-soon{font:500 15px/1 Montserrat,system-ui,sans-serif;letter-spacing:.3em;text-transform:uppercase;color:#E6E2DA}
+</style>
+<div class="s-wrap">
+<p class="s-eye">On YouTube</p>
+<h2 id="series-h">The Journal <em>Series</em></h2>
+<p class="s-lead">One continuous story, told a page at a time. Almost two decades in uniform, the summer it ended, and starting again from nothing. Every episode picks up exactly where the last one left off, in step with my journal.</p>
+<div class="s-row"><a class="s-btn red" href="https://www.youtube.com/@NickMehra?sub_confirmation=1" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg>Subscribe on YouTube</a><a class="s-btn ghost" href="/journal/">Read the journal</a></div>
+<div class="grid" id="series-grid" aria-live="polite"></div>
+</div>
+<script src="/series/series.js" defer></script>
+</section>
 <section class="bs" id="blacksheep">
   <div class="wrap">
     <img class="logo" src="/img/logo.png" alt="BlackSheep Digital Works" width="820" height="766" loading="lazy">
@@ -65,9 +107,9 @@
 <footer><div class="wrap">
   <div class="fgrid">
   <div class="fbrand"><a class="fmark" href="/">Nick <span>Mehra</span></a><p>Owner &amp; Creative Director, BlackSheep Digital Works. Almost two decades in security and public service law enforcement before the lens.</p><p class="floc">Ontario, Canada</p></div>
-    <nav class="fcol" aria-label="About"><h4>About</h4><a href="/story/">Story</a><a href="/experience/">Experience</a><a href="/now/">Now</a><a href="/journal/">Journal</a></nav>
+    <nav class="fcol" aria-label="About"><h4>About</h4><a href="/story/">Story</a><a href="/#series">YouTube series</a><a href="/experience/">Experience</a><a href="/now/">Now</a><a href="/journal/">Journal</a></nav>
     <nav class="fcol" aria-label="Work"><h4>Work</h4><a href="/portraits/">Portraits</a><a href="/work/">Work</a><a href="https://blacksheepdigitalworks.ca" target="_blank" rel="noopener">BlackSheep ↗</a></nav>
-    <nav class="fcol" aria-label="Connect"><h4>Connect</h4><a href="/contact/">Contact</a><a href="mailto:nic.mehra@gmail.com">Email</a><a href="https://www.instagram.com/blacksheepdigitalworks/" target="_blank" rel="noopener">Instagram ↗</a></nav>
+    <nav class="fcol" aria-label="Connect"><h4>Connect</h4><a href="/contact/">Contact</a><a href="mailto:nic.mehra@gmail.com">Email</a><a href="https://www.instagram.com/blacksheepdigitalworks/" target="_blank" rel="noopener">Instagram ↗</a><a href="https://www.youtube.com/@NickMehra" target="_blank" rel="noopener">YouTube ↗</a></nav>
   </div>
   <div class="fbar"><span class="fsig">© 2026 Nick Mehra</span><nav class="flegal" aria-label="Legal"><a href="/privacy/">Privacy</a><a href="/terms/">Terms of use</a><a href="/accessibility/">Accessibility</a><a href="/comments-admin.php" rel="nofollow">Admin</a></nav><span class="fvisits" id="fvisits"></span><script>(function(){var el=document.getElementById("fvisits");fetch("/counter.php",{method:"POST",cache:"no-store",credentials:"omit"}).then(function(r){return r.json()}).then(function(d){if(el&&d&&d.total!=null)el.textContent=d.total.toLocaleString("en-CA")+" visits"}).catch(function(){})})();</script></div>
 </div></footer>
