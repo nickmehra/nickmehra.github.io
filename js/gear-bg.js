@@ -46,9 +46,9 @@
     cv.style.width = W + 'px'; cv.style.height = H + 'px';
     var narrow = W < 760;
     // desktop: the whole camera with its telephoto and ND filter sits in the left margin, lens toward the page
-    L.cam   = narrow ? {x:.30, y:.86, s:.62} : {x:.135, y:.70, s:.25};
-    L.drone = narrow ? {x:.84, y:.135, s:.36} : {x:.82, y:.17, s:.27};
-    L.x360  = narrow ? {x:.92, y:.80, s:.24} : {x:.92, y:.68, s:.12};
+    L.cam   = narrow ? {x:.30, y:.86, s:.62} : {x:.15, y:.70, s:.28};
+    L.drone = narrow ? {x:.80, y:.14, s:.42} : {x:.845, y:.27, s:.31};
+    L.x360  = narrow ? {x:.88, y:.74, s:.30} : {x:.89, y:.70, s:.17};
   }
   addEventListener('resize', function(){ clearTimeout(layout.t); layout.t = setTimeout(layout, 120); });
   layout();
@@ -151,9 +151,9 @@
       if (dd < Math.max(bw, bh) * .8){ var f = bell(age / 1.2) * 18; cx += dx / dd * f; cy += dy / dd * f; st.glow = Math.max(st.glow, bell(age / 1.2) * .5); }
     });
     var sc = st.sc, w = bw * sc, h = bh * sc;
-    var alpha = clamp(st.a, 0, 1) * (dark ? .9 : .82);
+    var alpha = clamp(st.a, 0, 1);
     // ambient depth of field: deeper pieces are softer
-    var blur = st.blur + (1 - k.z) * (coarse ? 0 : 1.6);
+    var blur = st.blur;
 
     ctx.save();
     ctx.translate(cx, cy); ctx.rotate(st.rot + Math.sin(t * .2 + i) * .012);
