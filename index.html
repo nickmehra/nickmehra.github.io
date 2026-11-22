@@ -380,6 +380,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
 .film-frame{width:min(960px,100%);max-width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--line);box-shadow:0 40px 90px var(--shadow);overflow:hidden}
 .film-frame video{display:block;width:100%;height:100%;object-fit:contain;background:#000}
 .film-frame.tilt:hover{--tz:10px}
+.film-frame.vert{width:min(360px,78vw);aspect-ratio:9/16}
 
 /* ---------- Light mode rebuild: no dark boxes around text. Light-on-dark text flips to dark-on-light, a stronger light veil
    keeps the floating photos from fighting the copy, and a soft page-coloured halo replaces dark plates.
@@ -629,6 +630,16 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
           </video>
         </div>
         <p class="muted">3:25 · Photo, film and drone coverage of the full day.</p>
+      </div>
+      <div class="film">
+        <span class="eyebrow">Film</span>
+        <h2>Portrait <em>reel</em></h2>
+        <div class="film-frame vert tilt">
+          <video controls playsinline preload="none" poster="video/portrait-reel-poster.jpg" aria-label="Portrait reel of Nick Mehra in colour and black and white, 6 seconds">
+            <source src="video/portrait-reel.mp4" type="video/mp4">
+          </video>
+        </div>
+        <p class="muted">0:06 · Studio portrait sequence, colour and black and white.</p>
       </div>
       <p class="soon panel">Real estate, dealership and aerial work join the collection soon. More on Instagram: <a class="lk" href="https://www.instagram.com/BlackSheepDigitalWorks/" target="_blank" rel="noopener">@BlackSheepDigitalWorks</a></p>
       <aside class="lens-card" aria-labelledby="lensName">
@@ -891,7 +902,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   function cardArt(id){
     cardArt.cache = cardArt.cache || {};
     if (cardArt.cache[id]) return cardArt.cache[id];
-    var d = CARD_ART[id]; if (!d) return cardArt(id);
+    var d = CARD_ART[id]; if (!d) return 'img/' + (WORK_IDS[id] ? 'work/' : '') + id + '.jpg';
     var c = document.createElement('canvas'); c.width = 1200; c.height = 800;
     var x = c.getContext('2d');
     var g = x.createLinearGradient(0,0,0,800); g.addColorStop(0,'#12244A'); g.addColorStop(1,'#0A1426');
@@ -909,9 +920,21 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
     return cardArt.cache[id] = c.toDataURL('image/jpeg', .92);
   }
 
+  // Real photographs live in img/work/<id>.jpg (3:2 tile) and img/work/<id>-full.jpg (full frame for the lightbox).
+  function isPhoto(id){ return !!WORK_IDS[id]; }
+  function fullOf(id){ return isPhoto(id) ? 'img/work/' + id + '-full.jpg' : cardArt(id); }
   var PHOTOS = [
-    ['hero', 'BlackSheep Digital Works, from conviction to legacy', 'The brand']
+    ['hero', 'BlackSheep Digital Works, from conviction to legacy', 'The brand'],
+    ['nick-mug', 'Studio portrait of Nick with the BlackSheep mug', 'Portrait'],
+    ['night-highway', 'Night highway shoot above the traffic, Toronto skyline beyond', 'Night work'],
+    ['lakeshore-sunset', 'Lakeshore path at sunset', 'Landscape'],
+    ['bmw-country-lot', 'Black BMW 330i on a country lot', 'Automotive'],
+    ['nick-henley', 'Night portrait in a white henley', 'Portrait'],
+    ['before-the-lens', 'Before the lens: the enforcement years', 'Before the lens'],
+    ['doberman', 'Doberman in a tactical harness', 'Field portrait'],
+    ['bmw-after-rain', 'Black BMW 330i after the rain', 'Automotive']
   ];
+  var WORK_IDS = {}; PHOTOS.forEach(function(p){ if (!CARD_ART[p[0]]) WORK_IDS[p[0]] = 1; });
   (function(){ for (var i = PHOTOS.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)), t = PHOTOS[i]; PHOTOS[i] = PHOTOS[j]; PHOTOS[j] = t; } })();
 
   /* ---------------- Theme ---------------- */
@@ -962,8 +985,8 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   function setPhoto(i){
     lbIndex = (i + PHOTOS.length) % PHOTOS.length;
     var p = PHOTOS[lbIndex];
-    lbImg.src = cardArt(p[0]); lbImg.alt = p[1];
-    lb.style.setProperty('--lbsrc', 'url(img/' + p[0] + '.jpg)');
+    lbImg.src = fullOf(p[0]); lbImg.alt = p[1];
+    lb.style.setProperty('--lbsrc', 'url(' + (isPhoto(p[0]) ? 'img/work/' + p[0] + '.jpg' : 'img/' + p[0] + '.jpg') + ')');
     $('lbCap').textContent = 'BlackSheep · ' + p[1] + ' · ' + (lbIndex + 1) + ' of ' + PHOTOS.length;
     var d = lbImg.decode ? lbImg.decode() : Promise.resolve();
     return d.catch(function(){});
@@ -1402,13 +1425,14 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
 
   /* 3D photo carousels */
   function photoIndex(id){ for (var i = 0; i < PHOTOS.length; i++) if (PHOTOS[i][0] === id) return i; return -1; }
-  var carouselPool = PHOTOS.map(function(p){ return p[0]; }).filter(function(id){ return id !== 'hero'; }).reverse();
+  var carouselPool = PHOTOS.map(function(p){ return p[0]; }).filter(function(id){ return id !== 'hero' && !isPhoto(id); }).reverse();
   document.querySelectorAll('.carousel').forEach(function(frame){
     // each entry is a photo id, optionally "@x%" to choose which part of a wide photo the tall frame shows
     var entries = frame.getAttribute('data-photos').split(',');
     // "random": six photos drawn fresh on every visit, never repeating what the other carousel shows
     if (entries[0] === 'random'){ entries = []; while (entries.length < 6 && carouselPool.length) entries.push(carouselPool.shift()); }
     var ids = entries.map(function(e){ return e.split('@')[0]; });
+    if (!ids.length || !ids[0]){ frame.parentElement.style.display = 'none'; return; }
     var pos = entries.map(function(e){ return e.split('@')[1] || ''; });
     var box = frame.querySelector('.cslides');
     var fig = frame.parentElement, dots = fig.querySelector('.cdots'), cap = fig.querySelector('.ccap');
@@ -1788,7 +1812,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   if (document.getElementById('gear')) hero.group.visible = false; // the gear backdrop replaces the estate photo
 
   // The ring shows 22 photos picked at random each visit; the corridor shows the rest
-  var RING_N = 0;
+  var RING_N = PHOTOS.length;
 
   // The corridor: prints floating on both sides of the camera path
   var corridor = [];
