@@ -27,11 +27,11 @@
 
   /* ---------- the kit ---------- */
   function load(src){ var i = new Image(); i.decoding = 'async'; i.src = src; return i; }
-  var V = '?v=1';
+  var V = '?v=2';
   // images are photographs of the real kit, cut out on transparent backgrounds
   var kit = {
-    cam:   {img:load('img/gear/camera.webp' + V), w:968, h:601, z:.55},
-    drone: {img:load('img/gear/drone.webp' + V), w:1213, h:580, z:.8,
+    cam:   {img:load('img/gear/camera.webp' + V), w:968, h:601, z:.55, fade:1},
+    drone: {img:load('img/gear/drone.webp' + V), w:1213, h:580, z:.8, fade:.38,
             leds:[{x:.735, y:.761, c:[70,255,140]}, {x:.098, y:.396, c:[255,40,40]}]},
     x360:  {img:load('img/gear/x360.webp' + V), w:0, h:0, z:.35}
   };
@@ -47,7 +47,7 @@
     var narrow = W < 760;
     // desktop: the whole camera with its telephoto and ND filter sits in the left margin, lens toward the page
     L.cam   = narrow ? {x:.30, y:.86, s:.62} : {x:.15, y:.70, s:.28};
-    L.drone = narrow ? {x:.80, y:.14, s:.42} : {x:.845, y:.27, s:.31};
+    L.drone = narrow ? {x:.66, y:.33, s:.62} : {x:.76, y:.42, s:.42};
     L.x360  = narrow ? {x:.88, y:.74, s:.30} : {x:.89, y:.70, s:.17};
   }
   addEventListener('resize', function(){ clearTimeout(layout.t); layout.t = setTimeout(layout, 120); });
@@ -151,7 +151,7 @@
       if (dd < Math.max(bw, bh) * .8){ var f = bell(age / 1.2) * 18; cx += dx / dd * f; cy += dy / dd * f; st.glow = Math.max(st.glow, bell(age / 1.2) * .5); }
     });
     var sc = st.sc, w = bw * sc, h = bh * sc;
-    var alpha = clamp(st.a, 0, 1);
+    var alpha = clamp(st.a, 0, 1) * (k.fade == null ? 1 : k.fade);
     // ambient depth of field: deeper pieces are softer
     var blur = st.blur;
 
@@ -181,7 +181,7 @@
     ctx.drawImage(k.img, -w / 2, -h / 2, w, h);
     ctx.filter = 'none';
     ctx.restore();
-    return {cx:cx, cy:cy, w:w, h:h, rot:st.rot, alpha:alpha};
+    return {cx:cx, cy:cy, w:w, h:h, rot:st.rot, alpha:clamp(st.a, 0, 1)};   // lights keep full strength
   }
 
   function drawLeds(box, now, dark){
@@ -237,9 +237,10 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
     drawSpotlight(now, dark);
-    var bx = drawPiece('x360', 0, now, dark);
-    drawPiece('cam', 1, now, dark);
+    // the faded drone sits furthest back; its lights are drawn last so they always read
     var bd = drawPiece('drone', 2, now, dark);
+    drawPiece('x360', 0, now, dark);
+    drawPiece('cam', 1, now, dark);
     drawLeds(bd, now, dark);
   }
 
