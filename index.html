@@ -675,6 +675,48 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
     </div>
   </section>
 
+  <section id="series" aria-labelledby="series-h">
+<style>#series{padding:96px 0;background:linear-gradient(180deg,#07080A 0%,#0B0C0F 100%);border-top:1px solid #16181C;border-bottom:1px solid #16181C}
+#series .s-wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+#series .s-eye{font:600 12px/1 Cinzel,serif;letter-spacing:.3em;color:#B3141C;margin:0 0 14px;text-transform:uppercase}
+#series h2{margin:0 0 18px;color:#EFEBE3;font-family:Cinzel,serif;font-weight:600;letter-spacing:.04em;font-size:clamp(28px,4vw,44px)}
+#series h2 em{font-style:normal;color:#C9CCD1}
+#series .s-wrap{text-align:center}
+#series .s-lead{max-width:720px;margin-left:auto!important;margin-right:auto!important;color:#B8BCC2;font-size:17px;line-height:1.7;margin:0 0 30px}
+#series .s-row{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:0 0 42px}
+#series .s-btn{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border-radius:3px;font:600 13px/1 Montserrat,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;transition:background .25s,border-color .25s,color .25s}
+#series .s-btn.red{background:#A3121A;color:#fff;border:1px solid #A3121A}
+#series .s-btn.red:hover{background:#C0161F;border-color:#C0161F}
+#series .s-btn.ghost{color:#E6E2DA;border:1px solid #3A3D43}
+#series .s-btn.ghost:hover{border-color:#8A8E95}
+#series .s-btn svg{width:18px;height:18px;fill:currentColor}
+#series .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,360px));justify-content:center;gap:26px;text-align:left}
+#series .ep-body{text-align:center}
+#series .ep{background:#0F1114;border:1px solid #1C1F24;border-radius:4px;overflow:hidden}
+#series .ep-media{position:relative;display:block;width:100%;aspect-ratio:16/9;padding:0;border:0;background:#050607;cursor:pointer;overflow:hidden}
+#series .ep-media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease,filter .6s ease}
+#series .ep-media:hover img{transform:scale(1.03);filter:brightness(1.08)}
+#series .ep-play{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;background:rgba(163,18,26,.92);box-shadow:0 8px 30px rgba(0,0,0,.5)}
+#series .ep-play:after{content:"";position:absolute;left:26px;top:20px;border-left:18px solid #fff;border-top:12px solid transparent;border-bottom:12px solid transparent}
+#series .ep-len{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.78);color:#fff;font:600 12px/1 Montserrat,system-ui,sans-serif;padding:5px 7px;border-radius:2px}
+#series .ep-frame{display:block;width:100%;aspect-ratio:16/9;border:0}
+#series .ep-body{padding:18px 20px 22px}
+#series .ep-tag{display:inline-block;font:600 11px/1 Cinzel,serif;letter-spacing:.22em;color:#B3141C;text-transform:uppercase;margin:0 0 8px}
+#series .ep-body h3{margin:0 0 8px;color:#EFEBE3;font-size:20px}
+#series .ep-body p{margin:0;color:#9EA3AA;font-size:14px;line-height:1.6}
+#series .soon .ep-media{cursor:default;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:radial-gradient(ellipse at 50% 40%,#1A1C21 0%,#08090B 70%)}
+#series .soon .ep-media .ep-tag{margin:0}
+#series .ep-soon{font:500 15px/1 Montserrat,system-ui,sans-serif;letter-spacing:.3em;text-transform:uppercase;color:#E6E2DA}
+</style>
+<div class="s-wrap">
+<p class="s-eye">The story behind the studio</p>
+<h2 id="series-h">The Journal <em>Series</em></h2>
+<p class="s-lead">Before BlackSheep had a name, it had a story. Nick is telling it on YouTube, one page of his journal at a time: almost two decades in uniform, starting again from nothing, and building this studio alone. Every episode picks up where the last one left off.</p>
+<div class="s-row"><a class="s-btn red" href="https://www.youtube.com/@NickMehra?sub_confirmation=1" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg>Subscribe on YouTube</a><a class="s-btn ghost" href="https://nickmehra.ca/journal/" target="_blank" rel="noopener">Read the journal ↗</a></div>
+<div class="grid" id="series-grid" aria-live="polite"></div>
+</div>
+<script src="/series/series.js" defer></script>
+</section>
   <section id="about" data-cam="about">
     <div class="wrap">
       <div class="head" style="margin-bottom:24px">
@@ -877,7 +919,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
   <div class="wrap">
     <div class="fgrid">
       <div class="fbrand"><a class="ram-link" href="#home" aria-label="BlackSheep Digital Works home"><img class="logo-foot" src="img/logo.png" alt="BlackSheep Digital Works"></a><p>Real estate, dealership and event media from Pickering to Kingston, north to Peterborough.</p><p class="fcontact"><a href="tel:+16478883098">647.888.3098</a><a href="mailto:nic.mehra@gmail.com">nic.mehra@gmail.com</a></p></div>
-      <div class="fcol"><h4>Studio</h4><a href="#about">About</a><a href="about/">About Nick</a><a href="https://nickmehra.ca/" target="_blank" rel="noopener">Personal site ↗</a><a href="#portfolio">Portfolio</a><a href="journal/">Journal</a><a href="partners/">Partners</a><a href="resources/">Resources</a><a href="#contact">Contact</a></div><div class="fcol"><h4>Services</h4><a href="services/real-estate-photography/">Real estate photography</a><a href="services/video/">Video &amp; social reels</a><a href="services/drone/">Drone &amp; aerial</a><a href="services/floor-plans/">Floor plans &amp; 3D</a><a href="services/events/">Event coverage</a><a href="services/dealerships/">Dealership inventory</a></div><div class="fcol"><h4>Book</h4><a href="#booking">Book a shoot</a><a href="pricing/#book">Get a quote</a><a href="pricing/">Pricing</a><a href="account/">My quotes</a><a href="https://www.instagram.com/BlackSheepDigitalWorks/" target="_blank" rel="noopener">Instagram ↗</a></div>
+      <div class="fcol"><h4>Studio</h4><a href="#about">About</a><a href="about/">About Nick</a><a href="https://nickmehra.ca/" target="_blank" rel="noopener">Personal site ↗</a><a href="#portfolio">Portfolio</a><a href="journal/">Journal</a><a href="#series">YouTube series</a><a href="partners/">Partners</a><a href="resources/">Resources</a><a href="#contact">Contact</a></div><div class="fcol"><h4>Services</h4><a href="services/real-estate-photography/">Real estate photography</a><a href="services/video/">Video &amp; social reels</a><a href="services/drone/">Drone &amp; aerial</a><a href="services/floor-plans/">Floor plans &amp; 3D</a><a href="services/events/">Event coverage</a><a href="services/dealerships/">Dealership inventory</a></div><div class="fcol"><h4>Book</h4><a href="#booking">Book a shoot</a><a href="pricing/#book">Get a quote</a><a href="pricing/">Pricing</a><a href="account/">My quotes</a><a href="https://www.instagram.com/BlackSheepDigitalWorks/" target="_blank" rel="noopener">Instagram ↗</a><a href="https://www.youtube.com/@NickMehra" target="_blank" rel="noopener">YouTube ↗</a></div>
     </div>
     <div class="fbar"><span class="fsig">© 2026 BlackSheep Digital Works · From Conviction to Legacy</span><div class="flegal"><a href="privacy/">Privacy &amp; data</a><a href="terms/">Terms of service</a><a href="disclaimer/">Disclaimer</a><a href="accessibility/">Accessibility</a><a href="comments-admin.php" rel="nofollow">Admin</a></div><span class="fvisits" id="fvisits"></span><script>(function(){var el=document.getElementById("fvisits");fetch("counter.php",{method:"POST",cache:"no-store",credentials:"omit"}).then(function(r){return r.json()}).then(function(d){if(el&&d&&d.total!=null)el.textContent=d.total.toLocaleString("en-CA")+" visits"}).catch(function(){})})();</script></div>
   </div>
