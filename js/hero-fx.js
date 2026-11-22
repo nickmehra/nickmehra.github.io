@@ -6,12 +6,17 @@
   var ctx=cv&&cv.getContext('2d'); if(!ctx)return;
   var W=0,H=0,dpr=Math.min(window.devicePixelRatio||1,2), motes=[];
   var tx=.5,ty=.55, x=.5,y=.55, active=false, lastMove=0, t0=performance.now(), visible=true, r=240, rt=240;
+  // Phones and tablets: repainting the light mask and the cast shadow every frame makes mobile GPUs
+  // jitter and flicker, so there the light rests in one place, the shadow is cast once, and only
+  // the dust drifts, at a lighter 30 fps.
+  var calm=matchMedia('(hover: none), (pointer: coarse), (max-width: 820px)').matches, lastDraw=0;
 
   function size(){
     W=reel.offsetWidth; H=reel.offsetHeight; cv.width=W*dpr; cv.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
-    var n=Math.round(Math.min(140,Math.max(50,W*H/9000))); motes=[];
+    var n=Math.round(Math.min(140,Math.max(50,W*H/9000))); if(calm)n=Math.round(n*.45); motes=[];
     for(var i=0;i<n;i++)motes.push(mote(true));
     rt=r=Math.max(190,Math.min(420,W*.27));
+    if(calm){reel.style.setProperty('--lx','50%');reel.style.setProperty('--ly','42%');reel.style.setProperty('--lr',(r*1.25).toFixed(1)+'px');reel.style.setProperty('--bx','0.5');}
   }
   function mote(any){
     // most dust lives in the warm, sunlit right side; a few cooler specks drift on the platform side
@@ -30,7 +35,7 @@
     var p=toLocal(e.clientX,e.clientY); tx=p[0];ty=p[1];active=true;lastMove=performance.now();
     reel.style.setProperty('--fx',(p[0]*100)+'%'); reel.style.setProperty('--fy',(p[1]*100)+'%');
     focus.classList.remove('go'); void focus.offsetWidth; focus.classList.add('go');
-    r=r*.55; // the lens snaps tight, then breathes back open
+    if(!calm) r=r*.55; // the lens snaps tight, then breathes back open
     for(var i=0;i<motes.length;i++){var m=motes[i],dx=m.x-p[0]*W,dy=m.y-p[1]*H,d=Math.hypot(dx,dy)||1;
       if(d<260){var f=(260-d)/260*3.2;m.vx+=dx/d*f;m.vy+=dy/d*f;}}
   },{passive:true});
@@ -40,12 +45,16 @@
   function frame(now){
     requestAnimationFrame(frame);
     if(!visible)return;
+    if(calm){ if(now-lastDraw<33)return; lastDraw=now; }
     var t=(now-t0)/1000;
     // with no pointer (phones, or the visitor is reading), the lens wanders slowly across the scene
     if(!active||now-lastMove>4000){tx=.5+Math.sin(t*.17)*.3; ty=.5+Math.sin(t*.23+1)*.16;}
-    x+=(tx-x)*.07; y+=(ty-y)*.07; r+=(rt-r)*.05;
-    reel.style.setProperty('--lx',(x*100).toFixed(2)+'%'); reel.style.setProperty('--ly',(y*100).toFixed(2)+'%');
-    reel.style.setProperty('--lr',r.toFixed(1)+'px'); reel.style.setProperty('--bx',x.toFixed(3));
+    if(calm){ x=.5; y=.42; }
+    else{
+      x+=(tx-x)*.07; y+=(ty-y)*.07; r+=(rt-r)*.05;
+      reel.style.setProperty('--lx',(x*100).toFixed(2)+'%'); reel.style.setProperty('--ly',(y*100).toFixed(2)+'%');
+      reel.style.setProperty('--lr',r.toFixed(1)+'px'); reel.style.setProperty('--bx',x.toFixed(3));
+    }
     ctx.clearRect(0,0,W,H);
     var px=x*W, py=y*H;
     for(var i=0;i<motes.length;i++){
@@ -100,7 +109,12 @@
     stage.style.setProperty('--fig-shadow','drop-shadow('+(ux*14).toFixed(1)+'px '+(24+uy*10).toFixed(1)+'px 36px rgba(0,0,0,'+(light?.28:.6)+'))');
   }
   if(fig&&sh){stage.classList.add('fx-on');fit();addEventListener('resize',function(){setTimeout(fit,160);});if(!fig.complete)fig.addEventListener('load',fit);
-    var _frame=frame; frame=function(now){_frame(now); if(visible)castLight();};}
+    if(calm){ // cast the shadow once it settles, then leave it still
+      var settle=function(){ for(var i=0;i<40;i++)castLight(); };
+      if(fig.complete)setTimeout(settle,60); else fig.addEventListener('load',function(){setTimeout(settle,60);});
+      addEventListener('resize',function(){setTimeout(settle,220);});
+    } else { var _frame=frame; frame=function(now){_frame(now); if(visible)castLight();}; }
+  }
 
   size(); requestAnimationFrame(frame);
 })();

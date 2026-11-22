@@ -142,7 +142,7 @@ for f in glob.glob(os.path.join(R, '**/*.html'), recursive=True):
     if '/js/navmore.js' not in s: s = s.replace('</body>', '<script src="/js/navmore.js?v=1" defer></script>\n</body>', 1)
     if '/chat.js' not in s: s = s.replace('</body>', '<script src="/chat-kb.js?v=1" defer></script><script src="/chat.js?v=1" defer></script>\n</body>', 1)
     s = re.sub(r'/css/site\.css\?v=\d+', '/css/site.css?v=' + CSS_V, s)
-    s = re.sub(r'/css/pages\.css\?v=\d+', '/css/pages.css?v=16', s)
+    s = re.sub(r'/css/pages\.css\?v=\d+', '/css/pages.css?v=18', s)
     s = re.sub(r'/css/light\.css\?v=\d+', '/css/light.css?v=4', s)
     open(f, 'w').write(s)
 
