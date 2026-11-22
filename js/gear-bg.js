@@ -161,13 +161,16 @@
     ctx.save(); ctx.globalAlpha = alpha * (dark ? .55 : .25);
     var g = ctx.createRadialGradient(0, h * .46, 0, 0, h * .46, w * .45);
     g.addColorStop(0, 'rgba(0,0,0,.55)'); g.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = g; ctx.scale(1, .18); ctx.fillRect(-w * .5, h * .46 / .18 - w * .45, w, w * .9); ctx.restore();
+    ctx.fillStyle = g; ctx.scale(1, .18); ctx.beginPath(); ctx.arc(0, h * .46 / .18, w * .45, 0, Math.PI * 2); ctx.fill(); ctx.restore();
     // frame flash / spotlight glow behind
     if (st.glow > .01){
-      ctx.save(); ctx.globalAlpha = st.glow * (dark ? .55 : .4);
-      var gg = ctx.createRadialGradient(0, 0, 0, 0, 0, Math.max(w, h) * .7);
-      gg.addColorStop(0, dark ? 'rgba(255,236,210,.9)' : 'rgba(255,220,180,.9)'); gg.addColorStop(1, 'rgba(255,236,210,0)');
-      ctx.fillStyle = gg; ctx.fillRect(-w, -h, w * 2, h * 2); ctx.restore();
+      // soft round bloom that fades fully to nothing well inside its own circle (no edges, no box)
+      var R = Math.max(w, h) * .62;
+      ctx.save(); ctx.globalAlpha = st.glow * (dark ? .45 : .32);
+      var gg = ctx.createRadialGradient(0, 0, 0, 0, 0, R);
+      var c0 = dark ? '255,236,210' : '255,222,186';
+      gg.addColorStop(0, 'rgba(' + c0 + ',.75)'); gg.addColorStop(.35, 'rgba(' + c0 + ',.28)'); gg.addColorStop(.7, 'rgba(' + c0 + ',.06)'); gg.addColorStop(1, 'rgba(' + c0 + ',0)');
+      ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill(); ctx.restore();
     }
     ctx.globalAlpha = alpha;
     // on black, dark gear gets a faint cool rim so its silhouette reads
@@ -235,7 +238,6 @@
     ctx.clearRect(0, 0, W, H);
     drawSpotlight(now, dark);
     var bx = drawPiece('x360', 0, now, dark);
-    drawRing(bx, now);
     drawPiece('cam', 1, now, dark);
     var bd = drawPiece('drone', 2, now, dark);
     drawLeds(bd, now, dark);
