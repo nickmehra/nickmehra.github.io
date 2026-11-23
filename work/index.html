@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="/css/site.css?v=9">
 <link rel="stylesheet" href="/css/pages.css?v=18">
 <link rel="stylesheet" href="/css/light.css?v=4">
+<link rel="stylesheet" href="/css/vf-gallery.css?v=1">
 </head>
 <body>
 <header class="nav"><div class="bar">
@@ -42,21 +43,9 @@
     </div>
     <div class="group">
       <span class="eyebrow">Photography &nbsp;·&nbsp; 2026</span>
-      <h3>Selected photographs</h3>
-      <div class="grid" id="photoGrid">
-        <button class="tilt wide" type="button" data-full="/img/work/nick-mug-full.jpg"><img src="/img/work/nick-mug.jpg" alt="Studio portrait of Nick with the BlackSheep mug" loading="lazy"></button>
-        <button class="tilt wide" type="button" data-full="/img/work/night-highway-full.jpg"><img src="/img/work/night-highway.jpg" alt="Night highway shoot above the traffic, Toronto skyline beyond" loading="lazy"></button>
-        <button class="tilt wide" type="button" data-full="/img/work/lakeshore-sunset-full.jpg"><img src="/img/work/lakeshore-sunset.jpg" alt="Lakeshore path at sunset" loading="lazy"></button>
-        <button class="tilt wide" type="button" data-full="/img/work/bmw-country-lot-full.jpg"><img src="/img/work/bmw-country-lot.jpg" alt="Black BMW 330i on a country lot" loading="lazy"></button>
-        <button class="tilt wide" type="button" data-full="/img/work/nick-henley-full.jpg"><img src="/img/work/nick-henley.jpg" alt="Night portrait in a white henley" loading="lazy"></button>
-        <button class="tilt wide" type="button" data-full="/img/work/before-the-lens-full.jpg"><img src="/img/work/before-the-lens.jpg" alt="Before the lens: the enforcement years, identifying details blurred" loading="lazy"></button>
-        <button class="tilt wide" type="button" data-full="/img/work/doberman-full.jpg"><img src="/img/work/doberman.jpg" alt="Doberman in a tactical harness" loading="lazy"></button>
-        <button class="tilt wide" type="button" data-full="/img/work/bmw-after-rain-full.jpg"><img src="/img/work/bmw-after-rain.jpg" alt="Black BMW 330i after the rain" loading="lazy"></button>
-        <button class="tilt wide" type="button" data-full="/img/work/nick-at-the-wheel-full.jpg"><img src="/img/work/nick-at-the-wheel.jpg" alt="Nick at the wheel in mirrored green sunglasses, late afternoon light" loading="lazy"></button>
-        <button class="tilt wide" type="button" data-full="/img/work/lot-at-dusk-full.jpg"><img src="/img/work/lot-at-dusk.jpg" alt="An empty parking lot at dusk through the windshield, evergreens against a red sky" loading="lazy"></button>
-        <button class="tilt wide" type="button" data-full="/img/work/highway-sunset-full.jpg"><img src="/img/work/highway-sunset.jpg" alt="A divided highway at sunset from an overpass, streaked clouds above" loading="lazy"></button>
-      </div>
-      <script>(function(){var g=document.getElementById('photoGrid'),k=[].slice.call(g.children);for(var i=k.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=k[i];k[i]=k[j];k[j]=t;}k.forEach(function(e){g.appendChild(e);});})();</script>
+      <h3>Through the <em>viewfinder</em></h3>
+      <p class="lead">Move to focus, hold to magnify, drag the film strip. Double-click or press the shutter for full size.</p>
+      <div class="vfg" data-base="/img/work/" aria-label="Selected photographs"><script type="application/json" class="vfg-data">[{"id": "nick-mug", "t": "Studio portrait of Nick with the BlackSheep mug", "k": "Portrait"}, {"id": "night-highway", "t": "Night highway shoot above the traffic, Toronto skyline beyond", "k": "Night work"}, {"id": "lakeshore-sunset", "t": "Lakeshore path at sunset", "k": "Landscape"}, {"id": "bmw-country-lot", "t": "Black BMW 330i on a country lot", "k": "Automotive"}, {"id": "nick-henley", "t": "Night portrait in a white henley", "k": "Portrait"}, {"id": "before-the-lens", "t": "Before the lens: the enforcement years", "k": "Before the lens"}, {"id": "doberman", "t": "Doberman in a tactical harness", "k": "Field portrait"}, {"id": "bmw-after-rain", "t": "Black BMW 330i after the rain", "k": "Automotive"}, {"id": "nick-at-the-wheel", "t": "Nick at the wheel, late afternoon light", "k": "Portrait"}, {"id": "lot-at-dusk", "t": "An empty lot at dusk through the windshield", "k": "Landscape"}, {"id": "highway-sunset", "t": "A divided highway at sunset from an overpass", "k": "Landscape"}]</script></div>
     </div>
     <div class="group">
       <span class="eyebrow">Film &nbsp;·&nbsp; 2026</span>
@@ -94,6 +83,7 @@
 <script src="/js/site.js"></script>
 <script src="/js/ff-pool.js?v=6"></script>
 <script src="/js/pages.js?v=10"></script>
+<script src="/js/vf-gallery.js?v=1" defer></script>
 <script src="/react.js?v=7" defer></script>
 <script src="/type-fx.js?v=12" defer></script>
 <script src="/chat-kb.js?v=1" defer></script><script src="/chat.js?v=1" defer></script>
