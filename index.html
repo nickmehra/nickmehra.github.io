@@ -507,6 +507,7 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
 <script src="/booking-gate.js?v=2" defer></script>
 <style>@media (max-width:760px){section:not(.hero){padding-top:48px!important;padding-bottom:48px!important}}</style>
 <style id="gear-css">html{background:var(--bg)}body{background:transparent!important}#gear{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:-1;pointer-events:none;transition:opacity .5s}</style>
+<link rel="stylesheet" href="css/vf-gallery.css?v=1">
 </head>
 <body>
 
@@ -627,9 +628,10 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
       <div class="head" style="margin-bottom:10px">
         <span class="eyebrow">Portfolio</span>
         <h2>Selected <em>work.</em></h2>
-        <p>Use the arrows, swipe, or tap a photo to see it full size.</p>
+        <p>Move to focus, hold to magnify, drag the film strip. Tap the shutter for full size.</p>
       </div>
-      <div class="show" id="show" role="region" aria-roledescription="carousel" aria-label="Portfolio">
+      <div class="vfg" data-base="img/work/" aria-label="Portfolio photographs"><script type="application/json" class="vfg-data">[{"id": "nick-mug", "t": "Studio portrait of Nick with the BlackSheep mug", "k": "Portrait"}, {"id": "night-highway", "t": "Night highway shoot above the traffic, Toronto skyline beyond", "k": "Night work"}, {"id": "lakeshore-sunset", "t": "Lakeshore path at sunset", "k": "Landscape"}, {"id": "bmw-country-lot", "t": "Black BMW 330i on a country lot", "k": "Automotive"}, {"id": "nick-henley", "t": "Night portrait in a white henley", "k": "Portrait"}, {"id": "before-the-lens", "t": "Before the lens: the enforcement years", "k": "Before the lens"}, {"id": "doberman", "t": "Doberman in a tactical harness", "k": "Field portrait"}, {"id": "bmw-after-rain", "t": "Black BMW 330i after the rain", "k": "Automotive"}, {"id": "nick-at-the-wheel", "t": "Nick at the wheel, late afternoon light", "k": "Portrait"}, {"id": "lot-at-dusk", "t": "An empty lot at dusk through the windshield", "k": "Landscape"}, {"id": "highway-sunset", "t": "A divided highway at sunset from an overpass", "k": "Landscape"}]</script></div>
+      <div class="show" id="show" hidden role="region" aria-roledescription="carousel" aria-label="Portfolio">
         <button type="button" class="show-main tilt" id="showMain" aria-label="Open this photo full size"></button>
         <p class="show-cap" id="showCap" aria-live="polite"></p>
         <div class="stage-ctl">
@@ -2164,5 +2166,6 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
 <script src="/chat-kb.js?v=1" defer></script><script src="/chat.js?v=1" defer></script>
 <script src="js/navmore.js" defer></script>
 <script src="js/gear-bg.js?v=6" defer></script>
+<script src="js/vf-gallery.js?v=1" defer></script>
 </body>
 </html>
