@@ -995,7 +995,10 @@ footer .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;f
     ['nick-henley', 'Night portrait in a white henley', 'Portrait'],
     ['before-the-lens', 'Before the lens: the enforcement years', 'Before the lens'],
     ['doberman', 'Doberman in a tactical harness', 'Field portrait'],
-    ['bmw-after-rain', 'Black BMW 330i after the rain', 'Automotive']
+    ['bmw-after-rain', 'Black BMW 330i after the rain', 'Automotive'],
+    ['nick-at-the-wheel', 'Nick at the wheel in mirrored green sunglasses, late afternoon light', 'Portrait'],
+    ['lot-at-dusk', 'An empty parking lot at dusk through the windshield, evergreens against a red sky', 'Landscape'],
+    ['highway-sunset', 'A divided highway at sunset from an overpass, streaked clouds above', 'Landscape']
   ];
   var WORK_IDS = {}; PHOTOS.forEach(function(p){ if (!CARD_ART[p[0]]) WORK_IDS[p[0]] = 1; });
   (function(){ for (var i = PHOTOS.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)), t = PHOTOS[i]; PHOTOS[i] = PHOTOS[j]; PHOTOS[j] = t; } })();
