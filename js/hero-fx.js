@@ -1,120 +1,108 @@
+/* Hero backdrop v4: a warm spotlight drifts with the pointer, dust floats through it, a tap pulls
+   focus, and Nick casts a soft shadow on the wall opposite the light. Every moving part is a
+   pre-drawn layer that only changes transform/opacity, so the GPU never repaints mid-animation. */
 (function(){
   var stage=document.getElementById('stage'), reel=document.getElementById('reel');
   if(!stage||!reel)return;
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  var lens=reel.querySelector('img.lens'), cv=reel.querySelector('canvas.motes'), focus=reel.querySelector('.focus');
+  var cv=reel.querySelector('canvas.motes'), focus=reel.querySelector('.focus');
   var ctx=cv&&cv.getContext('2d'); if(!ctx)return;
-  var W=0,H=0,dpr=Math.min(window.devicePixelRatio||1,2), motes=[];
-  var tx=.5,ty=.55, x=.5,y=.55, active=false, lastMove=0, t0=performance.now(), visible=true, r=240, rt=240;
-  // Phones and tablets: repainting the light mask and the cast shadow every frame makes mobile GPUs
-  // jitter and flicker, so there the light rests in one place, the shadow is cast once, and only
-  // the dust drifts, at a lighter 30 fps.
-  var calm=matchMedia('(hover: none), (pointer: coarse), (max-width: 820px)').matches, lastDraw=0;
+  var spot=document.createElement('span'); spot.className='spot'; spot.setAttribute('aria-hidden','true'); reel.appendChild(spot);
+  var calm=matchMedia('(hover: none), (pointer: coarse), (max-width: 820px)').matches;
+  var W=0,H=0,dpr=Math.min(window.devicePixelRatio||1,calm?1.5:2), motes=[], R=240;
+  var tx=.5,ty=.5,x=.5,y=.5,active=false,lastMove=0,t0=performance.now(),visible=true,lastDraw=0,FPS=calm?30:40;
 
   function size(){
-    W=reel.offsetWidth; H=reel.offsetHeight; cv.width=W*dpr; cv.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
-    var n=Math.round(Math.min(140,Math.max(50,W*H/9000))); if(calm)n=Math.round(n*.45); motes=[];
-    for(var i=0;i<n;i++)motes.push(mote(true));
-    rt=r=Math.max(190,Math.min(420,W*.27));
-    if(calm){reel.style.setProperty('--lx','50%');reel.style.setProperty('--ly','42%');reel.style.setProperty('--lr',(r*1.25).toFixed(1)+'px');reel.style.setProperty('--bx','0.5');}
+    W=reel.offsetWidth; H=reel.offsetHeight; cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); ctx.setTransform(dpr,0,0,dpr,0,0);
+    var n=Math.round(Math.min(90,Math.max(36,W*H/14000))); if(calm)n=Math.round(n*.5);
+    motes=[]; for(var i=0;i<n;i++)motes.push(mote(true));
+    R=Math.max(190,Math.min(420,W*.27)); reel.style.setProperty('--sd',(R*2.6).toFixed(0)+'px');
   }
   function mote(any){
-    // most dust lives in the warm, sunlit right side; a few cooler specks drift on the platform side
     var warm=Math.random()<.78;
-    return {x:warm?W*(.45+Math.random()*.55):Math.random()*W*.5, y:any?Math.random()*H:H+10,
-      vx:(Math.random()-.5)*.12, vy:-(.05+Math.random()*.22), s:Math.random()*1.8+.4, a:Math.random()*.5+.15,
-      ph:Math.random()*6.28, warm:warm};
+    return {x:warm?W*(.45+Math.random()*.55):Math.random()*W*.5,y:any?Math.random()*H:H+10,
+      vx:(Math.random()-.5)*.12,vy:-(.05+Math.random()*.2),s:Math.random()*1.6+.5,a:Math.random()*.45+.15,ph:Math.random()*6.28,warm:warm};
   }
-  function toLocal(cx,cy){
-    var b=reel.getBoundingClientRect();
-    return [(cx-b.left)/b.width,(cy-b.top)/b.height];
+  function toLocal(cx,cy){var b=reel.getBoundingClientRect();return [(cx-b.left)/b.width,(cy-b.top)/b.height];}
+  if(!calm){
+    stage.addEventListener('pointermove',function(e){var p=toLocal(e.clientX,e.clientY);tx=p[0];ty=p[1];active=true;lastMove=performance.now();},{passive:true});
+    stage.addEventListener('pointerleave',function(){active=false;});
   }
-  stage.addEventListener('pointermove',function(e){var p=toLocal(e.clientX,e.clientY);tx=p[0];ty=p[1];active=true;lastMove=performance.now();},{passive:true});
-  stage.addEventListener('pointerleave',function(){active=false;});
   stage.addEventListener('pointerdown',function(e){
-    var p=toLocal(e.clientX,e.clientY); tx=p[0];ty=p[1];active=true;lastMove=performance.now();
+    var p=toLocal(e.clientX,e.clientY);
     reel.style.setProperty('--fx',(p[0]*100)+'%'); reel.style.setProperty('--fy',(p[1]*100)+'%');
     focus.classList.remove('go'); void focus.offsetWidth; focus.classList.add('go');
-    if(!calm) r=r*.55; // the lens snaps tight, then breathes back open
     for(var i=0;i<motes.length;i++){var m=motes[i],dx=m.x-p[0]*W,dy=m.y-p[1]*H,d=Math.hypot(dx,dy)||1;
-      if(d<260){var f=(260-d)/260*3.2;m.vx+=dx/d*f;m.vy+=dy/d*f;}}
+      if(d<240){var f=(240-d)/240*2.4;m.vx+=dx/d*f;m.vy+=dy/d*f;}}
   },{passive:true});
   if('IntersectionObserver' in window)new IntersectionObserver(function(es){visible=es[0].isIntersecting;}).observe(stage);
-  var rs; addEventListener('resize',function(){clearTimeout(rs);rs=setTimeout(size,150);});
+  document.addEventListener('visibilitychange',function(){visible=!document.hidden;});
+  var rs; addEventListener('resize',function(){clearTimeout(rs);rs=setTimeout(function(){size();fit();},180);});
 
   function frame(now){
     requestAnimationFrame(frame);
-    if(!visible)return;
-    if(calm){ if(now-lastDraw<33)return; lastDraw=now; }
+    if(!visible||now-lastDraw<1000/FPS)return;
+    var dt=Math.min(3,(now-lastDraw)/16.7); lastDraw=now;
     var t=(now-t0)/1000;
-    // with no pointer (phones, or the visitor is reading), the lens wanders slowly across the scene
-    if(!active||now-lastMove>4000){tx=.5+Math.sin(t*.17)*.3; ty=.5+Math.sin(t*.23+1)*.16;}
-    if(calm){ x=.5; y=.42; }
-    else{
-      x+=(tx-x)*.07; y+=(ty-y)*.07; r+=(rt-r)*.05;
-      reel.style.setProperty('--lx',(x*100).toFixed(2)+'%'); reel.style.setProperty('--ly',(y*100).toFixed(2)+'%');
-      reel.style.setProperty('--lr',r.toFixed(1)+'px'); reel.style.setProperty('--bx',x.toFixed(3));
-    }
+    if(!active||now-lastMove>4000){tx=.5+Math.sin(t*.11)*.26; ty=.46+Math.sin(t*.15+1)*.12;}   // slow idle wander
+    var e=1-Math.pow(1-.06,dt); x+=(tx-x)*e; y+=(ty-y)*e;
+    spot.style.transform='translate3d('+(x*W).toFixed(1)+'px,'+(y*H).toFixed(1)+'px,0)';
+    reel.style.setProperty('--bx',x.toFixed(2));
     ctx.clearRect(0,0,W,H);
-    var px=x*W, py=y*H;
+    var px=x*W,py=y*H;
     for(var i=0;i<motes.length;i++){
-      var m=motes[i], dx=m.x-px, dy=m.y-py, d=Math.hypot(dx,dy)||1;
-      if(d<r*.8){var f=(r*.8-d)/(r*.8)*.05; m.vx+=dx/d*f; m.vy+=dy/d*f;}
-      m.vx*=.985; m.vy=m.vy*.985+(-(.04+m.s*.03))*.015;
-      m.x+=m.vx+Math.sin(t*.6+m.ph)*.08; m.y+=m.vy;
+      var m=motes[i],dx=m.x-px,dy=m.y-py,d=Math.hypot(dx,dy)||1;
+      m.vx*=.985; m.vy=m.vy*.985-(.04+m.s*.03)*.015;
+      m.x+=(m.vx+Math.sin(t*.5+m.ph)*.07)*dt; m.y+=m.vy*dt;
       if(m.y<-10||m.x<-20||m.x>W+20){motes[i]=mote(false);continue;}
-      // dust glows brighter when it passes through the lens of light
-      var lit=Math.max(0,1-d/r), al=m.a*(.35+lit*1.6)*(.7+.3*Math.sin(t*1.3+m.ph));
-      ctx.beginPath(); ctx.arc(m.x,m.y,m.s*(1+lit*.8),0,6.283);
-      ctx.fillStyle=m.warm?'rgba(255,206,140,'+Math.min(al,.95).toFixed(3)+')':'rgba(170,205,255,'+Math.min(al*.8,.8).toFixed(3)+')';
-      ctx.fill();
+      var lit=Math.max(0,1-d/R), al=Math.min(.85,m.a*(.4+lit*1.3));
+      ctx.fillStyle=m.warm?'rgba(255,206,140,'+al.toFixed(2)+')':'rgba(170,205,255,'+(al*.8).toFixed(2)+')';
+      ctx.beginPath(); ctx.arc(m.x,m.y,m.s,0,6.283); ctx.fill();
     }
-  }
-  /* ---- Cast light on the figure ---- */
-  var scene=document.getElementById('scene'), fig=scene&&scene.querySelector('.figure');
-  var sh=scene&&scene.querySelector('.fx-shadow'), rim=scene&&scene.querySelector('.fx-rim'), shade=scene&&scene.querySelector('.fx-shade');
-  var Z={sh:-100,rim:68,shade:71};
-  function fit(){
-    if(!fig||!sh)return; var cs=getComputedStyle(fig);
-    [sh,rim,shade].forEach(function(el){el.style.bottom=cs.bottom;el.style.height=cs.height;el.style.width=cs.width;});
-  }
-  function isLight(){return document.documentElement.getAttribute('data-theme')==='light';}
-  var sox=0,soy=0,sblur=10,sop=0;
-  function castLight(){
-    if(!fig||!sh||!fig.complete)return;
-    var b=reel.getBoundingClientRect(), f=fig.getBoundingClientRect(), st=stage.getBoundingClientRect();
-    var Lx=b.left+x*b.width, Ly=b.top+y*b.height;           // where the spotlight is
-    var Fx=f.left+f.width/2, Fy=f.top+f.height*.42;          // the figure's centre of mass (chest height)
-    var vx=Fx-Lx, vy=Fy-Ly, d=Math.hypot(vx,vy)||1, ux=vx/d, uy=vy/d, span=Math.max(st.width,600);
-    // point light in front of the subject, wall behind: the shadow is displaced away from the light by
-    // (wall depth / light depth) times the light's offset, enlarged by the same ratio, and its penumbra widens with distance
-    var k=.32, ox=vx*k, oy=vy*k*.75, lim=f.height*.42, ol=Math.hypot(ox,oy); if(ol>lim){ox*=lim/ol;oy*=lim/ol;}
-    var near=Math.max(0,1-d/(span*.95));                       // inverse fall-off: closer light, darker and crisper shadow
-    var light=isLight();
-    sox+=(ox-sox)*.25; soy+=(oy-soy)*.25;
-    sblur+=((3+ (1-near)*16)-sblur)*.2;
-    sop+=(((light?.30:.62)+near*(light?.25:.33))-sop)*.2;
-    var sc=1.04+ol/f.height*.25;
-    sh.style.transform='translate3d(-50%,0,'+Z.sh+'px) translate('+sox.toFixed(1)+'px,'+soy.toFixed(1)+'px) scale('+sc.toFixed(3)+')';
-    sh.style.filter='blur('+sblur.toFixed(1)+'px)'; sh.style.opacity=sop.toFixed(3);
-    // rim light: a warm edge on the side facing the light
-    var rr=1.5+near*2.5;
-    rim.style.transform='translate3d(-50%,0,'+Z.rim+'px) translate('+(-ux*rr).toFixed(1)+'px,'+(-uy*rr).toFixed(1)+'px)';
-    rim.style.filter='blur('+(2.5+(1-near)*2).toFixed(1)+'px)'; rim.style.opacity=((light?.3:.12+near*.4)*(st.width<820?.45:1)).toFixed(3);
-    // form shading: lit toward the light, falling into shadow on the far side
-    var ang=Math.atan2(ux,-uy)*180/Math.PI;
-    shade.style.transform='translate3d(-50%,0,'+Z.shade+'px)';
-    shade.style.background='linear-gradient('+ang.toFixed(1)+'deg,rgba(255,214,160,'+(light?.10:.12+near*.14).toFixed(3)+') 0%,rgba(0,0,0,0) 42%,rgba(0,0,0,'+(light?.22:.3+near*.25).toFixed(3)+') 100%)';
-    // contact shadow under the figure leans away from the light too
-    stage.style.setProperty('--fig-shadow','drop-shadow('+(ux*14).toFixed(1)+'px '+(24+uy*10).toFixed(1)+'px 36px rgba(0,0,0,'+(light?.28:.6)+'))');
-  }
-  if(fig&&sh){stage.classList.add('fx-on');fit();addEventListener('resize',function(){setTimeout(fit,160);});if(!fig.complete)fig.addEventListener('load',fit);
-    if(calm){ // cast the shadow once it settles, then leave it still
-      var settle=function(){ for(var i=0;i<40;i++)castLight(); };
-      if(fig.complete)setTimeout(settle,60); else fig.addEventListener('load',function(){setTimeout(settle,60);});
-      addEventListener('resize',function(){setTimeout(settle,220);});
-    } else { var _frame=frame; frame=function(now){_frame(now); if(visible)castLight();}; }
+    castLight();
   }
 
+  /* ---- cast shadow ---- */
+  var scene=document.getElementById('scene'), fig=scene&&scene.querySelector('.figure');
+  var sh=scene&&scene.querySelector('.fx-shadow'), shade=scene&&scene.querySelector('.fx-shade');
+  function isLight(){return document.documentElement.getAttribute('data-theme')==='light';}
+  var shadowReady=false, sox=0, soy=0, lastAng=999, lastShadeT=0;
+  function bake(){ // draw Nick's silhouette, blurred, once per size/theme
+    if(!fig||!sh||!fig.complete||!fig.naturalWidth)return;
+    var w=fig.offsetWidth,h=fig.offsetHeight; if(!w||!h)return;
+    var pad=24, c=document.createElement('canvas'), s=Math.min(1,700/h); c.width=Math.round((w+pad*2)*s); c.height=Math.round((h+pad*2)*s);
+    var g=c.getContext('2d'); g.scale(s,s);
+    g.filter='blur(9px)'; g.drawImage(fig,pad,pad,w,h);
+    g.filter='none'; g.globalCompositeOperation='source-in'; g.fillStyle=isLight()?'#2a1f16':'#000'; g.fillRect(0,0,w+pad*2,h+pad*2);
+    g.globalCompositeOperation='destination-in'; var fade=g.createLinearGradient(0,0,0,h+pad*2); fade.addColorStop(0,'#000'); fade.addColorStop(.78,'#000'); fade.addColorStop(1,'rgba(0,0,0,0)');
+    g.fillStyle=fade; g.fillRect(0,0,w+pad*2,h+pad*2);
+    try{ sh.style.backgroundImage='url('+c.toDataURL('image/png')+')'; }catch(err){ return; }
+    var cs=getComputedStyle(fig);
+    sh.style.width=(w+pad*2)+'px'; sh.style.height=(h+pad*2)+'px'; sh.style.bottom='calc('+cs.bottom+' - '+pad+'px)'; sh.style.marginLeft='0';
+    if(shade){shade.style.bottom=cs.bottom;shade.style.width=w+'px';shade.style.height=h+'px';}
+    shadowReady=true; lastAng=999;
+  }
+  function fit(){ bake(); }
+  function castLight(){
+    if(!shadowReady)return;
+    var Lx=x*W, Ly=y*H, f=fig.getBoundingClientRect(), b=reel.getBoundingClientRect();
+    var Fx=(f.left+f.width/2-b.left)*(W/b.width), Fy=(f.top+f.height*.42-b.top)*(H/b.height);
+    var vx=Fx-Lx, vy=Fy-Ly, d=Math.hypot(vx,vy)||1;
+    var ox=vx*.3, oy=vy*.2, lim=f.height*.35, ol=Math.hypot(ox,oy); if(ol>lim){ox*=lim/ol;oy*=lim/ol;}
+    sox+=(ox-sox)*.12; soy+=(oy-soy)*.12;
+    var near=Math.max(0,1-d/Math.max(W,600)), light=isLight();
+    sh.style.transform='translate3d(-50%,0,-100px) translate3d('+sox.toFixed(1)+'px,'+soy.toFixed(1)+'px,0) scale('+(1.04+ol/f.height*.2).toFixed(3)+')';
+    sh.style.opacity=((light?.28:.55)+near*(light?.18:.25)).toFixed(2);
+    // the far-side shading only re-paints when the light has really moved, and at most twice a second
+    var ang=Math.round(Math.atan2(vx/d,-vy/d)*180/Math.PI/6)*6, now=performance.now();
+    if(shade&&ang!==lastAng&&now-lastShadeT>500){ lastAng=ang; lastShadeT=now;
+      shade.style.transform='translate3d(-50%,0,71px)';
+      shade.style.background='linear-gradient('+ang+'deg,rgba(255,214,160,'+(light?.08:.12)+') 0%,rgba(0,0,0,0) 42%,rgba(0,0,0,'+(light?.18:.32)+') 100%)';
+    }
+  }
+  if(fig&&sh){
+    if(fig.complete)setTimeout(bake,80); else fig.addEventListener('load',function(){setTimeout(bake,80);});
+    new MutationObserver(function(){setTimeout(bake,50);}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+  }
   size(); requestAnimationFrame(frame);
 })();

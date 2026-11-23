@@ -1,33 +1,36 @@
-/* Interactive hero backdrop: a lens of light follows the pointer and brings the scene into focus,
-   dust drifts through the sunlit side and parts around the cursor, a tap pulls focus. */
-.reel{--lx:50%;--ly:55%;--lr:240px;transform:translateZ(-160px) scale(1.28)!important}
-.reel img.lens{z-index:3;opacity:1;filter:saturate(1.15) brightness(1.2) contrast(1.05)!important;
-  -webkit-mask-image:radial-gradient(circle var(--lr) at var(--lx) var(--ly),#000 0%,rgba(0,0,0,.55) 45%,transparent 100%);
-  mask-image:radial-gradient(circle var(--lr) at var(--lx) var(--ly),#000 0%,rgba(0,0,0,.55) 45%,transparent 100%);
-  transition:none}
-/* the beam no longer pulses on and off; it leans toward the light */
-.reel .beam{animation:none!important;opacity:.9;z-index:4;
-  transform:translate3d(calc((var(--bx,0.5) - .5) * 30%),0,0);transition:transform .9s cubic-bezier(.2,.7,.2,1)}
-.reel canvas.motes{position:absolute;inset:0;width:100%;height:100%;z-index:5;pointer-events:none;mix-blend-mode:screen}
-.reel .focus{position:absolute;z-index:6;left:var(--fx,50%);top:var(--fy,50%);width:10px;height:10px;transform:translate(-50%,-50%);border-radius:50%;
-  border:1.5px solid rgba(255,214,150,.8);box-shadow:0 0 24px rgba(255,190,110,.25);opacity:0;pointer-events:none}
+/* Hero backdrop, v4 (Nov 22 2026): smooth on every device.
+   Rule: nothing that moves is ever repainted. Blur is baked into the image, the spotlight is a
+   pre-drawn glow that only slides (transform), the cast shadow is drawn once and only slides,
+   and no blend modes or animated masks/filters are used. */
+.reel{--lr:240px;transform:translateZ(-160px) scale(1.2)!important;contain:paint}
+.reel img.lens{display:none!important}
+.stage .reel img.frame.on{filter:saturate(.9) brightness(.6)!important;will-change:transform;backface-visibility:hidden}
+.reel img.frame.on{animation:drift 30s ease-in-out infinite alternate!important}
+.reel .beam{animation:none!important;mix-blend-mode:normal!important;opacity:.55;z-index:4;will-change:transform;
+  background:linear-gradient(100deg,transparent 40%,rgba(255,190,110,.07) 52%,transparent 64%)!important;
+  transform:translate3d(calc((var(--bx,0.5) - .5) * 30%),0,0);transition:transform 1.4s cubic-bezier(.2,.7,.2,1)}
+.reel .spot{position:absolute;left:0;top:0;z-index:3;width:var(--sd,600px);height:var(--sd,600px);margin:calc(var(--sd,600px) / -2) 0 0 calc(var(--sd,600px) / -2);
+  border-radius:50%;pointer-events:none;will-change:transform;backface-visibility:hidden;
+  background:radial-gradient(closest-side,rgba(255,214,160,.20),rgba(255,200,140,.10) 45%,rgba(255,190,120,0) 100%)}
+.reel canvas.motes{position:absolute;inset:0;width:100%;height:100%;z-index:5;pointer-events:none;mix-blend-mode:normal!important}
+.reel .focus{position:absolute;z-index:6;left:var(--fx,50%);top:var(--fy,50%);width:380px;height:380px;margin:-190px 0 0 -190px;border-radius:50%;
+  border:1.5px solid rgba(255,214,150,.8);opacity:0;pointer-events:none;transform:scale(.03);will-change:transform,opacity}
 .reel .focus.go{animation:pullfocus 1.1s cubic-bezier(.15,.7,.2,1) forwards}
-@keyframes pullfocus{0%{opacity:.95;width:10px;height:10px}100%{opacity:0;width:380px;height:380px}}
+@keyframes pullfocus{0%{opacity:.9;transform:scale(.03)}100%{opacity:0;transform:scale(1)}}
 .stage{cursor:crosshair}
-:root[data-theme="light"] .reel img.lens{filter:saturate(1) brightness(1.06) contrast(.98)!important;opacity:.9}
-:root[data-theme="light"] .reel canvas.motes{mix-blend-mode:multiply;opacity:.6}
-@media (prefers-reduced-motion:reduce){.reel img.lens,.reel canvas.motes,.reel .focus{display:none}.reel .beam{transition:none}}
+/* the halo behind Nick: same soft colours, drawn without a live 90px blur */
+.glow{filter:none!important;background:radial-gradient(closest-side,rgba(122,74,20,.55),rgba(90,36,20,.35) 40%,rgba(42,51,64,.18) 70%,transparent 100%)!important}
+:root[data-theme="light"] .glow{background:radial-gradient(closest-side,rgba(243,201,168,.8),rgba(241,215,166,.45) 45%,rgba(217,221,228,.2) 75%,transparent 100%)!important}
+:root[data-theme="light"] .stage .reel img.frame.on{filter:saturate(.75) brightness(1.08) contrast(.9)!important}
+:root[data-theme="light"] .reel .spot{background:radial-gradient(closest-side,rgba(255,236,200,.35),rgba(255,226,180,.14) 50%,rgba(255,220,170,0) 100%)}
+:root[data-theme="light"] .reel canvas.motes{opacity:.55}
+@media (prefers-reduced-motion:reduce){.reel .spot,.reel canvas.motes,.reel .focus{display:none}.reel img.frame.on{animation:none!important}}
 
-/* Cast light: the spotlight is a point light in front of Nick. His shadow falls on the wall on the
-   opposite side (offset, enlarged and softened with distance, as a real point light would cast it),
-   a warm rim catches the edge facing the light, and the far side of the figure falls into shade. */
-.fx-shadow,.fx-rim,.fx-shade{position:absolute;left:50%;pointer-events:none;will-change:transform,opacity,filter;
+/* Cast shadow: drawn once to a bitmap (blur included), then only moved */
+.fx-shadow{position:absolute;left:50%;pointer-events:none;will-change:transform,opacity;transform-origin:50% 100%;opacity:0;background-size:100% 100%;background-repeat:no-repeat}
+.fx-rim{display:none!important}
+.fx-shade{position:absolute;left:50%;pointer-events:none;
   -webkit-mask-image:url(/img/nick-hero.webp?v=9),linear-gradient(#000 80%,transparent 100%);-webkit-mask-size:100% 100%,100% 100%;-webkit-mask-repeat:no-repeat;-webkit-mask-composite:source-in;
-  mask-image:url(/img/nick-hero.webp?v=9),linear-gradient(#000 80%,transparent 100%);mask-size:100% 100%,100% 100%;mask-repeat:no-repeat;mask-composite:intersect}
-.fx-shadow{background:#000;opacity:0;transform-origin:50% 100%}
-.fx-rim{background:#ffcf96;opacity:0}
-.fx-shade{opacity:1}
-:root[data-theme="light"] .fx-shadow{background:#2a1f16}
-:root[data-theme="light"] .fx-rim{background:#ffb070}
-.stage.fx-on .figure{filter:var(--fig-shadow)!important}
-@media (prefers-reduced-motion:reduce){.fx-shadow,.fx-rim,.fx-shade{display:none}}
+  mask-image:url(/img/nick-hero.webp?v=9),linear-gradient(#000 80%,transparent 100%);mask-size:100% 100%,100% 100%;mask-repeat:no-repeat;mask-composite:intersect;
+  transition:opacity 1.2s ease}
+@media (prefers-reduced-motion:reduce){.fx-shadow,.fx-shade{display:none}}
