@@ -32,7 +32,7 @@ if ($allowed && $state === 'approved' && empty($q['approved_at'])) $q['approved_
 $L = $q ? bs_links($q) : null;
 ?><!doctype html>
 <html lang="en-CA"><head><meta charset="utf-8"><meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex"><title>Your quote · BlackSheep Digital Works</title><link rel="icon" href="/img/ram.png">
+<meta name="robots" content="noindex"><title>Your quote · BlackSheep Digital Works</title><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
 :root{--bg:#F5F5F2;--panel:#fff;--fg:#08090A;--muted:#3a3e44;--line:rgba(8,9,10,.18);--red:#9A1219;color-scheme:only light}

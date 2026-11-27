@@ -152,7 +152,7 @@ def page(title, desc, canonical, body, depth, og_image, extra_head=''):
 <meta property="og:type" content="article"><meta property="og:title" content="{html.escape(title)}">
 <meta property="og:description" content="{html.escape(desc)}"><meta property="og:url" content="{canonical}">
 <meta property="og:image" content="{SITE}/{og_image}">
-<link rel="icon" href="{up}img/ram.png">
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
 <link rel="stylesheet" href="{up}fonts/fonts.css">
 <script>try{{var t=localStorage.getItem('bs-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}}catch(e){{}}</script>
 <style>{CSS}{FOOTER_CSS}</style>
