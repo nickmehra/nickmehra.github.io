@@ -64,7 +64,8 @@ def pricing():
   <div class="pk" data-seg-box="auto" hidden>{au_cards}</div>
   <div class="pk" data-seg-box="ev" hidden>{ev_cards}</div>
   <p class="note" data-seg-text="re">Packages cover homes up to 2,999 sq ft. 3,000–3,999 sq ft adds $100, 4,000–4,999 sq ft adds $200, 5,000+ is quoted.</p>
-  <p class="note" data-seg-text="auto" hidden>Per-unit visits start at 10 cars or trucks, or 5 RVs. Monthly lot programs and RV shows are quoted.</p>
+  <p class="note" data-seg-text="auto" hidden>Per-unit visits start at 10 cars or trucks, or 5 RVs. Photos + walkaround is $69 per car or truck, or $59 at 25+ units. Monthly lot programs and RV shows are quoted.</p>
+  <p class="note"><b>Partner rates:</b> full-fee agents and dealerships who book with us regularly can qualify for ongoing partner pricing. <a class="lk" href="../#contact">Ask Nick about partner rates</a>.</p>
   <p class="note" data-seg-text="ev" hidden>Community festivals, brand activations, corporate and private events. Coverage runs up to 3 hours per event, with unlimited edited photos. <b>Weddings are not offered.</b></p>
 </div></section>
 
@@ -134,7 +135,7 @@ def pricing():
 </div></section>
 '''
     data = json.dumps(CAT).replace('</', '<\\/')
-    js = '<script>window.BS_CAT=' + data + ';</script>\n<script src="calc.js?v=2"></script><script src="/booking-gate.js?v=2" defer></script><script src="pricing.js?v=6"></script>'
+    js = '<script>window.BS_CAT=' + data + ';</script>\n<script src="calc.js?v=3"></script><script src="/booking-gate.js?v=2" defer></script><script src="pricing.js?v=6"></script>'
     page = blog.page('Pricing | BlackSheep Digital Works', 'Real estate, dealership and event photo, video and drone pricing. Build your package and get an instant numbered quote with a PDF.',
                      blog.SITE + '/pricing/', body, 1, 'img/og-image.jpg', '<style>' + CSS + '</style>')
     page = page.replace('</body>', js + '\n</body>', 1)

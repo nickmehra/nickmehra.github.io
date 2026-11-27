@@ -97,6 +97,7 @@ function bs_catalog() {
       'unitAddons' => [
         ['id' => 'au-photo', 'name' => 'Vehicle photos · 25–35 per car or truck', 'price' => 35, 'unitType' => 'car'],
         ['id' => 'au-walk', 'name' => 'Walkaround video · per car or truck', 'price' => 45, 'unitType' => 'car'],
+        ['id' => 'au-bundle', 'name' => 'Photos + walkaround video · per car or truck', 'price' => 69, 'unitType' => 'car', 'vol' => 25, 'volPrice' => 59],
         ['id' => 'rv-photo', 'name' => 'RV photos · 35–45 per unit', 'price' => 69, 'unitType' => 'rv'],
         ['id' => 'rv-walk', 'name' => 'RV walkthrough video · per unit', 'price' => 75, 'unitType' => 'rv'],
         ['id' => 'rv-plan', 'name' => 'RV 2D layout plan · per unit', 'price' => 49, 'unitType' => 'rv'],
@@ -164,7 +165,10 @@ function bs_price($req) {
       if ($u) {
         if ($pkg && empty($pkg['perunit']) && $u['unitType'] === $pkg['unitType']) continue; // already in the package
         $n = $u['unitType'] === 'rv' ? $rvs : $cars; if ($n < 1) continue;
-        $lines[] = ['name' => $u['name'], 'qty' => $n, 'unit' => $u['price'], 'amount' => $n * $u['price']]; continue;
+        if (($id === 'au-photo' || $id === 'au-walk') && in_array('au-bundle', $addons, true)) continue; // covered by the photos + walkaround bundle
+        $unit = $u['price']; $nm = $u['name'];
+        if (!empty($u['vol']) && $n >= $u['vol']) { $unit = $u['volPrice']; $nm .= ' (volume rate, ' . $u['vol'] . '+ units)'; }
+        $lines[] = ['name' => $nm, 'qty' => $n, 'unit' => $unit, 'amount' => $n * $unit]; continue;
       }
       $a = bs_find($c['addons'], $id); if (!$a) continue;
       if (!empty($a['quote'])) { $flags[] = $a['name'] . ': priced on request'; continue; }

@@ -17,7 +17,10 @@ window.bsCalc = function (C, seg, st) {
     if (pk && !pk.perunit) { lines.push([pk.name, 1, pk.price]); var n = pk.unitType === 'rv' ? rvs : cars, ex = Math.max(0, n - pk.included); if (ex) lines.push(['Extra units beyond ' + pk.included, ex, ex * pk.extra]); }
     st.add.forEach(function (id) {
       var u = find(c.unitAddons, id);
-      if (u) { if (pk && !pk.perunit && u.unitType === pk.unitType) return; var k = u.unitType === 'rv' ? rvs : cars; if (k > 0) lines.push([u.name, k, k * u.price]); return; }
+      if (u) { if (pk && !pk.perunit && u.unitType === pk.unitType) return; var k = u.unitType === 'rv' ? rvs : cars; if (k < 1) return;
+        if ((id === 'au-photo' || id === 'au-walk') && st.add.indexOf('au-bundle') >= 0) return; /* covered by the photos + walkaround bundle */
+        var up = u.price, nm = u.name; if (u.vol && k >= u.vol) { up = u.volPrice; nm += ' (volume rate, ' + u.vol + '+ units)'; }
+        lines.push([nm, k, k * up]); return; }
       var a = find(c.addons, id); if (!a) return; if (a.quote) { flags.push(a.name + ': priced on request'); return; }
       if (pk && !pk.perunit && id === 'au-aerial') return; lines.push([a.name, 1, a.price]);
     });
