@@ -60,16 +60,15 @@ function bs_acc_fields($in, $requireAll = true) {
 function bs_acc_public($a) {
   // what the account owner sees about themselves (export / profile)
   return ['first' => $a['first'], 'last' => $a['last'], 'email' => $a['email'], 'phone' => $a['phone'], 'title' => $a['title'],
-    'username' => $a['username'], 'created' => $a['created'], 'consent' => $a['consent'], 'marketing' => !empty($a['marketing']),
+    'username' => $a['username'], 'created' => $a['created'], 'consent' => $a['consent'],
     'bookings' => array_values($a['bookings'] ?? []), 'devices' => array_map(function ($d) { return ['name' => $d['name'], 'added' => $d['added'], 'push' => !empty($d['fcm'])]; }, $a['devices'] ?? [])];
 }
 
-function bs_acc_create($email, $fields, $marketing) {
+function bs_acc_create($email, $fields, $unused = false) {
   $id = bs_acc_id($email);
-  $a = $fields + ['email' => strtolower($email), 'created' => time(), 'marketing' => (bool)$marketing,
+  $a = $fields + ['email' => strtolower($email), 'created' => time(),
     'consent' => ['privacy' => BS_PRIVACY_VERSION, 'at' => time()], 'bookings' => [], 'devices' => []];
   bs_acc_save($a); bs_username_set('', $fields['username'], $id);
-  if ($marketing) bs_list_add($email, $fields['first'] . ' ' . $fields['last'], 'express');
   return $a;
 }
 

@@ -2,8 +2,8 @@
 // Client accounts on the website. Sign-in uses the existing email code (auth.php); no passwords.
 // GET  account.php?me      -> {verified, email, account|null}
 // GET  account.php?export  -> download everything we hold about you (JSON)
-// POST {action:"create", first,last,phone,title,username, consent:true, marketing:bool}
-// POST {action:"update", first,last,phone,title,username, marketing}
+// POST {action:"create", first,last,phone,title,username, consent:true}
+// POST {action:"update", first,last,phone,title,username}
 // POST {action:"delete", confirm:"DELETE"}   -> deletes the account, its bookings and app sign-ins
 require __DIR__ . '/bs-accounts.php';
 header('Cache-Control: no-store');
@@ -39,8 +39,7 @@ if ($act === 'update') {
     if (!bs_username_free($f['username'], $id)) bs_json(['error' => 'That username is taken.'], 409);
     bs_username_set($a['username'], $f['username'], $id);
   }
-  $a = array_merge($a, $f); $a['marketing'] = !empty($in['marketing']); bs_acc_save($a);
-  if ($a['marketing']) bs_list_add($email, $f['first'] . ' ' . $f['last'], 'express');
+  $a = array_merge($a, $f); bs_acc_save($a);
   bs_json(['ok' => true, 'account' => bs_acc_public($a)]);
 }
 if ($act === 'delete') {

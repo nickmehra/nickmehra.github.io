@@ -2,7 +2,7 @@
 // API for the BlackSheep Drive app. Sign-in with the same email code as the website (no passwords).
 //   GET  app-api.php?challenge                         -> "I'm human" puzzle (solved by the app)
 //   POST {action:"send_code", email, pow}              -> emails a 6-digit code
-//   POST {action:"login", email, code, device, [first,last,phone,title,username,consent,marketing]}
+//   POST {action:"login", email, code, device, [first,last,phone,title,username,consent]}
 //        -> {token}; creates the account in the same step when it doesn't exist yet
 //   Bearer token:
 //   GET  ?me                                           -> profile + upcoming bookings (start time, address, arrival)

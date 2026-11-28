@@ -411,7 +411,6 @@ main{position:relative;z-index:2}
       <label>Email<input name="email" type="email" readonly></label>
     </div>
     <label class="chk"><input type="checkbox" name="consent"> I have read the <a class="lk" href="../privacy/#accounts" target="_blank">privacy notice</a> and agree to BlackSheep storing these details, and bookings I make while signed in, to run my account.</label>
-    <label class="chk"><input type="checkbox" name="marketing"> Optional: send me the Monday update email. You can unsubscribe at any time.</label>
     <p class="err" id="accErr" role="alert" hidden></p>
     <div class="accb"><button type="submit" class="btn primary lk" id="accSave">Create account</button>
       <a class="btn lk" id="accExport" href="../account.php?export" hidden>Download my data</a>
@@ -435,7 +434,7 @@ main{position:relative;z-index:2}
 (function(){
   var f=document.getElementById('accForm'),err=document.getElementById('accErr'),save=document.getElementById('accSave'),has=false;
   function fail(m){err.textContent=m;err.hidden=!m;}
-  function fill(a){['first','last','phone','title','username'].forEach(function(k){f.elements[k].value=a[k]||'';});f.elements.marketing.checked=!!a.marketing;
+  function fill(a){['first','last','phone','title','username'].forEach(function(k){f.elements[k].value=a[k]||'';});
     f.elements.consent.checked=true;f.elements.consent.parentNode.hidden=true;save.textContent='Save changes';has=true;
     document.getElementById('accExport').hidden=false;document.getElementById('accDel').hidden=false;
     var l=document.getElementById('accBkList');l.innerHTML='';(a.bookings||[]).forEach(function(b){var li=document.createElement('li');li.textContent=b.ref+' · '+b.date+' '+b.slot+' · '+b.address;l.appendChild(li);});
@@ -444,7 +443,7 @@ main{position:relative;z-index:2}
     if(!d.verified)return; f.hidden=false; f.elements.email.value=d.email; if(d.account)fill(d.account);});}
   document.addEventListener('bk-verified',load);
   f.addEventListener('submit',function(e){e.preventDefault();fail('');
-    var b={action:has?'update':'create',consent:f.elements.consent.checked,marketing:f.elements.marketing.checked};
+    var b={action:has?'update':'create',consent:f.elements.consent.checked};
     ['first','last','phone','title','username'].forEach(function(k){b[k]=f.elements[k].value.trim();});
     if(!has&&!b.consent)return fail('Please tick the box to accept the privacy notice.');
     save.disabled=true;fetch('../account.php',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)})
