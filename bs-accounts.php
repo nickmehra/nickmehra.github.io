@@ -114,6 +114,11 @@ function bs_dev_auth() {
   return [null, -1];
 }
 function bs_is_owner($a) { return $a && strtolower($a['email']) === strtolower(BS_OWNER_EMAIL); }
+/* BlackSheep representatives (staff): emails kept encrypted next to the accounts. The owner manages the list in the app. */
+function bs_staff_file() { return bs_acc_dir() . '/staff.bin'; }
+function bs_staff() { $f = bs_staff_file(); return is_file($f) ? (bs_dec(file_get_contents($f)) ?: []) : []; }
+function bs_staff_save($list) { file_put_contents(bs_staff_file(), bs_enc(array_values(array_unique($list)))); }
+function bs_is_staff($a) { return $a && (bs_is_owner($a) || in_array(strtolower($a['email']), bs_staff(), true)); }
 
 /* ---------- instant alerts via Firebase Cloud Messaging (HTTP v1). Optional: works once the
    service-account file "fcm-service-account.json" is placed in the private folder. ---------- */
