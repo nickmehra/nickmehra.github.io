@@ -119,7 +119,10 @@ if ($act === 'confirm' || $act === 'checkin' || $act === 'checkout' || $act === 
     if (!empty($c['bookings'][$ref]['enroute_at']) && $c['bookings'][$ref]['enroute_at'] > time() - 6 * 3600) bs_json(['ok' => true, 'pushed' => 0]);
     $c['bookings'][$ref]['enroute_at'] = time(); bs_acc_save($c);
     $eta = isset($in['eta']) ? max(1, (int)round($in['eta'] / 60)) : 0;
-    $msg = 'Your BlackSheep Media Operator is on the way to ' . $addr . ($eta ? " (about $eta min)." : '.') . ' You can follow them live on the map in BlackSheep Drive about 15 minutes before they arrive.';
+    $at = '';
+    if ($eta) { $d = new DateTime('@' . (time() + $eta * 60)); $d->setTimezone(new DateTimeZone('America/Toronto')); $at = $d->format('g:i A'); }
+    $msg = 'Your BlackSheep Media Operator is on the way to ' . $addr . '.' . ($eta ? " Estimated arrival: about $eta min (around $at)." : '')
+      . ' You can follow them live on the map in BlackSheep Drive about 15 minutes before they arrive.';
     $sent = bs_push($c, 'On the way', $msg, ['type' => 'enroute', 'ref' => $ref]);
     bs_mail($c['email'], 'Your BlackSheep Media Operator is on the way', bs_email_shell('On the way', '<p>Hi ' . htmlspecialchars($c['first']) . ', ' . htmlspecialchars($msg) . '</p>'), "Hi {$c['first']}, $msg\n");
     bs_json(['ok' => true, 'pushed' => $sent]);
