@@ -1,8 +1,10 @@
 <?php
 // Homepage booking request. Needs a verified email (auth.php). Emails Nick the full request with a
 // BSQ-RECORD line (his computer files it under WEBSITE ASSETS/Bookings) and emails the client a copy.
-// Nothing about the client is stored here except the mailing-list entry (email + name + consent basis).
-require __DIR__ . '/bs-auth.php';
+// If the client has a BlackSheep account, the shoot details (not a second copy of their contact details) are saved
+// to that account so the Drive app can remind them and show Nick's arrival. Otherwise nothing is stored except the
+// mailing-list entry (email + name + consent basis).
+require __DIR__ . '/bs-accounts.php';
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') bs_json(['error' => 'Method not allowed'], 405);
 $in = bs_input();
 if (!empty($in['website'])) bs_json(['ok' => true]);
@@ -35,4 +37,6 @@ $own = '<p><b>' . $e($name) . '</b> sent a booking request.</p><p>' . $e($email)
   . '<p>' . bs_btn('mailto:' . $email . '?subject=' . rawurlencode("Your BlackSheep booking $ref"), 'Reply to client') . '</p>';
 bs_mail(BS_OWNER_EMAIL, "New booking request $ref · " . bs_money($price['total']) . " · $name", bs_email_shell('New booking request ' . $ref, $own),
   "New booking request $ref from $name <$email>\n$seg · $type\n$addr\n$when\n$lines\n$tot\n\nBSQ-RECORD:" . base64_encode(json_encode(['event' => 'booking', 'booking' => $b, 'sent' => ['subject' => "Your BlackSheep booking request $ref", 'text' => $ctext]], JSON_UNESCAPED_UNICODE)) . "\n", null, $email);
-bs_json(['ok' => true, 'ref' => $ref, 'total' => $price['total']]);
+$saved = bs_acc_add_booking($email, ['ref' => $ref, 'created' => time(), 'segment' => $price['segment'], 'type' => $type, 'address' => $addr,
+  'date' => $date, 'slot' => $slot, 'status' => 'requested']);
+bs_json(['ok' => true, 'ref' => $ref, 'total' => $price['total'], 'saved_to_account' => $saved]);
