@@ -27,7 +27,8 @@ function app_booking_out($b) {
   $start = bs_booking_start($b);
   return ['ref' => $b['ref'], 'type' => $b['type'] ?? '', 'segment' => $b['segment'] ?? '', 'address' => $b['address'] ?? '',
     'date' => $b['date'] ?? '', 'slot' => $b['slot'] ?? '', 'start' => $start, 'confirmed' => !empty($b['confirmed_at']),
-    'status' => $b['status'] ?? 'requested', 'arrived_at' => $b['arrived_at'] ?? 0, 'left_at' => $b['left_at'] ?? 0];
+    'status' => $b['status'] ?? 'requested', 'arrived_at' => $b['arrived_at'] ?? 0, 'left_at' => $b['left_at'] ?? 0,
+    'operator' => $b['op_name'] ?? ''];
 }
 function app_upcoming($a) {
   $out = [];
@@ -50,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // live view only from about 15 minutes before arrival (or once on site)
     $near = !empty($b['arrived_at']) || (isset($l['eta']) && $l['eta'] <= 900);
     if (!$near) bs_json(['shared' => false, 'enroute' => !empty($b['enroute_at'])]);
-    bs_json(['shared' => true, 'lat' => $l['lat'], 'lon' => $l['lon'], 'at' => $l['at']]);
+    bs_json(['shared' => true, 'lat' => $l['lat'], 'lon' => $l['lon'], 'at' => $l['at'], 'name' => $b['op_name'] ?? '']);
   }
   if (isset($_GET['staff'])) {
     if (!bs_is_owner($a)) bs_json(['error' => 'Not allowed'], 403);
@@ -115,13 +116,19 @@ if ($act === 'confirm' || $act === 'checkin' || $act === 'checkout' || $act === 
     bs_acc_save($c); bs_json(['ok' => true]);
   }
   $addr = $c['bookings'][$ref]['address'] ?? 'your property';
+  // the client sees only the attending representative's FIRST name, taken from the account they are signed in with
+  if ($act !== 'confirm') { $fn = bs_clean(explode(' ', trim($a['first'] ?? ''))[0], 40); if ($fn !== '') $c['bookings'][$ref]['op_name'] = $fn; }
+  $nm = $c['bookings'][$ref]['op_name'] ?? '';
+  $who = 'Your BlackSheep Media Operator' . ($nm !== '' ? ", $nm," : '');
+  $whoL = lcfirst($who);
+  $whoS = 'Your BlackSheep Media Operator' . ($nm !== '' ? " ($nm)" : '');
   if ($act === 'enroute') {
     if (!empty($c['bookings'][$ref]['enroute_at']) && $c['bookings'][$ref]['enroute_at'] > time() - 6 * 3600) bs_json(['ok' => true, 'pushed' => 0]);
     $c['bookings'][$ref]['enroute_at'] = time(); bs_acc_save($c);
     $eta = isset($in['eta']) ? max(1, (int)round($in['eta'] / 60)) : 0;
     $at = '';
     if ($eta) { $d = new DateTime('@' . (time() + $eta * 60)); $d->setTimezone(new DateTimeZone('America/Toronto')); $at = $d->format('g:i A'); }
-    $msg = 'Your BlackSheep Media Operator is on the way to ' . $addr . '.' . ($eta ? " Estimated arrival: about $eta min (around $at)." : '')
+    $msg = $who . ' is on the way to ' . $addr . '.' . ($eta ? " Estimated arrival: about $eta min (around $at)." : '')
       . ' You can follow them live on the map in BlackSheep Drive about 15 minutes before they arrive.';
     $sent = bs_push($c, 'On the way', $msg, ['type' => 'enroute', 'ref' => $ref]);
     bs_mail($c['email'], 'Your BlackSheep Media Operator is on the way', bs_email_shell('On the way', '<p>Hi ' . htmlspecialchars($c['first']) . ', ' . htmlspecialchars($msg) . '</p>'), "Hi {$c['first']}, $msg\n");
@@ -138,20 +145,20 @@ if ($act === 'confirm' || $act === 'checkin' || $act === 'checkout' || $act === 
     // the moment the live view opens (about 15 minutes out), the client gets one alert
     $wasNear = $prev && isset($prev['eta']) && $prev['eta'] <= 900;
     if ($eta !== null && $eta <= 900 && !$wasNear && empty($c['bookings'][$ref]['arrived_at']))
-      bs_push($c, 'About 15 minutes away', 'Your BlackSheep Media Operator is about 15 minutes away. Their live location is now visible on your map in BlackSheep Drive.', ['type' => 'near', 'ref' => $ref]);
+      bs_push($c, 'About 15 minutes away', $who . ' is about 15 minutes away. Their live location is now visible on your map in BlackSheep Drive.', ['type' => 'near', 'ref' => $ref]);
     bs_json(['ok' => true]);
   }
   if ($act === 'checkout') {
     $c['bookings'][$ref]['left_at'] = time(); unset($c['bookings'][$ref]['op_loc']); bs_acc_save($c);   // live position deleted at check-out
-    $sent = bs_push($c, 'Visit finished', "Your BlackSheep Media Operator has finished and left $addr.", ['type' => 'left', 'ref' => $ref]);
-    bs_mail($c['email'], 'Visit finished', bs_email_shell('Visit finished', '<p>Hi ' . htmlspecialchars($c['first']) . ', your BlackSheep Media Operator has finished and left <b>' . htmlspecialchars($addr) . '</b> (booking ' . htmlspecialchars($ref) . '). Thank you!</p>'),
-      "Hi {$c['first']}, your BlackSheep Media Operator has finished and left $addr (booking $ref). Thank you!\n");
+    $sent = bs_push($c, 'Visit finished', "$who has finished and left $addr.", ['type' => 'left', 'ref' => $ref]);
+    bs_mail($c['email'], 'Visit finished', bs_email_shell('Visit finished', '<p>Hi ' . htmlspecialchars($c['first']) . ', ' . htmlspecialchars($whoL) . ' has finished and left <b>' . htmlspecialchars($addr) . '</b> (booking ' . htmlspecialchars($ref) . '). Thank you!</p>'),
+      "Hi {$c['first']}, $whoL has finished and left $addr (booking $ref). Thank you!\n");
     bs_json(['ok' => true, 'pushed' => $sent]);
   }
   $c['bookings'][$ref]['arrived_at'] = time(); bs_acc_save($c);
-  $sent = bs_push($c, 'Your BlackSheep Media Operator has arrived', "Your BlackSheep Media Operator is on site at $addr.", ['type' => 'arrived', 'ref' => $ref]);
-  bs_mail($c['email'], 'Your BlackSheep Media Operator has arrived', bs_email_shell('Your BlackSheep Media Operator has arrived', '<p>Hi ' . htmlspecialchars($c['first']) . ', your BlackSheep Media Operator has arrived at <b>' . htmlspecialchars($addr) . '</b> for your booking ' . htmlspecialchars($ref) . '.</p>'),
-    "Hi {$c['first']}, your BlackSheep Media Operator has arrived at $addr for your booking $ref.\n");
+  $sent = bs_push($c, 'Your BlackSheep Media Operator has arrived', "$who is on site at $addr.", ['type' => 'arrived', 'ref' => $ref]);
+  bs_mail($c['email'], $whoS . ' has arrived', bs_email_shell('Your BlackSheep Media Operator has arrived', '<p>Hi ' . htmlspecialchars($c['first']) . ', ' . htmlspecialchars(lcfirst($who)) . ' has arrived at <b>' . htmlspecialchars($addr) . '</b> for your booking ' . htmlspecialchars($ref) . '.</p>'),
+    "Hi {$c['first']}, $whoL has arrived at $addr for your booking $ref.\n");
   bs_json(['ok' => true, 'pushed' => $sent]);
 }
 bs_json(['error' => 'Unknown action'], 400);
