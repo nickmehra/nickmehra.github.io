@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="color-scheme" content="light dark">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>My quotes | BlackSheep Digital Works</title>
+<title>My account &amp; quotes | BlackSheep Digital Works</title>
 <meta name="description" content="Your BlackSheep quotes saved on this device.">
 <link rel="canonical" href="https://blacksheepdigitalworks.ca/account/">
 <meta property="og:type" content="article"><meta property="og:title" content="My quotes | BlackSheep Digital Works">
@@ -396,11 +396,69 @@ main{position:relative;z-index:2}
   </div>
 </header>
 <main>
+<section class="pg" id="account"><div class="wrap">
+  <span class="eyebrow">Your account</span>
+  <h1>Your BlackSheep <em>account.</em></h1>
+  <p class="sub">Optional. With an account, bookings you make while signed in are saved to it, and the BlackSheep Drive app can remind you an hour before your shoot and tell you when Nick arrives. Sign in with a code we email you; there is no password.</p>
+  <div class="bk-gate" data-form="accForm" data-title="Sign in or create an account" data-text="Confirm you're human, then enter the 6-digit code we email you. No password needed."></div>
+  <form id="accForm" class="accf" hidden novalidate>
+    <div class="accg">
+      <label>First name<input name="first" autocomplete="given-name" maxlength="60" required></label>
+      <label>Last name<input name="last" autocomplete="family-name" maxlength="60" required></label>
+      <label>Phone<input name="phone" type="tel" autocomplete="tel" maxlength="30" required></label>
+      <label>Professional title<input name="title" autocomplete="organization-title" maxlength="80" placeholder="e.g. Sales Representative, REALTOR®" required></label>
+      <label>Username<input name="username" autocomplete="username" maxlength="24" pattern="[A-Za-z0-9._-]{3,24}" required></label>
+      <label>Email<input name="email" type="email" readonly></label>
+    </div>
+    <label class="chk"><input type="checkbox" name="consent"> I have read the <a class="lk" href="../privacy/#accounts" target="_blank">privacy notice</a> and agree to BlackSheep storing these details, and bookings I make while signed in, to run my account.</label>
+    <p class="err" id="accErr" role="alert" hidden></p>
+    <div class="accb"><button type="submit" class="btn primary lk" id="accSave">Create account</button>
+      <a class="btn lk" id="accExport" href="../account.php?export" hidden>Download my data</a>
+      <button type="button" class="btn lk" id="accDel" hidden>Delete my account</button></div>
+    <div id="accBk" hidden><h2 class="acch">Bookings on this account</h2><ul class="accl" id="accBkList"></ul></div>
+  </form>
+</div></section>
+<style>
+.accf{display:flex;flex-direction:column;gap:16px;max-width:760px}
+.accg{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.accg label{display:flex;flex-direction:column;gap:6px;font-size:1.05rem}
+.accg input{font:inherit;font-size:1.1rem;padding:14px 14px;border:1px solid var(--line,rgba(127,127,127,.35));background:var(--field,transparent);color:var(--fg,inherit);border-radius:14px}
+.accg input[readonly]{opacity:.7}
+.chk{display:flex;gap:12px;align-items:flex-start;font-size:1.02rem;line-height:1.45}.chk input{width:22px;height:22px;margin-top:2px;flex:none}
+.accb{display:flex;gap:10px;flex-wrap:wrap}.accf .err{color:#c2202c}
+.acch{font-size:1.2rem;margin:10px 0 6px}.accl{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.accl li{border:1px solid var(--line,rgba(127,127,127,.3));border-radius:16px;padding:12px 14px;font-size:1.02rem}
+</style>
+<script src="/booking-gate.js?v=3" defer></script>
+<script>
+(function(){
+  var f=document.getElementById('accForm'),err=document.getElementById('accErr'),save=document.getElementById('accSave'),has=false;
+  function fail(m){err.textContent=m;err.hidden=!m;}
+  function fill(a){['first','last','phone','title','username'].forEach(function(k){f.elements[k].value=a[k]||'';});
+    f.elements.consent.checked=true;f.elements.consent.parentNode.hidden=true;save.textContent='Save changes';has=true;
+    document.getElementById('accExport').hidden=false;document.getElementById('accDel').hidden=false;
+    var l=document.getElementById('accBkList');l.innerHTML='';(a.bookings||[]).forEach(function(b){var li=document.createElement('li');li.textContent=b.ref+' · '+b.date+' '+b.slot+' · '+b.address;l.appendChild(li);});
+    document.getElementById('accBk').hidden=!(a.bookings||[]).length;}
+  function load(){fetch('../account.php?me',{credentials:'same-origin',cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+    if(!d.verified)return; f.hidden=false; f.elements.email.value=d.email; if(d.account)fill(d.account);});}
+  document.addEventListener('bk-verified',load);
+  f.addEventListener('submit',function(e){e.preventDefault();fail('');
+    var b={action:has?'update':'create',consent:f.elements.consent.checked};
+    ['first','last','phone','title','username'].forEach(function(k){b[k]=f.elements[k].value.trim();});
+    if(!has&&!b.consent)return fail('Please tick the box to accept the privacy notice.');
+    save.disabled=true;fetch('../account.php',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)})
+      .then(function(r){return r.json();}).then(function(j){save.disabled=false;if(j.error)return fail(j.error);fill(j.account);fail('');save.textContent='Saved ✓';setTimeout(function(){save.textContent='Save changes';},1800);})
+      .catch(function(){save.disabled=false;fail('Could not reach the server. Please try again.');});});
+  document.getElementById('accDel').addEventListener('click',function(){var t=prompt('This permanently deletes your account, its saved bookings and app sign-ins. Type DELETE to confirm.');
+    if(t!=='DELETE')return;fetch('../account.php',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'delete',confirm:'DELETE'})})
+      .then(function(r){return r.json();}).then(function(j){if(j.ok){alert('Your account has been deleted.');location.reload();}else fail(j.error||'Could not delete.');});});
+})();
+</script>
 
 <section class="pg"><div class="wrap">
   <span class="eyebrow">My quotes</span>
   <h1>Your quotes, <em>on this device.</em></h1>
-  <p class="sub">No account needed. Quotes you request on this phone or computer are listed here, and every one is also in your email with its PDF and approve button. We don't keep client details on this website.</p>
+  <p class="sub">No account needed. Quotes you request on this phone or computer are listed here, and every one is also in your email with its PDF and approve button. Quotes are not stored on this website. (If you create an account below, only your account details and bookings are kept, as described in our privacy notice.)</p>
   <div class="hist" id="hist"></div>
   <p class="note" id="none" hidden>No quotes on this device yet. <a class="lk" href="../pricing/#book">Build one in a minute</a>, or check your email for quotes you requested elsewhere.</p>
   <p class="note"><button type="button" class="btn lk" id="clr" hidden>Clear this list</button></p>
